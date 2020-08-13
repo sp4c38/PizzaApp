@@ -2,15 +2,15 @@
 //  ContentView.swift
 //  PizzaApp
 //
-//  Created by Léon Becker on 03.08.20.
-//  Copyright © 2020 Léon Becker. All rights reserved.
+//  Created by Léon Becker on 13.08.20.
 //
 
 import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        Text("Hello, World!")
+        Text("Hello, world!")
+            .padding()
     }
 }
 
