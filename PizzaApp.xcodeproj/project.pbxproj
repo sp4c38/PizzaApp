@@ -7,12 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		617E133E24E5660800C0337F /* PizzaAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 617E133D24E5660800C0337F /* PizzaAppApp.swift */; };
-		617E134024E5660800C0337F /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 617E133F24E5660800C0337F /* ContentView.swift */; };
+		6170495524E56DA700D83587 /* allData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6170495424E56DA700D83587 /* allData.swift */; };
+		6170495724E5700B00D83587 /* PizzaData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6170495624E5700B00D83587 /* PizzaData.swift */; };
 		617E134224E5660A00C0337F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 617E134124E5660A00C0337F /* Assets.xcassets */; };
 		617E134524E5660A00C0337F /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 617E134424E5660A00C0337F /* Preview Assets.xcassets */; };
 		617E135024E5660B00C0337F /* PizzaAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 617E134F24E5660B00C0337F /* PizzaAppTests.swift */; };
 		617E135B24E5660B00C0337F /* PizzaAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 617E135A24E5660B00C0337F /* PizzaAppUITests.swift */; };
+		617E136924E568DE00C0337F /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 617E136824E568DE00C0337F /* HomeView.swift */; };
+		617E136B24E568FA00C0337F /* PizzaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 617E136A24E568FA00C0337F /* PizzaApp.swift */; };
+		61E224BE24E56B9000A10F87 /* PizzaInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61E224BD24E56B9000A10F87 /* PizzaInfoView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -33,9 +36,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		6170495424E56DA700D83587 /* allData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = allData.swift; sourceTree = "<group>"; };
+		6170495624E5700B00D83587 /* PizzaData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PizzaData.swift; sourceTree = "<group>"; };
 		617E133A24E5660800C0337F /* PizzaApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PizzaApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		617E133D24E5660800C0337F /* PizzaAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PizzaAppApp.swift; sourceTree = "<group>"; };
-		617E133F24E5660800C0337F /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		617E134124E5660A00C0337F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		617E134424E5660A00C0337F /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		617E134624E5660A00C0337F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -45,6 +48,9 @@
 		617E135624E5660B00C0337F /* PizzaAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PizzaAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		617E135A24E5660B00C0337F /* PizzaAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PizzaAppUITests.swift; sourceTree = "<group>"; };
 		617E135C24E5660B00C0337F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		617E136824E568DE00C0337F /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		617E136A24E568FA00C0337F /* PizzaApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PizzaApp.swift; sourceTree = "<group>"; };
+		61E224BD24E56B9000A10F87 /* PizzaInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PizzaInfoView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,6 +78,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6170495324E56D9300D83587 /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				6170495424E56DA700D83587 /* allData.swift */,
+				6170495624E5700B00D83587 /* PizzaData.swift */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
 		617E133124E5660800C0337F = {
 			isa = PBXGroup;
 			children = (
@@ -95,8 +110,10 @@
 		617E133C24E5660800C0337F /* PizzaApp */ = {
 			isa = PBXGroup;
 			children = (
-				617E133D24E5660800C0337F /* PizzaAppApp.swift */,
-				617E133F24E5660800C0337F /* ContentView.swift */,
+				6170495324E56D9300D83587 /* Data */,
+				61E224BF24E56B9A00A10F87 /* Support Views */,
+				617E136A24E568FA00C0337F /* PizzaApp.swift */,
+				617E136824E568DE00C0337F /* HomeView.swift */,
 				617E134124E5660A00C0337F /* Assets.xcassets */,
 				617E134624E5660A00C0337F /* Info.plist */,
 				617E134324E5660A00C0337F /* Preview Content */,
@@ -128,6 +145,14 @@
 				617E135C24E5660B00C0337F /* Info.plist */,
 			);
 			path = PizzaAppUITests;
+			sourceTree = "<group>";
+		};
+		61E224BF24E56B9A00A10F87 /* Support Views */ = {
+			isa = PBXGroup;
+			children = (
+				61E224BD24E56B9000A10F87 /* PizzaInfoView.swift */,
+			);
+			path = "Support Views";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -259,8 +284,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				617E134024E5660800C0337F /* ContentView.swift in Sources */,
-				617E133E24E5660800C0337F /* PizzaAppApp.swift in Sources */,
+				6170495724E5700B00D83587 /* PizzaData.swift in Sources */,
+				617E136B24E568FA00C0337F /* PizzaApp.swift in Sources */,
+				61E224BE24E56B9000A10F87 /* PizzaInfoView.swift in Sources */,
+				617E136924E568DE00C0337F /* HomeView.swift in Sources */,
+				6170495524E56DA700D83587 /* allData.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
