@@ -12,7 +12,7 @@ struct HomeView: View {
         NavigationView() {
             List {
                 ForEach(PizzaData.pizzas, id: \.self) { pizza in
-                    NavigationLink(destination: PizzaInfoView(pizza: pizza)) {
+                    NavigationLink(destination: PizzaInfoView(info: PizzaData.info, pizza: pizza)) {
                         Text(pizza.name)
                     }
                 }

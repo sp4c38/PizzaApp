@@ -7,10 +7,15 @@
 
 import Foundation
 import UIKit
+import SwiftUI
 
 struct Pizza: Codable, Hashable {
     var name: String
     var prices: [Double]
+    fileprivate var image_name: String
+    var image: Image {
+        Image(image_name)
+    }
 }
 
 struct PizzaInfo: Codable {
