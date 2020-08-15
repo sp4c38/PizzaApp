@@ -18,14 +18,9 @@ struct ShoppingCartView: View {
     
     var body: some View {
         VStack(alignment: .center, spacing: 15) {
-            HStack {
-                Text("Warenkorb")
-                    .bold()
-                    .font(.title)
-                Image(systemName: "cart.fill")
-            }
             
             if shoppingCart.isEmpty {
+                
                 Spacer()
                 Text("Dein Warenkorb ist noch leer. Suche dir eine Pizza aus! 🍕")
                     .font(.title)
@@ -33,37 +28,40 @@ struct ShoppingCartView: View {
                     .padding(30)
                 Spacer()
             } else if !shoppingCart.isEmpty {
-                ScrollView(.vertical, showsIndicators: true) {
-                    ForEach(shoppingCart) { pizza in
-                        PizzaCollectionShoppingCartView(shoppingCartItem: pizza)
-                            .padding(.leading, 40)
-                            .padding(.trailing, 40)
-                            .padding(.top, 20)
-                    }
-                    
-                    if !continueToCheckout {
-                        Button(action: {
-                            continueToCheckout = true
-                        }) {
-                            HStack(spacing: 15) {
-                                Image(systemName: "eurosign.circle")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(maxHeight: 30)
-                                    .foregroundColor(Color.white)
-                                Text("Zur Kasse")
-                                    .bold()
-                                    .font(.title2)
-                                    .foregroundColor(Color.white)
+                if !continueToCheckout {
+                    ScrollView {
+                        VStack {
+                            ForEach(shoppingCart) { pizza in
+                                PizzaCollectionShoppingCartView(shoppingCartItem: pizza)
+                                    .padding(.leading, 40)
+                                    .padding(.trailing, 40)
+                                    .padding(.top, 20)
+                                    .transition(.moveAndFade)
                             }
                         }
-                        .buttonStyle(CheckoutButtonStyle())
-                        .padding(.top, 30)
-                        .padding(.bottom, 20)
                     }
+                
+                    Button(action: {
+                        withAnimation {
+                            continueToCheckout = true
+                        }
+                    }) {
+                        HStack(spacing: 15) {
+                            Image(systemName: "eurosign.circle")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(maxHeight: 30)
+                                .foregroundColor(Color.white)
+                            Text("Zur Kasse")
+                                .bold()
+                                .font(.title2)
+                                .foregroundColor(Color.white)
+                        }
+                    }
+                    .buttonStyle(CheckoutButtonStyle())
+                    .transition(.moveAndFade)
                 }
             }
-        }
-        .padding(.top, 40)
+        }.navigationBarTitle("Warenkorb", displayMode: .inline)
     }
 }

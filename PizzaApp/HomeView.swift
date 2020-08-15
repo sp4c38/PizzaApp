@@ -34,7 +34,7 @@ func packPizzas() -> [[Pizza]] {
 
 
 struct HomeView: View {
-    @State var showShoppingCart: Bool = false
+    @State var showShoppingCart: Bool = true
     @Environment(\.managedObjectContext) var managedObjectContext
     var packedPizzas: [[Pizza]] = packPizzas()
     
@@ -67,19 +67,15 @@ struct HomeView: View {
                 .padding(.top, 10)
                 .navigationBarTitle("Pizzen")
                 .navigationBarItems(trailing:
-                    Button(action: {
-                        showShoppingCart = true
-                    }) {
+                    NavigationLink(
+                        destination: ShoppingCartView().environment(\.managedObjectContext, managedObjectContext)) {
                         HStack {
                             Text("Warenkorb")
                             Image(systemName: "cart")
                         }
                         .padding(.top, 10)
                         .padding(.trailing, 10)
-                    })
-            }
-            .sheet(isPresented: $showShoppingCart) {
-                ShoppingCartView().environment(\.managedObjectContext, managedObjectContext) // Needed to parse environment objects to sheets
+                })
             }
         }
     }
