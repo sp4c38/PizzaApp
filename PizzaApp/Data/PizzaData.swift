@@ -12,10 +12,11 @@ import SwiftUI
 struct Pizza: Codable, Hashable {
     var name: String
     var prices: [Double]
-    fileprivate var image_name: String
+    fileprivate var imageName: String
     var image: Image {
-        Image(image_name)
+        Image(imageName)
     }
+    var ingredientDescription: String
 }
 
 struct PizzaInfo: Codable {
