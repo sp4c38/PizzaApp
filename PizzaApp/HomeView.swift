@@ -34,9 +34,6 @@ func packPizzas() -> [[Pizza]] {
 
 
 struct HomeView: View {
-    @State var showShoppingCart: Bool = true
-    var lul = PizzaData
-    
     @Environment(\.managedObjectContext) var managedObjectContext
     
     var packedPizzas: [[Pizza]] = packPizzas()

@@ -17,7 +17,7 @@ struct ShoppingCartView: View {
     @State var continueToCheckout: Bool = false
     
     var body: some View {
-        VStack(alignment: .center, spacing: 15) {
+        VStack(spacing: 0) {
             
             if shoppingCart.isEmpty {
                 
@@ -41,11 +41,7 @@ struct ShoppingCartView: View {
                         }
                     }
                 
-                    Button(action: {
-                        withAnimation {
-                            continueToCheckout = true
-                        }
-                    }) {
+                    NavigationLink(destination: CheckoutView()) {
                         HStack(spacing: 15) {
                             Image(systemName: "eurosign.circle")
                                 .resizable()
@@ -58,8 +54,9 @@ struct ShoppingCartView: View {
                                 .foregroundColor(Color.white)
                         }
                     }
-                    .buttonStyle(CheckoutButtonStyle())
-                    .transition(.moveAndFade)
+                    .buttonStyle(CheckoutButtonStyle()) // Also applies to NavigationLink
+                    .padding(.top, 10)
+                    .padding(.bottom, 10)
                 }
             }
         }.navigationBarTitle("Warenkorb", displayMode: .inline)

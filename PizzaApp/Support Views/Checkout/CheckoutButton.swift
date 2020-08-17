@@ -28,7 +28,7 @@ struct CheckoutButtonStyle: ButtonStyle {
                 RoundedRectangle(cornerRadius: 0)
                     .stroke(Color.black, lineWidth: 2)
             )
-            .shadow(radius: 3)
+            .shadow(radius: 5)
     }
 }
 
