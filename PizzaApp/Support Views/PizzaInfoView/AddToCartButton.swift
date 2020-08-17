@@ -28,8 +28,8 @@ struct AddToCartButton: ButtonStyle {
     }
 }
 
-//struct PizzaInfo_OrderButton_Previews: PreviewProvider {
-//    static var previews: some View {
-//        PizzaInfoView(info: PizzaData.info, pizza: PizzaData.pizzas[1]!)
-//    }
-//}
+struct PizzaInfo_OrderButton_Previews: PreviewProvider {
+    static var previews: some View {
+        PizzaInfoView(info: PizzaData.info, pizza: PizzaData.pizzas[0])
+    }
+}

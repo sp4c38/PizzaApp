@@ -1,8 +1,8 @@
 //
-//  ShoppingCart+CoreDataClass.swift
+//  ShoppingCartItem+CoreDataClass.swift
 //  PizzaApp
 //
-//  Created by Léon Becker on 15.08.20.
+//  Created by Léon Becker on 17.08.20.
 //
 //
 

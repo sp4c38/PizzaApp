@@ -45,7 +45,7 @@ struct PizzaCollectionShoppingCartView: View {
                         .font(.title3)
                         .bold()
                     Spacer()
-                    Text("4,99 €")
+                    Text("\(shoppingCartItem.price .description) €")
                         .font(.headline)
                 }
             }
@@ -101,9 +101,9 @@ struct PizzaCollectionView: View {
     }
 }
 
-//struct PizzaCollection_Previews: PreviewProvider {
-//    static var previews: some View {
-//        PizzaCollectionView(pizza: PizzaData.pizzas[1]!)
-//            .frame(width: 150, height: 150)
-//    }
-//}
+struct PizzaCollection_Previews: PreviewProvider {
+    static var previews: some View {
+        PizzaCollectionView(pizza: PizzaData.pizzas[0])
+            .frame(width: 150, height: 150)
+    }
+}

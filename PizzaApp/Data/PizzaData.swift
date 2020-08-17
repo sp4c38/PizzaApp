@@ -10,6 +10,7 @@ import UIKit
 import SwiftUI
 
 struct Pizza: Codable, Hashable {
+    var id: Int32
     var name: String
     var imageName: String
     var image: Image {
@@ -21,7 +22,7 @@ struct Pizza: Codable, Hashable {
 
 struct PizzaInfo: Codable {
     var info: [String: [String]]
-    var pizzas: [String: Pizza]
+    var pizzas: [Pizza]
 }
 
 func downloadPizzaData(url: String) -> PizzaInfo {
