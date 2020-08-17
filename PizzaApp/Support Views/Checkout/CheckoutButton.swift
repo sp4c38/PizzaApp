@@ -32,6 +32,38 @@ struct CheckoutButtonStyle: ButtonStyle {
     }
 }
 
+struct BuyButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .padding()
+            .background(Color.blue)
+            .cornerRadius(10)
+            .shadow(radius: 7)
+            .scaleEffect(configuration.isPressed ? CGFloat(1.3) : 1.0)
+            .rotationEffect(.degrees(configuration.isPressed ? 0.0 : 0))
+            .blur(radius: configuration.isPressed ? CGFloat(0.0) : 0)
+            .animation(Animation.spring(response: 0.30000000000000004, dampingFraction: 0.4, blendDuration: 1))
+    }
+}
+
+struct MyButtonStyle: ButtonStyle {
+    func makeBody(configuration: Self.Configuration) -> some View {
+        configuration.label
+            .background(Capsule()
+                            .foregroundColor(configuration.isPressed ? Color.gray : Color.primary)) // replace gray
+            .scaleEffect(configuration.isPressed ? CGFloat(1.3) : 1.0)
+            .rotationEffect(.degrees(configuration.isPressed ? 0.0 : 0))
+            .blur(radius: configuration.isPressed ? CGFloat(0.0) : 0)
+            .animation(Animation.spring(response: 0.30000000000000004, dampingFraction: 0.4, blendDuration: 1))
+    }
+}
+
+extension Button {
+    func myButtonStyle() -> some View {
+        self.buttonStyle(MyButtonStyle())
+    }
+}
+
 struct CheckoutButton_Previews: PreviewProvider {
     static var previews: some View {
         Button(action: {}) {
