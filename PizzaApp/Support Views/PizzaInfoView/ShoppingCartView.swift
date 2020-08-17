@@ -10,9 +10,9 @@ import SwiftUI
 struct ShoppingCartView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @FetchRequest(
-        entity: ShoppingCart.entity(),
+        entity: ShoppingCartItem.entity(),
         sortDescriptors: []
-    ) var shoppingCart: FetchedResults<ShoppingCart>
+    ) var shoppingCart: FetchedResults<ShoppingCartItem>
     
     @State var continueToCheckout: Bool = false
     
@@ -31,8 +31,8 @@ struct ShoppingCartView: View {
                 if !continueToCheckout {
                     ScrollView {
                         VStack {
-                            ForEach(shoppingCart) { pizza in
-                                PizzaCollectionShoppingCartView(shoppingCartItem: pizza)
+                            ForEach(shoppingCart) { storedPizza in
+                                PizzaCollectionShoppingCartView(shoppingCartItem: storedPizza)
                                     .padding(.leading, 40)
                                     .padding(.trailing, 40)
                                     .padding(.top, 20)

@@ -9,7 +9,7 @@
 import Foundation
 import CoreData
 
-@objc(ShoppingCart)
-public class ShoppingCart: NSManagedObject {
+@objc(ShoppingCartItem)
+public class ShoppingCartItem: NSManagedObject {
 
 }

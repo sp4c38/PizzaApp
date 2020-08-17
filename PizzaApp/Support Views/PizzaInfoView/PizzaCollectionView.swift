@@ -10,21 +10,21 @@ import SwiftUI
 struct PizzaCollectionShoppingCartView: View {
     // A single pizza box which is shown in the shopping cart view
     
-    var shoppingCartItem: ShoppingCart
+    var shoppingCartItem: ShoppingCartItem
     
     var body: some View {
         VStack(alignment: .leading) {
-            Image("venedig")
+            Image(shoppingCartItem.pictureName)
                 .resizable()
                 .scaledToFit()
                 .cornerRadius(7)
-                .border(Color.black, width: 2)
+                .border(Color.white, width: 2)
                 .padding(.top, 2)
                 .padding(.leading, 2)
                 .padding(.trailing, 2)
             
             VStack(alignment: .leading, spacing: 5) {
-                Text("Pizza Venedig")
+                Text("Pizza \(shoppingCartItem.name)")
                     .font(.title2)
                     .bold()
                     .multilineTextAlignment(.center)
@@ -36,7 +36,7 @@ struct PizzaCollectionShoppingCartView: View {
                         .font(.title3)
                         .bold()
                     Spacer()
-                    Text("Supermaxi")
+                    Text(PizzaData.info["sizes"]![Int(shoppingCartItem.sizeIndex)])
                         .font(.headline)
                 }
                 
@@ -76,7 +76,7 @@ struct PizzaCollectionView: View {
                 .resizable()
                 .scaledToFit()
                 .cornerRadius(7)
-                .border(Color.black, width: 2)
+                .border(Color.white, width: 2)
                 .padding(.top, 2)
                 .padding(.leading, 2)
                 .padding(.trailing, 2)
@@ -101,11 +101,9 @@ struct PizzaCollectionView: View {
     }
 }
 
-struct PizzaCollection_Previews: PreviewProvider {
-    static var previews: some View {
-        //PizzaCollectionShoppingCartView()//shoppingCartItem: cart)
-        //    .frame(width: 300, height: 400, alignment: .center)
-        PizzaCollectionView(pizza: PizzaData.pizzas[0])
-            .frame(width: 150, height: 150)
-    }
-}
+//struct PizzaCollection_Previews: PreviewProvider {
+//    static var previews: some View {
+//        PizzaCollectionView(pizza: PizzaData.pizzas[1]!)
+//            .frame(width: 150, height: 150)
+//    }
+//}

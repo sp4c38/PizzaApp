@@ -20,13 +20,14 @@ struct PricesView: View {
                     .padding(.bottom, 10)
                 Spacer()
             }
-
+            
             ForEach(info["sizes"]!, id: \.self) { size in
-                let index = info["sizes"]!.firstIndex(of: size)!
+                let index = info["sizes"]!.firstIndex(of: size)
+                
                 HStack {
                     Text(size)
                     Spacer()
-                    Text("\(String(pizza.prices[index])) €")
+                    Text("\(String(pizza.prices[index!])) €")
                 }
                 .padding(.bottom, 12)
             }
@@ -46,8 +47,8 @@ struct PricesView: View {
     }
 }
 
-struct PricesView_Previews: PreviewProvider {
-    static var previews: some View {
-        PizzaInfoView(info: PizzaData.info, pizza: PizzaData.pizzas[0])
-    }
-}
+//struct PricesView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        PizzaInfoView(info: PizzaData.info, pizza: PizzaData.pizzas[1]!)
+//    }
+//}

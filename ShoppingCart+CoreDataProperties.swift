@@ -10,13 +10,18 @@ import Foundation
 import CoreData
 
 
-extension ShoppingCart: Identifiable {
+extension ShoppingCartItem {
 
-    @nonobjc public class func fetchRequest() -> NSFetchRequest<ShoppingCart> {
-        return NSFetchRequest<ShoppingCart>(entityName: "ShoppingCart")
+    @nonobjc public class func fetchRequest() -> NSFetchRequest<ShoppingCartItem> {
+        return NSFetchRequest<ShoppingCartItem>(entityName: "ShoppingCart")
     }
 
     @NSManaged public var name: String
-    @NSManaged public var size: String
+    @NSManaged public var sizeIndex: Int16
+    @NSManaged public var pictureName: String
+
+}
+
+extension ShoppingCartItem : Identifiable {
 
 }

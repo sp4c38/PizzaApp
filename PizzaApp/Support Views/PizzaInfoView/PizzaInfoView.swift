@@ -45,9 +45,10 @@ struct PizzaInfoView: View {
                     PricesView(info: info, pizza: pizza)
 
                     Button(action: {
-                        let newCartItem = ShoppingCart(context: managedObjectContext)
+                        let newCartItem = ShoppingCartItem(context: managedObjectContext)
                         newCartItem.name = pizza.name
-                        newCartItem.size = String(pizza.prices[0])
+                        newCartItem.pictureName = pizza.imageName
+                        newCartItem.sizeIndex = 0
                         
                         do {
                             try managedObjectContext.save()
@@ -68,12 +69,12 @@ struct PizzaInfoView: View {
     }
 }
 
-struct PizzaInfo_Previews: PreviewProvider {
-    static var previews: some View {
-        Group {
-            PizzaInfoView(info: PizzaData.info, pizza: PizzaData.pizzas[0])
-            PizzaInfoView(info: PizzaData.info, pizza: PizzaData.pizzas[0])
-                .preferredColorScheme(.dark)
-        }
-    }
-}
+//struct PizzaInfo_Previews: PreviewProvider {
+//    static var previews: some View {
+//        Group {
+//            PizzaInfoView(info: PizzaData.info, pizza: PizzaData.pizzas[1]!)
+//            PizzaInfoView(info: PizzaData.info, pizza: PizzaData.pizzas[1]!)
+//                .preferredColorScheme(.dark)
+//        }
+//    }
+//}

@@ -11,17 +11,17 @@ import SwiftUI
 
 struct Pizza: Codable, Hashable {
     var name: String
-    var prices: [Double]
-    fileprivate var imageName: String
+    var imageName: String
     var image: Image {
         Image(imageName)
     }
+    var prices: [Double]
     var ingredientDescription: String
 }
 
 struct PizzaInfo: Codable {
     var info: [String: [String]]
-    var pizzas: [Pizza]
+    var pizzas: [String: Pizza]
 }
 
 func downloadPizzaData(url: String) -> PizzaInfo {
