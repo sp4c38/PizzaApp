@@ -48,7 +48,7 @@
 /* Begin PBXFileReference section */
 		6104F03924EA459E008C7A05 /* ShoppingCartItem+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ShoppingCartItem+CoreDataClass.swift"; sourceTree = "<group>"; };
 		6104F03A24EA459E008C7A05 /* ShoppingCartItem+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ShoppingCartItem+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		6104F03D24EA62A3008C7A05 /* CheckoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckoutView.swift; sourceTree = "<group>"; };
+		6104F03D24EA62A3008C7A05 /* CheckoutView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CheckoutView.swift; sourceTree = "<group>"; usesTabs = 0; };
 		6126B03D24E7E91A008FD5B4 /* PizzaApp.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = PizzaApp.xcdatamodel; sourceTree = "<group>"; };
 		612731D424E7F6BE0046E68C /* ShoppingCartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingCartView.swift; sourceTree = "<group>"; };
 		6139D41824E6E1D100DCBEFA /* AddToCartButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddToCartButton.swift; sourceTree = "<group>"; };

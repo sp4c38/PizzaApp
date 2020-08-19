@@ -22,8 +22,7 @@ func downloadPizzaData(url: String) -> PizzaInfo {
         
     let task = URLSession.shared.dataTask(with: request, completionHandler: {data, response, error in
         if let error = error {
-            print("Error occurred when retrieving data: \(error)")
-            return
+            fatalError("Error occurred when retrieving data: \(error)")
         }
         
         let jsonDecoder = JSONDecoder()
@@ -45,15 +44,33 @@ func downloadPizzaData(url: String) -> PizzaInfo {
     return outputData!
 }
 
-func secureSendPizzaOrder(_ url: String) -> Bool {
+func sendPizzaOrder(_ url: String, shoppingCartItems: [ShoppingCartItem], orderDetails: OrderDetails) -> Bool {
     let orderDestination = URL(string: url)
     
     var request = URLRequest(url: orderDestination!)
     request.httpMethod = "POST"
     
-    let body = ["pizza_id": 48313,
-                "pizza_sizeindex": 2]
+    struct bodyData: Encodable {
+        var name: String
+        var street: String
+        var city: String
+        var postalcode: String
+        var pizzas = [[String: Int]]()
+        
+        init(_ orderDetails: OrderDetails, _ shoppingCart: [ShoppingCartItem]) {
+            self.name = orderDetails.name
+            self.street = orderDetails.street
+            self.city = orderDetails.city
+            self.postalcode = orderDetails.postalCode
+            
+            for pizza in shoppingCart {
+                self.pizzas.append(["pizza_id": Int(pizza.pizzaId), "pizza_sizeindex": Int(pizza.sizeIndex)])
+            }
+        }
+    }
     
+    let body = bodyData(orderDetails, shoppingCartItems)
+
     let jsonEncoder = JSONEncoder()
     var encodedData: Data
     
@@ -77,6 +94,7 @@ func secureSendPizzaOrder(_ url: String) -> Bool {
         let successfulRequest: returnSucceeded
         
         do {
+            print(String(data: data!, encoding: .utf8)!)
             try successfulRequest = jsonDecoder.decode(returnSucceeded.self, from: data!)
         } catch {
             fatalError("Error parsing the returned JSON data returned from the server after sending order. Error: \(error)")

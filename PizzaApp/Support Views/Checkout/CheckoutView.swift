@@ -7,10 +7,26 @@
 
 import SwiftUI
 
+class OrderDetails: ObservableObject {
+    @Published var name: String = "" // Name of the customer
+    @Published var street: String = "" // Name of the street the customer lives on
+    @Published var city: String = "" // City or village the
+    @Published var postalCode: String = ""
+    @Published var selectedPaymentMethod: Int8 = 1
+}
+
 struct CheckoutView: View {
-    @State var name = ""
-    @State var selectedPaymentMethod = 1
+    @ObservedObject var orderDetails = OrderDetails()
     @FetchRequest(entity: ShoppingCartItem.entity(), sortDescriptors: []) var shoppingCart: FetchedResults<ShoppingCartItem>
+    
+    var shoppingCartArray: [ShoppingCartItem] {
+        // Convert the FetchedResult<ShoppingCartItem> which contains an array to type Array<ShoppingCartItem>
+        var out = [ShoppingCartItem]()
+        for i in shoppingCart {
+            out.append(i)
+        }
+        return out
+    }
     
     var body: some View {
         VStack(spacing: 30) {
@@ -24,7 +40,7 @@ struct CheckoutView: View {
                     .bold()
                     .font(.title3)
                 
-                TextField("Name", text: $name)
+                TextField("Name", text: $orderDetails.name)
                     .frame(maxWidth: .infinity, maxHeight: 16)
                     .padding()
                     .overlay(
@@ -41,7 +57,7 @@ struct CheckoutView: View {
                     .font(.title3)
                     .padding(.bottom, 5)
                 
-                TextField("Straße", text: $name)
+                TextField("Straße", text: $orderDetails.street)
                     .padding()
                     .overlay(
                         RoundedRectangle(cornerRadius: 10)
@@ -49,7 +65,7 @@ struct CheckoutView: View {
                     )
                 
                 HStack {
-                    TextField("Ort", text: $name)
+                    TextField("Ort", text: $orderDetails.city)
                         .padding()
                         .overlay(
                             RoundedRectangle(cornerRadius: 10)
@@ -57,7 +73,7 @@ struct CheckoutView: View {
                         )
 
                     
-                    TextField("PLZ", text: $name)
+                    TextField("PLZ", text: $orderDetails.postalCode)
                         .padding()
                         .overlay(
                             RoundedRectangle(cornerRadius: 10)
@@ -72,7 +88,7 @@ struct CheckoutView: View {
                 Text("Bezahloption:")
                     .bold()
                     .font(.title3)
-                Picker(selection: $selectedPaymentMethod, label: Text("Payment Method")) {
+                Picker(selection: $orderDetails.selectedPaymentMethod, label: Text("Payment Method")) {
                     Text("Vor Ort in Bar").tag(1)
                     Text("Mit Karte").tag(2)
                 }.pickerStyle(SegmentedPickerStyle())
@@ -81,7 +97,7 @@ struct CheckoutView: View {
             .padding(.trailing, 16)
             
             Button(action: {
-                let orderSuccessful = secureSendPizzaOrder("https://www.space8.me:7392/pizzaapp/")//, shoppingCartItems: shoppingCart)
+                let orderSuccessful = sendPizzaOrder("https://www.space8.me:7392/pizzaapp/", shoppingCartItems: shoppingCartArray, orderDetails: orderDetails)
                 
                 if orderSuccessful {
                     print("Order successful.")
