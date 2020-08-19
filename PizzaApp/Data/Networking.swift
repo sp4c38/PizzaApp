@@ -56,12 +56,14 @@ func sendPizzaOrder(_ url: String, shoppingCartItems: [ShoppingCartItem], orderD
         var city: String
         var postalcode: String
         var pizzas = [[String: Int]]()
+        var payment_method: Int8
         
         init(_ orderDetails: OrderDetails, _ shoppingCart: [ShoppingCartItem]) {
             self.name = orderDetails.name
             self.street = orderDetails.street
             self.city = orderDetails.city
             self.postalcode = orderDetails.postalCode
+            self.payment_method = orderDetails.selectedPaymentMethod
             
             for pizza in shoppingCart {
                 self.pizzas.append(["pizza_id": Int(pizza.pizzaId), "pizza_sizeindex": Int(pizza.sizeIndex)])

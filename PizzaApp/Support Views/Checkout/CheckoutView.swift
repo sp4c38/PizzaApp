@@ -18,6 +18,7 @@ class OrderDetails: ObservableObject {
 struct CheckoutView: View {
     @ObservedObject var orderDetails = OrderDetails()
     @FetchRequest(entity: ShoppingCartItem.entity(), sortDescriptors: []) var shoppingCart: FetchedResults<ShoppingCartItem>
+    @State var showFieldsRequiredReminder: Bool = false
     
     var shoppingCartArray: [ShoppingCartItem] {
         // Convert the FetchedResult<ShoppingCartItem> which contains an array to type Array<ShoppingCartItem>
@@ -30,10 +31,19 @@ struct CheckoutView: View {
     
     var body: some View {
         VStack(spacing: 30) {
-            Text("Kasse")
-                .bold()
-                .font(.title)
-                .padding(.top, 20)
+            if showFieldsRequiredReminder {
+                VStack(spacing: 20) {
+                    Image(systemName: "exclamationmark.octagon")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 40, height: 40)
+                    
+                    Text("Bitte füllen Sie alle Felder aus")
+                        .bold()
+                        .font(.title3)
+                }
+                .foregroundColor(Color.red)
+            }
             
             VStack(alignment: .leading) {
                 Text("Name:")
@@ -74,6 +84,7 @@ struct CheckoutView: View {
 
                     
                     TextField("PLZ", text: $orderDetails.postalCode)
+                        .keyboardType(.numberPad)
                         .padding()
                         .overlay(
                             RoundedRectangle(cornerRadius: 10)
@@ -88,7 +99,7 @@ struct CheckoutView: View {
                 Text("Bezahloption:")
                     .bold()
                     .font(.title3)
-                Picker(selection: $orderDetails.selectedPaymentMethod, label: Text("Payment Method")) {
+                Picker(selection: $orderDetails.selectedPaymentMethod, label: Text("Bezahloption")) {
                     Text("Vor Ort in Bar").tag(1)
                     Text("Mit Karte").tag(2)
                 }.pickerStyle(SegmentedPickerStyle())
@@ -97,12 +108,14 @@ struct CheckoutView: View {
             .padding(.trailing, 16)
             
             Button(action: {
-                let orderSuccessful = sendPizzaOrder("https://www.space8.me:7392/pizzaapp/", shoppingCartItems: shoppingCartArray, orderDetails: orderDetails)
-                
-                if orderSuccessful {
-                    print("Order successful.")
-                } else if !orderSuccessful {
-                    print("Error with sending the order request.")
+                if (orderDetails.name == "") || (orderDetails.street == "") || (orderDetails.city == "")  || (orderDetails.postalCode == "")  {
+                    showFieldsRequiredReminder = true
+                } else  {
+                    let wasSuccessful = sendPizzaOrder("https://www.space8.me:7392/pizzaapp/", shoppingCartItems: shoppingCartArray, orderDetails: orderDetails)
+
+                    if !wasSuccessful {
+                        print("Error with sending the order request.")
+                    }
                 }
             }) {
                 Text("Kostenpflichtig Bestellen")
@@ -119,6 +132,8 @@ struct CheckoutView: View {
             Spacer()
         }
         .navigationBarTitle("Kasse", displayMode: .inline)
+        .padding(.top, 20)
+        .animation(.easeInOut)
     }
 }
 

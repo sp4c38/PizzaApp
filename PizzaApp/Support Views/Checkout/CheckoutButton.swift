@@ -41,8 +41,7 @@ struct BuyButtonStyle: ButtonStyle {
             .shadow(radius: 7)
             .scaleEffect(configuration.isPressed ? CGFloat(1.3) : 1.0)
             .rotationEffect(.degrees(configuration.isPressed ? 0.0 : 0))
-            .blur(radius: configuration.isPressed ? CGFloat(0.0) : 0)
-            .animation(Animation.spring(response: 0.30000000000000004, dampingFraction: 0.4, blendDuration: 1))
+//            .animation(Animation.spring(response: 0.30000000000000004, dampingFraction: 0.4, blendDuration: 1))
     }
 }
 
