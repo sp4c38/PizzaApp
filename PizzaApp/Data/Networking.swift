@@ -51,7 +51,8 @@ func sendPizzaOrder(_ url: String, shoppingCartItems: [ShoppingCartItem], orderD
     request.httpMethod = "POST"
     
     struct bodyData: Encodable {
-        var name: String
+        var firstname: String
+        var lastname: String
         var street: String
         var city: String
         var postalcode: String
@@ -59,7 +60,8 @@ func sendPizzaOrder(_ url: String, shoppingCartItems: [ShoppingCartItem], orderD
         var payment_method: Int8
         
         init(_ orderDetails: OrderDetails, _ shoppingCart: [ShoppingCartItem]) {
-            self.name = orderDetails.name
+            self.firstname = orderDetails.firstname
+            self.lastname = orderDetails.lastname
             self.street = orderDetails.street
             self.city = orderDetails.city
             self.postalcode = orderDetails.postalCode
