@@ -25,6 +25,7 @@
 		61B1374E24E702E800BE1CBE /* PizzaCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61B1374D24E702E800BE1CBE /* PizzaCollectionView.swift */; };
 		61BFB48524EAE7E60034130F /* Networking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61BFB48424EAE7E60034130F /* Networking.swift */; };
 		61C7014524EE584C00EDBE45 /* CheckoutValidateFields.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61C7014424EE584C00EDBE45 /* CheckoutValidateFields.swift */; };
+		61C7014724EE78CC00EDBE45 /* OrderSuccessful.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61C7014624EE78CC00EDBE45 /* OrderSuccessful.swift */; };
 		61E224BE24E56B9000A10F87 /* PizzaInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61E224BD24E56B9000A10F87 /* PizzaInfoView.swift */; };
 		61F4C5FA24E80B1700280F52 /* CheckoutButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61F4C5F924E80B1700280F52 /* CheckoutButton.swift */; };
 /* End PBXBuildFile section */
@@ -71,6 +72,7 @@
 		61B1374D24E702E800BE1CBE /* PizzaCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PizzaCollectionView.swift; sourceTree = "<group>"; };
 		61BFB48424EAE7E60034130F /* Networking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Networking.swift; sourceTree = "<group>"; };
 		61C7014424EE584C00EDBE45 /* CheckoutValidateFields.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckoutValidateFields.swift; sourceTree = "<group>"; };
+		61C7014624EE78CC00EDBE45 /* OrderSuccessful.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderSuccessful.swift; sourceTree = "<group>"; };
 		61E224BD24E56B9000A10F87 /* PizzaInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PizzaInfoView.swift; sourceTree = "<group>"; };
 		61F4C5F924E80B1700280F52 /* CheckoutButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckoutButton.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -104,6 +106,7 @@
 			isa = PBXGroup;
 			children = (
 				6104F03D24EA62A3008C7A05 /* CheckoutView.swift */,
+				61C7014624EE78CC00EDBE45 /* OrderSuccessful.swift */,
 				61F4C5F924E80B1700280F52 /* CheckoutButton.swift */,
 			);
 			path = Checkout;
@@ -355,6 +358,7 @@
 				61B1374E24E702E800BE1CBE /* PizzaCollectionView.swift in Sources */,
 				6126B03E24E7E91A008FD5B4 /* PizzaApp.xcdatamodeld in Sources */,
 				6104F03C24EA459E008C7A05 /* ShoppingCartItem+CoreDataProperties.swift in Sources */,
+				61C7014724EE78CC00EDBE45 /* OrderSuccessful.swift in Sources */,
 				61BFB48524EAE7E60034130F /* Networking.swift in Sources */,
 				61E224BE24E56B9000A10F87 /* PizzaInfoView.swift in Sources */,
 				617E136924E568DE00C0337F /* HomeView.swift in Sources */,
@@ -534,7 +538,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = me.sp4c38.PizzaApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -556,7 +560,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = me.sp4c38.PizzaApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

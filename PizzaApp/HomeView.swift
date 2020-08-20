@@ -32,57 +32,60 @@ func packPizzas() -> [[Pizza]] {
     return output
 }
 
-
 struct HomeView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
+    @EnvironmentObject var orderProperty: OrderProperty
     
     var packedPizzas: [[Pizza]] = packPizzas()
-
+    
     var body: some View {
-        VStack {
-            NavigationView {
-                ScrollView(.vertical, showsIndicators: false) {
-                    ForEach(packedPizzas, id: \.self) { pizza in
-                        HStack {
+        NavigationView {
+            ScrollView(.vertical, showsIndicators: false) {
+                if orderProperty.showOrderSuccessful {
+                    OrderSuccessful()
+                }
+                
+                ForEach(packedPizzas, id: \.self) { pizza in
+                    HStack {
 
-                            if pizza.count > 1 {
-                                NavigationLink(destination: PizzaInfoView(info: PizzaData.info, pizza: pizza[0])) {
-                                    PizzaCollectionView(pizza: pizza[0])
-                                }
-
-                                NavigationLink(destination: PizzaInfoView(info: PizzaData.info, pizza:  pizza[1])) {
-                                    PizzaCollectionView(pizza: pizza[1])
-                                }
-                            } else if !(pizza.count > 1) {
-                                NavigationLink(destination: PizzaInfoView(info: PizzaData.info, pizza:  pizza[0])) {
-                                    PizzaCollectionView(pizza: pizza[0])
-                                }
-                                .padding(.leading, 70)
-                                .padding(.trailing, 70)
+                        if pizza.count > 1 {
+                            NavigationLink(destination: PizzaInfoView(info: PizzaData.info, pizza: pizza[0])) {
+                                PizzaCollectionView(pizza: pizza[0])
                             }
 
-                        }.padding()
-                    }
+                            NavigationLink(destination: PizzaInfoView(info: PizzaData.info, pizza:  pizza[1])) {
+                                PizzaCollectionView(pizza: pizza[1])
+                            }
+                        } else if !(pizza.count > 1) {
+                            NavigationLink(destination: PizzaInfoView(info: PizzaData.info, pizza:  pizza[0])) {
+                                PizzaCollectionView(pizza: pizza[0])
+                            }
+                            .padding(.leading, 70)
+                            .padding(.trailing, 70)
+                        }
+
+                    }.padding()
                 }
-                .padding(.top, 10)
-                .navigationBarTitle("Pizzen")
-                .navigationBarItems(trailing:
-                    NavigationLink(
-                        destination: ShoppingCartView().environment(\.managedObjectContext, managedObjectContext)) {
+            }
+            .navigationBarTitle("Pizzen")
+            .navigationBarItems(trailing:
+                VStack(alignment: .trailing, spacing: 5) {
+                    NavigationLink (destination: ShoppingCartView().environment(\.managedObjectContext, managedObjectContext)) {
                         HStack {
                             Text("Warenkorb")
                             Image(systemName: "cart")
                         }
-                        .padding(.top, 10)
-                        .padding(.trailing, 10)
-                })
-            }
+                    }
+                }
+            )
         }
+            .navigationBarHidden(true)
     }
 }
 
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
         HomeView()
+            .environmentObject(OrderProperty())
     }
 }

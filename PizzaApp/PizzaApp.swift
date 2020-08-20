@@ -20,13 +20,19 @@ class PersistenceManager {
     }
 }
 
+class OrderProperty: ObservableObject {
+    @Published var showOrderSuccessful: Bool = false
+}
+
 @main
 struct PizzaApp_App: App {
     var persistence = PersistenceManager() // Since there is not AppDelegate and SceneDelegate in modern SwiftUI Applications a own PersistenceManager needs to be created
     
     var body: some Scene {
         WindowGroup {
-            HomeView().environment(\.managedObjectContext, persistence.persistentContainer.viewContext)
+            HomeView()
+                .environment(\.managedObjectContext, persistence.persistentContainer.viewContext)
+                .environmentObject(OrderProperty())
         }
     }
 }
