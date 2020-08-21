@@ -58,7 +58,7 @@ struct HomeView: View {
                 .buttonStyle(AllOrdersButton())
                 
                 ForEach(packedPizzas, id: \.self) { pizza in
-                    HStack {
+                    HStack(spacing: 20) {
                         if pizza.count > 1 {
                             NavigationLink(destination: PizzaInfoView(info: PizzaData.info, pizza: pizza[0])) {
                                 PizzaCollectionView(pizza: pizza[0])
@@ -71,8 +71,8 @@ struct HomeView: View {
                             NavigationLink(destination: PizzaInfoView(info: PizzaData.info, pizza:  pizza[0])) {
                                 PizzaCollectionView(pizza: pizza[0])
                             }
-                            .padding(.leading, 70)
-                            .padding(.trailing, 70)
+                            .padding(.leading, 78)
+                            .padding(.trailing, 78)
                         }
 
                     }.padding()

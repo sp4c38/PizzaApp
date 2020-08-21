@@ -128,39 +128,37 @@ struct PizzaCollectionView: View {
     var pizza: Pizza
     
     var body: some View {
-        VStack {
+        VStack(spacing: 0) {
             pizza.image
                 .resizable()
                 .scaledToFit()
-                .cornerRadius(7)
-                .border(Color.white, width: 2)
-                .padding(.top, 2)
-                .padding(.leading, 2)
-                .padding(.trailing, 2)
-            
+                .overlay(Rectangle().stroke(Color.white, lineWidth: 5))
+
             Text(pizza.name)
                 .font(.subheadline)
                 .bold()
                 .multilineTextAlignment(.center)
+                .minimumScaleFactor(0.9)
                 .shadow(radius: 4)
-                .padding(.bottom, 10)
-                .padding(.trailing, 5)
+                .frame(maxWidth: .infinity)
+                .padding(8)
+                .foregroundColor(Color.white)
+                .background(Color(hue: 0.9916, saturation: 0.9689, brightness: 0.8824))
         }
-        .foregroundColor(Color.white)
-        .background(Color(hue: 0.9916, saturation: 0.9689, brightness: 0.8824))
         .cornerRadius(10)
         .overlay(
-            RoundedRectangle(cornerRadius: 10)
-                .stroke(Color.white, lineWidth: 4)
+            RoundedRectangle(cornerRadius: 13)
+                .stroke(Color.white, lineWidth: 3)
         )
         .shadow(radius: 5)
-        .padding(2)
     }
 }
 
 struct PizzaCollection_Previews: PreviewProvider {
     static var previews: some View {
-        PizzaCollectionView(pizza: PizzaData.pizzas[0])
-            .frame(width: 150, height: 150)
+        HStack(spacing: 20) {
+            PizzaCollectionView(pizza: PizzaData.pizzas[0])
+            PizzaCollectionView(pizza: PizzaData.pizzas[0])
+        }.padding()
     }
 }
