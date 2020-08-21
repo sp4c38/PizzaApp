@@ -45,9 +45,20 @@ struct HomeView: View {
                     OrderSuccessful()
                 }
                 
+                NavigationLink(destination: OrdersView()) {
+                    Button(action: {
+                    
+                    }) {
+                        Text("Alle Bestellungen")
+                            .font(.headline)
+                            .foregroundColor(Color.white)
+                    }
+                }
+                .padding()
+                .buttonStyle(AllOrdersButton())
+                
                 ForEach(packedPizzas, id: \.self) { pizza in
                     HStack {
-
                         if pizza.count > 1 {
                             NavigationLink(destination: PizzaInfoView(info: PizzaData.info, pizza: pizza[0])) {
                                 PizzaCollectionView(pizza: pizza[0])
@@ -69,17 +80,15 @@ struct HomeView: View {
             }
             .navigationBarTitle("Pizzen")
             .navigationBarItems(trailing:
-                VStack(alignment: .trailing, spacing: 5) {
-                    NavigationLink (destination: ShoppingCartView().environment(\.managedObjectContext, managedObjectContext)) {
-                        HStack {
-                            Text("Warenkorb")
-                            Image(systemName: "cart")
-                        }
+                NavigationLink (destination: ShoppingCartView().environment(\.managedObjectContext, managedObjectContext)) {
+                    HStack {
+                        Text("Warenkorb")
+                        Image(systemName: "cart")
                     }
                 }
             )
+            .configureNavigationBar()
         }
-            .navigationBarHidden(true)
     }
 }
 

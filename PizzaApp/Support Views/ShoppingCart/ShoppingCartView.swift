@@ -36,7 +36,6 @@ struct ShoppingCartView: View {
                                     .padding(.leading, 40)
                                     .padding(.trailing, 40)
                                     .padding(.top, 20)
-                                    .transition(.moveAndFade)
                             }
                         }
                     }
@@ -59,6 +58,8 @@ struct ShoppingCartView: View {
                     .padding(.bottom, 10)
                 }
             }
-        }.navigationBarTitle("Warenkorb", displayMode: .inline)
+        }
+        .navigationBarTitle("Warenkorb", displayMode: .inline)
+        .animation(.easeInOut(duration: 0.3))
     }
 }

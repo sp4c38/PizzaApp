@@ -7,17 +7,6 @@
 
 import SwiftUI
 
-extension AnyTransition {
-    static var moveAndFade: AnyTransition {
-        let insertion = AnyTransition.opacity
-            .combined(with: .move(edge: .trailing))
-        let removal = AnyTransition.opacity
-            .combined(with: .move(edge: .trailing))
-        
-        return AnyTransition.asymmetric(insertion: insertion, removal: removal)
-    }
-}
-
 struct CheckoutButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
@@ -41,7 +30,6 @@ struct BuyButtonStyle: ButtonStyle {
             .shadow(radius: 7)
             .scaleEffect(configuration.isPressed ? CGFloat(1.3) : 1.0)
             .rotationEffect(.degrees(configuration.isPressed ? 0.0 : 0))
-//            .animation(Animation.spring(response: 0.30000000000000004, dampingFraction: 0.4, blendDuration: 1))
     }
 }
 
