@@ -87,7 +87,6 @@ struct HomeView: View {
                     }
                 }
             )
-            .configureNavigationBar()
         }
     }
 }
