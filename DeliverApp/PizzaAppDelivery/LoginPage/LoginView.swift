@@ -14,7 +14,7 @@ struct LoginView: View {
     var body: some View {
         GeometryReader { geometry in
             VStack(spacing: 40) {
-                HStack(spacing: 15) {
+                HStack(spacing: 20) {
                     Image("LoginPizzaImage")
                         .resizable()
                         .scaledToFit()
@@ -27,39 +27,61 @@ struct LoginView: View {
                         .minimumScaleFactor(0.9)
                 }
                 
-                VStack(spacing: 20) {
+                VStack(alignment: .leading, spacing: 40) {
                     Text("Anmelden")
                         .bold()
-                        .font(.title2)
+                        .font(.largeTitle)
                     
-                    HStack(spacing: 20) {
+                    VStack(spacing: 20) {
                         VStack(alignment: .leading, spacing: 10) {
                             Text("Benutzername:")
-                            Text("Passwort: ")
+                                .bold()
+                        
+                            TextField("Benutzername", text: $username)
+                                .padding(7)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .stroke(Color.gray, lineWidth: 1)
+                                )
                         }
                         
                         VStack(alignment: .leading, spacing: 10) {
-                            TextField("Benutzername", text: $username)
+                            Text("Passwort:")
+                                .bold()
+                                .font(.headline)
+                        
+                            SecureField("Passwort", text: $password)
                                 .padding(7)
-                                .overlay(RoundedRectangle(cornerRadius: 5).stroke(Color.black, lineWidth: 2))
-                            TextField("Passwort", text: $password)
-                                .padding(7)
-                                .overlay(RoundedRectangle(cornerRadius: 5).stroke(Color.black, lineWidth: 2))
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .stroke(Color.gray, lineWidth: 1)
+                                )
                         }
                     }
                     
-                    Button(action: {}) {
+                    
+                    Button(action: {
+                        
+                    }) {
                         Text("Login")
+                            .bold()
+                            .font(.title2)
                     }
+                    .foregroundColor(Color.white)
+                    .frame(maxWidth: .infinity)
+                    .padding(9)
+                    .background(Color.blue)
+                    .cornerRadius(7)
+                    .animation(.spring())
                 }
-                .foregroundColor(Color.white)
-                .padding()
+                .foregroundColor(Color.black)
+                .padding(30)
                 .frame(maxWidth: .infinity)
                 .background(
-                    RoundedRectangle(cornerRadius: 5)
-                        .stroke(Color.black, lineWidth: 2)
-                        .background(Color.red.cornerRadius(5))
+                    RoundedRectangle(cornerRadius: 20)
+                        .foregroundColor(Color.white)
                 )
+                .shadow(radius: 10)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .padding()
@@ -67,6 +89,7 @@ struct LoginView: View {
                 Image("LoginScreenBackground")
                     .resizable()
                     .scaledToFill()
+                    .blur(radius: 5)
             )
             .ignoresSafeArea()
         }

@@ -5,16 +5,23 @@
 //  Created by Léon Becker on 21.08.20.
 //
 
+import CoreData
 import SwiftUI
 
 struct ContentView: View {
+    @Environment(\.managedObjectContext) var managedObjectContext
     
-    init() {
-        TestSomeStuff()
-    }
+    @FetchRequest(entity: UserData.entity(), sortDescriptors: [])
+    var orders: FetchedResults<UserData>
+    
+    var hasAccount: Bool = true
     
     var body: some View {
-        LoginView()
+        if hasAccount {
+            Text("has account")
+        } else if !hasAccount {
+            LoginView()
+        }
     }
 }
 

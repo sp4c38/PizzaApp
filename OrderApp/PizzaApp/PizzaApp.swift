@@ -5,8 +5,8 @@
 //  Created by Léon Becker on 13.08.20.
 //
 
-import SwiftUI
 import CoreData
+import SwiftUI
 
 class PersistenceManager {
     var persistentContainer: NSPersistentContainer {
@@ -26,7 +26,7 @@ class OrderProperty: ObservableObject {
 
 @main
 struct PizzaApp_App: App {
-    var persistence = PersistenceManager() // Since there is not AppDelegate and SceneDelegate in modern SwiftUI Applications a own PersistenceManager needs to be created
+    var persistence = PersistenceManager()
     
     var body: some Scene {
         WindowGroup {

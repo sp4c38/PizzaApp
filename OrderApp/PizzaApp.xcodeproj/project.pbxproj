@@ -146,6 +146,7 @@
 				6170495424E56DA700D83587 /* allData.swift */,
 				6170495624E5700B00D83587 /* PizzaData.swift */,
 				61BFB48424EAE7E60034130F /* Networking.swift */,
+				61C7014424EE584C00EDBE45 /* CheckoutValidateFields.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -153,7 +154,6 @@
 		617E133124E5660800C0337F = {
 			isa = PBXGroup;
 			children = (
-				61C7014424EE584C00EDBE45 /* CheckoutValidateFields.swift */,
 				6104F03924EA459E008C7A05 /* ShoppingCartItem+CoreDataClass.swift */,
 				6104F03A24EA459E008C7A05 /* ShoppingCartItem+CoreDataProperties.swift */,
 				617E133C24E5660800C0337F /* PizzaApp */,

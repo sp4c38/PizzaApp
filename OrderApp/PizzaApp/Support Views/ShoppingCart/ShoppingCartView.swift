@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct ShoppingCartView: View {
-    @Environment(\.managedObjectContext) var managedObjectContext
     @FetchRequest(
         entity: ShoppingCartItem.entity(),
         sortDescriptors: []
@@ -17,7 +16,7 @@ struct ShoppingCartView: View {
     @State var continueToCheckout: Bool = false
     
     var body: some View {
-        VStack(spacing: 0) {
+        return VStack(spacing: 0) {
             
             if shoppingCart.isEmpty {
                 
