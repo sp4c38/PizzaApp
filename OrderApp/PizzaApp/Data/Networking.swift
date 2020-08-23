@@ -95,11 +95,11 @@ func sendPizzaOrder(_ url: String, shoppingCartItems: [ShoppingCartItem], orderD
     
     let task = URLSession.shared.dataTask(with: request, completionHandler: { data, response, error in
         let jsonDecoder = JSONDecoder()
-        let successfulRequest: returnSucceeded
+        var successfulRequest: returnSucceeded
         
         do {
             print(String(data: data!, encoding: .utf8)!)
-            try successfulRequest = jsonDecoder.decode(returnSucceeded.self, from: data!)
+            successfulRequest = try jsonDecoder.decode(returnSucceeded.self, from: data!)
         } catch {
             fatalError("Error parsing the returned JSON data returned from the server after sending order. Error: \(error)")
         }

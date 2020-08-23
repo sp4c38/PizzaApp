@@ -15,6 +15,8 @@ struct LoginView: View {
     @State var username: String = ""
     @State var password: String = ""
     
+    @State var errorWhenCheckingLogin: Bool = false
+    
     var body: some View {
         GeometryReader { geometry in
             VStack(spacing: 40) {
@@ -69,7 +71,11 @@ struct LoginView: View {
                     Button(action: {
                         if password != "" && username != "" {
                             // Save the account which was successfully logged-in
-                            saveAccount(username: username, password: password, managedObjectContext: managedObjectContext, keychainStore: keychainStore)
+                            let checkLoginSuccessful = saveAccount(username: username, password: password, managedObjectContext: managedObjectContext, keychainStore: keychainStore)
+                           
+                            if !checkLoginSuccessful {
+                                errorWhenCheckingLogin = true
+                            }
                         }
                     }) {
                         Text("Login")
