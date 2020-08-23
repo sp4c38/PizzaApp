@@ -5,9 +5,13 @@
 //  Created by Léon Becker on 21.08.20.
 //
 
+import CoreData
 import SwiftUI
 
 struct LoginView: View {
+    @Environment(\.keychainStore) var keychainStore
+    @Environment(\.managedObjectContext) var managedObjectContext
+    
     @State var username: String = ""
     @State var password: String = ""
     
@@ -32,7 +36,7 @@ struct LoginView: View {
                         .bold()
                         .font(.largeTitle)
                     
-                    VStack(spacing: 20) {
+                    VStack {
                         VStack(alignment: .leading, spacing: 10) {
                             Text("Benutzername:")
                                 .bold()
@@ -43,6 +47,7 @@ struct LoginView: View {
                                     RoundedRectangle(cornerRadius: 10)
                                         .stroke(Color.gray, lineWidth: 1)
                                 )
+                                .id(1) // Need to set an id because otherwise the button would be disabled due to a later .shadow
                         }
                         
                         VStack(alignment: .leading, spacing: 10) {
@@ -56,12 +61,16 @@ struct LoginView: View {
                                     RoundedRectangle(cornerRadius: 10)
                                         .stroke(Color.gray, lineWidth: 1)
                                 )
+                                .id(2) // Need to set an id because otherwise the button would be disabled due to a later .shadow
                         }
                     }
-                    
-                    
-                    Button(action: {
                         
+                        
+                    Button(action: {
+                        if password != "" && username != "" {
+                            // Save the account which was successfully logged-in
+                            saveAccount(username: username, password: password, managedObjectContext: managedObjectContext, keychainStore: keychainStore)
+                        }
                     }) {
                         Text("Login")
                             .bold()
@@ -76,7 +85,6 @@ struct LoginView: View {
                 }
                 .foregroundColor(Color.black)
                 .padding(30)
-                .frame(maxWidth: .infinity)
                 .background(
                     RoundedRectangle(cornerRadius: 20)
                         .foregroundColor(Color.white)

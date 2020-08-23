@@ -9,11 +9,17 @@ import CoreData
 import Foundation
 import SwiftUI
 
-//func checkGetUsernameStored(usernames: [UsernameData]) -> String? {
-//    // Checks if there is any stored usernames in the apps CoreData storage. If it finds one it returns the username otherwise returns nil
-//    
-//    
-//    
-//    
-//    return nil
-//}
+func checkGetUsernameStored(usernames: FetchedResults<UserData>) -> String? {
+    // Checks if there is any stored usernames in the apps CoreData storage. If it finds one it returns the username otherwise returns nil
+    
+    if usernames.count == 0 {
+        return nil
+    } else if usernames.count == 1 {
+        return usernames[0].username
+    } else if usernames.count > 1 {
+        print("!! Warning: There are multiple entrys of the UserData CoreData entity. Only max one entry should exist of the UserData entity. Will use the first UserData entry found.")
+        return usernames[0].username
+    }
+    
+    return nil
+}

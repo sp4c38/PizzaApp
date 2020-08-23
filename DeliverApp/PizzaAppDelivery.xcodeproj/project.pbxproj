@@ -16,13 +16,15 @@
 		61BDDCBD24EFB5F500CA1FC6 /* DownloadOrders.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61BDDCBC24EFB5F500CA1FC6 /* DownloadOrders.swift */; };
 		61BDDCC124EFE8C100CA1FC6 /* KeychainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61BDDCC024EFE8C100CA1FC6 /* KeychainStore.swift */; };
 		61BDDCC524EFEC8200CA1FC6 /* KeychainStoreErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61BDDCC424EFEC8200CA1FC6 /* KeychainStoreErrors.swift */; };
-		61E120C524F15DBE00B27041 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 61E120C324F15DBE00B27041 /* Model.xcdatamodeld */; };
 		61E120C824F15DF100B27041 /* UserData+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61E120C624F15DF100B27041 /* UserData+CoreDataClass.swift */; };
 		61E120C924F15DF100B27041 /* UserData+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61E120C724F15DF100B27041 /* UserData+CoreDataProperties.swift */; };
+		61E120CC24F1677A00B27041 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 61E120CA24F1677A00B27041 /* Model.xcdatamodeld */; };
+		61E120CE24F16A3000B27041 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61E120CD24F16A3000B27041 /* HomeView.swift */; };
+		61E120D024F1A38300B27041 /* CheckCorrectLogin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61E120CF24F1A38300B27041 /* CheckCorrectLogin.swift */; };
 		61FAD08C24F00EFE006132BF /* KeychainStoreQueryable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61FAD08B24F00EFE006132BF /* KeychainStoreQueryable.swift */; };
 		61FAD08F24F0248D006132BF /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61FAD08E24F0248D006132BF /* LoginView.swift */; };
 		61FAD09124F075DF006132BF /* CheckGetUsernameStored.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61FAD09024F075DF006132BF /* CheckGetUsernameStored.swift */; };
-		61FAD09324F07656006132BF /* VerifyAccountStored.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61FAD09224F07656006132BF /* VerifyAccountStored.swift */; };
+		61FAD09324F07656006132BF /* UserAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61FAD09224F07656006132BF /* UserAccount.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,13 +60,15 @@
 		61BDDCBC24EFB5F500CA1FC6 /* DownloadOrders.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadOrders.swift; sourceTree = "<group>"; };
 		61BDDCC024EFE8C100CA1FC6 /* KeychainStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainStore.swift; sourceTree = "<group>"; };
 		61BDDCC424EFEC8200CA1FC6 /* KeychainStoreErrors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeychainStoreErrors.swift; sourceTree = "<group>"; };
-		61E120C424F15DBE00B27041 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		61E120C624F15DF100B27041 /* UserData+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserData+CoreDataClass.swift"; sourceTree = "<group>"; };
 		61E120C724F15DF100B27041 /* UserData+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserData+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		61E120CB24F1677A00B27041 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
+		61E120CD24F16A3000B27041 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		61E120CF24F1A38300B27041 /* CheckCorrectLogin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckCorrectLogin.swift; sourceTree = "<group>"; };
 		61FAD08B24F00EFE006132BF /* KeychainStoreQueryable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainStoreQueryable.swift; sourceTree = "<group>"; };
 		61FAD08E24F0248D006132BF /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		61FAD09024F075DF006132BF /* CheckGetUsernameStored.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckGetUsernameStored.swift; sourceTree = "<group>"; };
-		61FAD09224F07656006132BF /* VerifyAccountStored.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerifyAccountStored.swift; sourceTree = "<group>"; };
+		61FAD09224F07656006132BF /* UserAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAccount.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -118,11 +122,12 @@
 				61BDDCBF24EFE89800CA1FC6 /* Keychain */,
 				61BDDCBE24EFB5FF00CA1FC6 /* Data */,
 				61FAD08D24F02462006132BF /* LoginPage */,
+				61E120CD24F16A3000B27041 /* HomeView.swift */,
 				611AE3E424EFA20F00AB3099 /* ContentView.swift */,
 				611AE3E224EFA20F00AB3099 /* PizzaAppDeliveryApp.swift */,
-				61E120C324F15DBE00B27041 /* Model.xcdatamodeld */,
 				61E120C624F15DF100B27041 /* UserData+CoreDataClass.swift */,
 				61E120C724F15DF100B27041 /* UserData+CoreDataProperties.swift */,
+				61E120CA24F1677A00B27041 /* Model.xcdatamodeld */,
 				611AE3E624EFA21100AB3099 /* Assets.xcassets */,
 				611AE3EB24EFA21100AB3099 /* Info.plist */,
 				611AE3E824EFA21100AB3099 /* Preview Content */,
@@ -159,9 +164,10 @@
 		61BDDCBE24EFB5FF00CA1FC6 /* Data */ = {
 			isa = PBXGroup;
 			children = (
-				61FAD09024F075DF006132BF /* CheckGetUsernameStored.swift */,
 				61BDDCBC24EFB5F500CA1FC6 /* DownloadOrders.swift */,
-				61FAD09224F07656006132BF /* VerifyAccountStored.swift */,
+				61FAD09024F075DF006132BF /* CheckGetUsernameStored.swift */,
+				61FAD09224F07656006132BF /* UserAccount.swift */,
+				61E120CF24F1A38300B27041 /* CheckCorrectLogin.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -315,7 +321,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				61E120C924F15DF100B27041 /* UserData+CoreDataProperties.swift in Sources */,
+				61E120CE24F16A3000B27041 /* HomeView.swift in Sources */,
 				61BDDCBD24EFB5F500CA1FC6 /* DownloadOrders.swift in Sources */,
+				61E120D024F1A38300B27041 /* CheckCorrectLogin.swift in Sources */,
 				61FAD08F24F0248D006132BF /* LoginView.swift in Sources */,
 				61E120C824F15DF100B27041 /* UserData+CoreDataClass.swift in Sources */,
 				611AE3E524EFA20F00AB3099 /* ContentView.swift in Sources */,
@@ -323,9 +331,9 @@
 				611AE3E324EFA20F00AB3099 /* PizzaAppDeliveryApp.swift in Sources */,
 				61FAD08C24F00EFE006132BF /* KeychainStoreQueryable.swift in Sources */,
 				61BDDCC124EFE8C100CA1FC6 /* KeychainStore.swift in Sources */,
-				61E120C524F15DBE00B27041 /* Model.xcdatamodeld in Sources */,
-				61FAD09324F07656006132BF /* VerifyAccountStored.swift in Sources */,
+				61FAD09324F07656006132BF /* UserAccount.swift in Sources */,
 				61FAD09124F075DF006132BF /* CheckGetUsernameStored.swift in Sources */,
+				61E120CC24F1677A00B27041 /* Model.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -650,12 +658,12 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		61E120C324F15DBE00B27041 /* Model.xcdatamodeld */ = {
+		61E120CA24F1677A00B27041 /* Model.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				61E120C424F15DBE00B27041 /* Model.xcdatamodel */,
+				61E120CB24F1677A00B27041 /* Model.xcdatamodel */,
 			);
-			currentVersion = 61E120C424F15DBE00B27041 /* Model.xcdatamodel */;
+			currentVersion = 61E120CB24F1677A00B27041 /* Model.xcdatamodel */;
 			path = Model.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

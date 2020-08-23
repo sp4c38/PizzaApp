@@ -10,16 +10,12 @@ import Foundation
 import CoreData
 
 
-extension UserData {
+extension UserData: Identifiable {
 
     @nonobjc public class func fetchRequest() -> NSFetchRequest<UserData> {
         return NSFetchRequest<UserData>(entityName: "UserData")
     }
 
-    @NSManaged public var username: String?
-
-}
-
-extension UserData : Identifiable {
+    @NSManaged public var username: String
 
 }

@@ -42,6 +42,22 @@ struct KeychainStore {
         
     }
     
+    func checkExistsValue(for userAccountName: String) throws -> Bool {
+        var query = keychainStoreQueryable.query
+        query[String(kSecAttrAccount)] = userAccountName
+        
+        let searchStatus = SecItemCopyMatching(query as CFDictionary, nil)
+        
+        switch searchStatus {
+            case errSecSuccess:
+                return true
+            case errSecItemNotFound:
+                return false
+            default:
+                fatalError("Error checking if a password for the username is stored.")
+        }
+    }
+    
     func getValue(for userAccountName: String) throws -> String? {
         var query = keychainStoreQueryable.query
         query[String(kSecMatchLimit)] = kSecMatchLimitOne

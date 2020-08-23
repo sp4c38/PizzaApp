@@ -8,19 +8,25 @@
 import CoreData
 import SwiftUI
 
+
 struct ContentView: View {
+    @Environment(\.keychainStore) var keychainStore
     @Environment(\.managedObjectContext) var managedObjectContext
+    @FetchRequest(
+        entity: UserData.entity(),
+        sortDescriptors: []) var usernamesResult: FetchedResults<UserData>
     
-    @FetchRequest(entity: UserData.entity(), sortDescriptors: [])
-    var orders: FetchedResults<UserData>
-    
-    var hasAccount: Bool = true
+    var hasAccount: String? {
+        verifyAccountStored(usernames: usernamesResult, keychainStore: keychainStore)
+    }
     
     var body: some View {
-        if hasAccount {
-            Text("has account")
-        } else if !hasAccount {
-            LoginView()
+        return VStack {
+            if hasAccount != nil {
+                Text("Account Found")
+            } else {
+                LoginView()
+            }
         }
     }
 }
