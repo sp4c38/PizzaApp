@@ -5,30 +5,29 @@
 //  Created by Léon Becker on 21.08.20.
 //
 
-import Foundation
+import SwiftUI
 
-func TestSomeStuff() {
-    let password = PasswordQueryable(service: "AccountService")
-    let secureStore = KeychainStore(keychainStoreQueryable: password)
+func downloadOrders(username: String, keychainStore: KeychainStore) -> Bool {
+    var request = URLRequest(url: URL(string: "https://www.space8.me:7392/pizzaapp/get_all_orders")!)
+    
+    let password = checkGetPasswordStored(username: username, keychainStore: keychainStore)
+    
+    if password != nil {
+        request.httpMethod = "POST"
+        
+        let encodedAuthData = "\(username):\(password!)".data(using: .utf8)!.base64EncodedString()
+        request.setValue("Basic \(encodedAuthData)", forHTTPHeaderField: "Authorization")
 
-    do {
-        try secureStore.setValue("1234567e9", for: "Bernrd")
-    } catch {
-        fatalError("Error when saving your password. \(error)")
+        let semaphore = DispatchSemaphore(value: 0)
+
+        let downloadTask = URLSession.shared.dataTask(with: request) { data, response, error in
+            print(String(data: data!, encoding: .utf8)!)
+            semaphore.signal()
+        }
+
+        downloadTask.resume()
+        semaphore.wait()
     }
-
-    let pass: String?
-
-    do {
-        pass = try secureStore.getValue(for: "Bernrd")
-    } catch {
-        fatalError("Error while reading your password.")
-    }
-
-    guard let passwd = pass else {
-        print("Didn't find any password.")
-        return
-    }
-
-    print(passwd)
+    
+    return true
 }

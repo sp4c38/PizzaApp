@@ -142,7 +142,7 @@ struct CheckoutView: View {
                                 let fieldsEnteredCorrectly = checkoutValidateFields(orderDetails)
                                 
                                 if fieldsEnteredCorrectly.0 {
-                                    let wasSuccessful = sendPizzaOrder("https://www.space8.me:7392/pizzaapp/",  shoppingCartItems: shoppingCartArray, orderDetails: orderDetails)
+                                    let wasSuccessful = sendPizzaOrder("https://www.space8.me:7392/pizzaapp/save_order",  shoppingCartItems: shoppingCartArray, orderDetails: orderDetails)
                                         
                                     if wasSuccessful {
                                         orderProperty.showOrderSuccessful = true

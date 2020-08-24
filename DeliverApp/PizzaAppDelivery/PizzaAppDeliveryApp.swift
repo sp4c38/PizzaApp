@@ -37,7 +37,6 @@ struct PizzaAppDeliveryApp: App {
         let persistence = PersistenceManager()
         let context = persistence.persistentContainer.viewContext
         
-        
         let queryType = PasswordQueryable(service: "UserAccountService")
         let keychainStore = KeychainStore(keychainStoreQueryable: queryType)
         

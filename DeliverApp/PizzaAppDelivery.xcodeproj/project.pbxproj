@@ -8,22 +8,23 @@
 
 /* Begin PBXBuildFile section */
 		611AE3E324EFA20F00AB3099 /* PizzaAppDeliveryApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 611AE3E224EFA20F00AB3099 /* PizzaAppDeliveryApp.swift */; };
-		611AE3E524EFA20F00AB3099 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 611AE3E424EFA20F00AB3099 /* ContentView.swift */; };
+		611AE3E524EFA20F00AB3099 /* StartViewRedirector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 611AE3E424EFA20F00AB3099 /* StartViewRedirector.swift */; };
 		611AE3E724EFA21100AB3099 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 611AE3E624EFA21100AB3099 /* Assets.xcassets */; };
 		611AE3EA24EFA21100AB3099 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 611AE3E924EFA21100AB3099 /* Preview Assets.xcassets */; };
 		611AE3F524EFA21100AB3099 /* PizzaAppDeliveryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 611AE3F424EFA21100AB3099 /* PizzaAppDeliveryTests.swift */; };
 		611AE40024EFA21100AB3099 /* PizzaAppDeliveryUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 611AE3FF24EFA21100AB3099 /* PizzaAppDeliveryUITests.swift */; };
+		61593EA924F3A595007B1487 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61593EA824F3A595007B1487 /* HomeView.swift */; };
 		61BDDCBD24EFB5F500CA1FC6 /* DownloadOrders.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61BDDCBC24EFB5F500CA1FC6 /* DownloadOrders.swift */; };
 		61BDDCC124EFE8C100CA1FC6 /* KeychainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61BDDCC024EFE8C100CA1FC6 /* KeychainStore.swift */; };
 		61BDDCC524EFEC8200CA1FC6 /* KeychainStoreErrors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61BDDCC424EFEC8200CA1FC6 /* KeychainStoreErrors.swift */; };
+		61DB60DF24F3A90B001A6973 /* PizzaCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61DB60DE24F3A90B001A6973 /* PizzaCollectionView.swift */; };
 		61E120C824F15DF100B27041 /* UserData+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61E120C624F15DF100B27041 /* UserData+CoreDataClass.swift */; };
 		61E120C924F15DF100B27041 /* UserData+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61E120C724F15DF100B27041 /* UserData+CoreDataProperties.swift */; };
 		61E120CC24F1677A00B27041 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 61E120CA24F1677A00B27041 /* Model.xcdatamodeld */; };
-		61E120CE24F16A3000B27041 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61E120CD24F16A3000B27041 /* HomeView.swift */; };
 		61E120D024F1A38300B27041 /* CheckCorrectLogin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61E120CF24F1A38300B27041 /* CheckCorrectLogin.swift */; };
 		61FAD08C24F00EFE006132BF /* KeychainStoreQueryable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61FAD08B24F00EFE006132BF /* KeychainStoreQueryable.swift */; };
 		61FAD08F24F0248D006132BF /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61FAD08E24F0248D006132BF /* LoginView.swift */; };
-		61FAD09124F075DF006132BF /* CheckGetUsernameStored.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61FAD09024F075DF006132BF /* CheckGetUsernameStored.swift */; };
+		61FAD09124F075DF006132BF /* CheckGetStoredData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61FAD09024F075DF006132BF /* CheckGetStoredData.swift */; };
 		61FAD09324F07656006132BF /* UserAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61FAD09224F07656006132BF /* UserAccount.swift */; };
 /* End PBXBuildFile section */
 
@@ -47,7 +48,7 @@
 /* Begin PBXFileReference section */
 		611AE3DF24EFA20F00AB3099 /* PizzaAppDelivery.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PizzaAppDelivery.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		611AE3E224EFA20F00AB3099 /* PizzaAppDeliveryApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PizzaAppDeliveryApp.swift; sourceTree = "<group>"; };
-		611AE3E424EFA20F00AB3099 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		611AE3E424EFA20F00AB3099 /* StartViewRedirector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartViewRedirector.swift; sourceTree = "<group>"; };
 		611AE3E624EFA21100AB3099 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		611AE3E924EFA21100AB3099 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		611AE3EB24EFA21100AB3099 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -57,17 +58,18 @@
 		611AE3FB24EFA21100AB3099 /* PizzaAppDeliveryUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PizzaAppDeliveryUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		611AE3FF24EFA21100AB3099 /* PizzaAppDeliveryUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PizzaAppDeliveryUITests.swift; sourceTree = "<group>"; };
 		611AE40124EFA21100AB3099 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		61593EA824F3A595007B1487 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		61BDDCBC24EFB5F500CA1FC6 /* DownloadOrders.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadOrders.swift; sourceTree = "<group>"; };
 		61BDDCC024EFE8C100CA1FC6 /* KeychainStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainStore.swift; sourceTree = "<group>"; };
 		61BDDCC424EFEC8200CA1FC6 /* KeychainStoreErrors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeychainStoreErrors.swift; sourceTree = "<group>"; };
+		61DB60DE24F3A90B001A6973 /* PizzaCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PizzaCollectionView.swift; sourceTree = "<group>"; };
 		61E120C624F15DF100B27041 /* UserData+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserData+CoreDataClass.swift"; sourceTree = "<group>"; };
 		61E120C724F15DF100B27041 /* UserData+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserData+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		61E120CB24F1677A00B27041 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
-		61E120CD24F16A3000B27041 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		61E120CF24F1A38300B27041 /* CheckCorrectLogin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckCorrectLogin.swift; sourceTree = "<group>"; };
 		61FAD08B24F00EFE006132BF /* KeychainStoreQueryable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainStoreQueryable.swift; sourceTree = "<group>"; };
 		61FAD08E24F0248D006132BF /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
-		61FAD09024F075DF006132BF /* CheckGetUsernameStored.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckGetUsernameStored.swift; sourceTree = "<group>"; };
+		61FAD09024F075DF006132BF /* CheckGetStoredData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckGetStoredData.swift; sourceTree = "<group>"; };
 		61FAD09224F07656006132BF /* UserAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAccount.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -119,11 +121,12 @@
 		611AE3E124EFA20F00AB3099 /* PizzaAppDelivery */ = {
 			isa = PBXGroup;
 			children = (
+				61DB60E124F3A933001A6973 /* Supporting Views */,
 				61BDDCBF24EFE89800CA1FC6 /* Keychain */,
 				61BDDCBE24EFB5FF00CA1FC6 /* Data */,
-				61FAD08D24F02462006132BF /* LoginPage */,
-				61E120CD24F16A3000B27041 /* HomeView.swift */,
-				611AE3E424EFA20F00AB3099 /* ContentView.swift */,
+				611AE3E424EFA20F00AB3099 /* StartViewRedirector.swift */,
+				61593EA824F3A595007B1487 /* HomeView.swift */,
+				61FAD08E24F0248D006132BF /* LoginView.swift */,
 				611AE3E224EFA20F00AB3099 /* PizzaAppDeliveryApp.swift */,
 				61E120C624F15DF100B27041 /* UserData+CoreDataClass.swift */,
 				61E120C724F15DF100B27041 /* UserData+CoreDataProperties.swift */,
@@ -165,7 +168,7 @@
 			isa = PBXGroup;
 			children = (
 				61BDDCBC24EFB5F500CA1FC6 /* DownloadOrders.swift */,
-				61FAD09024F075DF006132BF /* CheckGetUsernameStored.swift */,
+				61FAD09024F075DF006132BF /* CheckGetStoredData.swift */,
 				61FAD09224F07656006132BF /* UserAccount.swift */,
 				61E120CF24F1A38300B27041 /* CheckCorrectLogin.swift */,
 			);
@@ -182,12 +185,12 @@
 			path = Keychain;
 			sourceTree = "<group>";
 		};
-		61FAD08D24F02462006132BF /* LoginPage */ = {
+		61DB60E124F3A933001A6973 /* Supporting Views */ = {
 			isa = PBXGroup;
 			children = (
-				61FAD08E24F0248D006132BF /* LoginView.swift */,
+				61DB60DE24F3A90B001A6973 /* PizzaCollectionView.swift */,
 			);
-			path = LoginPage;
+			path = "Supporting Views";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -321,18 +324,19 @@
 			buildActionMask = 2147483647;
 			files = (
 				61E120C924F15DF100B27041 /* UserData+CoreDataProperties.swift in Sources */,
-				61E120CE24F16A3000B27041 /* HomeView.swift in Sources */,
+				61DB60DF24F3A90B001A6973 /* PizzaCollectionView.swift in Sources */,
+				61593EA924F3A595007B1487 /* HomeView.swift in Sources */,
 				61BDDCBD24EFB5F500CA1FC6 /* DownloadOrders.swift in Sources */,
 				61E120D024F1A38300B27041 /* CheckCorrectLogin.swift in Sources */,
 				61FAD08F24F0248D006132BF /* LoginView.swift in Sources */,
 				61E120C824F15DF100B27041 /* UserData+CoreDataClass.swift in Sources */,
-				611AE3E524EFA20F00AB3099 /* ContentView.swift in Sources */,
+				611AE3E524EFA20F00AB3099 /* StartViewRedirector.swift in Sources */,
 				61BDDCC524EFEC8200CA1FC6 /* KeychainStoreErrors.swift in Sources */,
 				611AE3E324EFA20F00AB3099 /* PizzaAppDeliveryApp.swift in Sources */,
 				61FAD08C24F00EFE006132BF /* KeychainStoreQueryable.swift in Sources */,
 				61BDDCC124EFE8C100CA1FC6 /* KeychainStore.swift in Sources */,
 				61FAD09324F07656006132BF /* UserAccount.swift in Sources */,
-				61FAD09124F075DF006132BF /* CheckGetUsernameStored.swift in Sources */,
+				61FAD09124F075DF006132BF /* CheckGetStoredData.swift in Sources */,
 				61E120CC24F1677A00B27041 /* Model.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -28,7 +28,6 @@ func checkCorrectLogin(username: String, password: String) -> Bool {
         var loginExistsReturnData: loginExistsReturn
         
         do {
-            print(String(data: data!, encoding: .utf8)!)
             loginExistsReturnData = try jsonDecoder.decode(loginExistsReturn.self, from: data!)
         } catch {
             fatalError("Couldn't parse return JSON data from server while checking if the user exists. \(error)")
@@ -43,6 +42,12 @@ func checkCorrectLogin(username: String, password: String) -> Bool {
     
     checkTask.resume()
     semaphore.wait()
+    
+    if loginExists {
+        print("Login for username \(username) is valid.")
+    } else {
+        print("Login for username \(username) is not valid.")
+    }
     
     return loginExists
 }

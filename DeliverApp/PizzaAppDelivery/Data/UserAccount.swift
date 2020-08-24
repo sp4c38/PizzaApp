@@ -9,36 +9,28 @@ import CoreData
 import Foundation
 import SwiftUI
 
-func verifyAccountStored(usernames: FetchedResults<UserData>, keychainStore: KeychainStore) -> String? {
-    let usernameStored = checkGetUsernameStored(usernames: usernames)
-    let passwordStored: Bool
+func verifyAccountStored(usernameStored: String, keychainStore: KeychainStore) -> Bool {
+    print("Checked if username and password are valid.")
     
-    if usernameStored != nil {
-        // Account is stored
-        // don't need to login
+    let passwordStored: String?
+    
+    passwordStored = checkGetPasswordStored(username: usernameStored, keychainStore: keychainStore)
         
-        do {
-            passwordStored = try keychainStore.checkExistsValue(for: usernameStored!)
-        } catch {
-            fatalError("Could not read password from keychain.")
-        }
-        
-        if passwordStored{
-            return usernameStored
+    if passwordStored != nil {
+        if checkCorrectLogin(username: usernameStored, password: passwordStored!) {
+            return true
         } else {
-            // This should normally not be run because it would mean that a username is stored but no password for the username is stored
-            fatalError("A username is stored but has no stored password")
-            //return nil
+            // Login details aren't valid anymore
+            return false
         }
     } else {
-        // No account is yet logged-in
-        // need to log in an account
-        
-        return nil
+        // This should normally not occur because it would mean that a username is stored but no password for the username is stored
+        fatalError("A username is stored but has no stored password")
+        //return nil
     }
 }
 
-func saveAccount(username: String, password: String, managedObjectContext: NSManagedObjectContext, keychainStore: KeychainStore) -> Bool {
+func checkAndSaveAccount(username: String, password: String, managedObjectContext: NSManagedObjectContext, keychainStore: KeychainStore) -> Bool {
     if checkCorrectLogin(username: username, password: password) {
         let loggedinAccount = UserData(context: managedObjectContext) // Register an entry for only the username as an UserData CoreData entry
         loggedinAccount.username = username

@@ -1,20 +1,41 @@
 //
-//  MainView.swift
+//  HomeView.swift
 //  PizzaAppDelivery
 //
-//  Created by Léon Becker on 22.08.20.
+//  Created by Léon Becker on 24.08.20.
 //
 
 import SwiftUI
 
-struct MainView: View {
+struct HomeView: View {
+    @Environment(\.keychainStore) var keychainStore
+    @EnvironmentObject var username: UsernameData
+    @FetchRequest(fetchRequest: BlogIdea.allIdeasFetchRequest()) var fetchedUserData: FetchedResults<BlogIdea>
+    
+    
+    var cake = NSFetchRequest()
+//
+//    var orders = Bool()
+//
+//    init() {
+//        self.orders = downloadOrders(username: username.username, keychainStore: keychainStore)
+//    }
+    
     var body: some View {
-        Text("Hello, World!")
+        print(fetchedUserData)
+        return ScrollView() {
+            Text("Pizza Bestellungen")
+                .bold()
+                .font(.title)
+            
+            Spacer()
+        }
+        .padding()
     }
 }
 
-struct MainView_Previews: PreviewProvider {
+struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
-        MainView()
+        HomeView()
     }
 }
