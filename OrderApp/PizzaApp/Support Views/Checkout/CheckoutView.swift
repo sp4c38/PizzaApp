@@ -13,11 +13,11 @@ struct PaymentMethod: Identifiable {
 }
 
 class OrderDetails: ObservableObject {
-    @Published var firstname: String = "dmkwd" // First name of the customer
-    @Published var lastname: String = "edfkow" // Last name of the customer
-    @Published var street: String = "ekfoef" // Name of the street the customer lives on
-    @Published var city: String = "oekokfef" // City or village the customer lives in
-    @Published var postalCode: String = "2932" // Postalcode of the city or village. This is treated as a String because it otherwise can't be used on TextField's
+    @Published var firstname: String = "" // First name of the customer
+    @Published var lastname: String = "" // Last name of the customer
+    @Published var street: String = "" // Name of the street the customer lives on
+    @Published var city: String = "" // City or village the customer lives in
+    @Published var postalCode: String = "" // Postalcode of the city or village. This is treated as a String because it otherwise can't be used on TextField's
     
     let paymentMethods: [PaymentMethod] = [PaymentMethod(id: 1, name: "Vor Ort in Bar"), PaymentMethod(id: 2, name: "Mit Karte")]
     

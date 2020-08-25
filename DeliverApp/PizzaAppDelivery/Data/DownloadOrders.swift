@@ -46,7 +46,6 @@ func downloadOrders(username: String, keychainStore: KeychainStore) -> OrderData
             let jsonDecoder = JSONDecoder()
             
             do {
-                print(String(data: data!, encoding: .utf8)!)
                 responseData = try jsonDecoder.decode(OrderData.self, from: data!)
             } catch {
                 fatalError("Couldn't download orders. \(error)")

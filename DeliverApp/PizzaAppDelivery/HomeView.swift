@@ -16,28 +16,44 @@ struct HomeView: View {
     @State var orders: OrderData?
     
     var body: some View {
-        return ScrollView() {
-            Text("Pizza Bestellungen")
-                .bold()
-                .font(.title)
-            
-            Button(action: {
-                orders = downloadOrders(username: username.username, keychainStore: keychainStore)
-            }) {
-                Text("Bestellungen herunterladen")
-            }
-            
-            if orders != nil {
-                ForEach(orders!.orders, id: \.self) { order in
-                    Text(order.street)
+        NavigationView {
+            VStack {
+                Text("Pizza Bestellungen")
+                    .bold()
+                    .font(.title)
+                    .padding()
+                
+                Button(action: {
+                    print()
+                    orders = downloadOrders(username: username.username, keychainStore: keychainStore)
+                }) {
+                    Text("Bestellungen aktualisieren")
+                        .bold()
+                        .foregroundColor(Color.white)
+                }.buttonStyle(RefreshButtonStyle())
+                
+                if orders != nil && ((orders != nil) ? !(orders!.orders.isEmpty) : false) {
+                    ScrollView(showsIndicators: false) {
+                        VStack(alignment: .center, spacing: 20) {
+                            ForEach(orders!.orders, id: \.self) { order in
+                                NavigationLink(destination: OrderInfoView(order: order)) {
+                                    OrderCollectionView(order: order)
+                                        .padding(.leading, 20)
+                                        .padding(.trailing, 20)
+                                }
+                            }
+                        }.padding(.top, 20)
+                    }
+                } else {
+                    Spacer()
+                    Text("🍕 Es gibt momentan keine Bestellungen.")
+                        .font(.title)
+                        .multilineTextAlignment(.center)
+                    Spacer()
                 }
             }
-            
-            Spacer()
-            
-            
+            .navigationBarHidden(true)
         }
-        .padding()
     }
 }
 

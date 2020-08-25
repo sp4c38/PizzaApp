@@ -78,7 +78,7 @@ struct HomeView: View {
                     }.padding()
                 }
             }
-            .navigationBarTitle("Pizzen")
+            .navigationBarTitle("Pizza Paulo")
             .navigationBarItems(trailing:
                 NavigationLink (destination: ShoppingCartView().environment(\.managedObjectContext, managedObjectContext)) {
                     HStack {
@@ -87,6 +87,7 @@ struct HomeView: View {
                     }
                 }
             )
+            .navigationBarBackButtonHidden(true)
         }
     }
 }
