@@ -31,7 +31,7 @@ func checkCorrectLogin(username: String, password: String) -> Bool {
             loginExistsReturnData = try jsonDecoder.decode(loginExistsReturn.self, from: data!)
         } catch {
             fatalError("Couldn't parse return JSON data from server while checking if the user exists. \(error)")
-        }
+        }   
         
         if loginExistsReturnData.user_exists == true {
             loginExists = true

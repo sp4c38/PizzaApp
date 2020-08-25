@@ -13,14 +13,29 @@ struct HomeView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @EnvironmentObject var username: UsernameData
     
+    @State var orders: OrderData?
+    
     var body: some View {
         return ScrollView() {
             Text("Pizza Bestellungen")
                 .bold()
                 .font(.title)
             
+            Button(action: {
+                orders = downloadOrders(username: username.username, keychainStore: keychainStore)
+            }) {
+                Text("Bestellungen herunterladen")
+            }
+            
+            if orders != nil {
+                ForEach(orders!.orders, id: \.self) { order in
+                    Text(order.street)
+                }
+            }
+            
             Spacer()
-            Text(username.username)
+            
+            
         }
         .padding()
     }
@@ -28,6 +43,8 @@ struct HomeView: View {
 
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
-        HomeView()
+        return Group {
+            HomeView()
+        }
     }
 }

@@ -35,7 +35,6 @@ extension EnvironmentValues {
 struct PizzaAppDeliveryApp: App {
     var body: some Scene {
         let persistence = PersistenceManager()
-        print("roll along")
         let context = persistence.persistentContainer.viewContext
         
         let queryType = PasswordQueryable(service: "UserAccountService")

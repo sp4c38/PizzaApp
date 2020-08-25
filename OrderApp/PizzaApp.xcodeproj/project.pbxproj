@@ -133,13 +133,6 @@
 			path = ShoppingCart;
 			sourceTree = "<group>";
 		};
-		616E097224E6B2E2009410A4 /* Assets */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Assets;
-			sourceTree = "<group>";
-		};
 		6170495324E56D9300D83587 /* Data */ = {
 			isa = PBXGroup;
 			children = (
@@ -176,7 +169,6 @@
 		617E133C24E5660800C0337F /* PizzaApp */ = {
 			isa = PBXGroup;
 			children = (
-				616E097224E6B2E2009410A4 /* Assets */,
 				6170495324E56D9300D83587 /* Data */,
 				61E224BF24E56B9A00A10F87 /* Support Views */,
 				617E136A24E568FA00C0337F /* PizzaApp.swift */,

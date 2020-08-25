@@ -26,7 +26,7 @@ struct ContentView: View {
         entity: UserData.entity(),
         sortDescriptors: []) var usernamesResult: FetchedResults<UserData>
 
-    var username = UsernameData()
+    @ObservedObject var username = UsernameData()
 
     var body: some View {
         let checkUsername = checkGetUsernameStored(usernames: usernamesResult)
