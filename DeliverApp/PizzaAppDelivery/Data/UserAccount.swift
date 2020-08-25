@@ -10,7 +10,7 @@ import Foundation
 import SwiftUI
 
 func verifyAccountStored(usernameStored: String, keychainStore: KeychainStore) -> Bool {
-    print("Checked if username and password are valid.")
+    print("Checked if username and password are valid logins.")
     
     let passwordStored: String?
     

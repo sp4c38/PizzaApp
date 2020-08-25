@@ -1,14 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="17189" systemVersion="19G2021" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
-    <entity name="BlogIdea" representedClassName="BlogIdea" syncable="YES">
-        <attribute name="ideaDescription" optional="YES" attributeType="String"/>
-        <attribute name="ideaTitle" optional="YES" attributeType="String"/>
-    </entity>
     <entity name="UserData" representedClassName="UserData" syncable="YES">
         <attribute name="username" optional="YES" attributeType="String"/>
     </entity>
     <elements>
         <element name="UserData" positionX="-36" positionY="9" width="128" height="58"/>
-        <element name="BlogIdea" positionX="-36" positionY="18" width="128" height="73"/>
     </elements>
 </model>
