@@ -7,6 +7,16 @@
 
 import SwiftUI
 
+struct DisplayPizza: Hashable {
+    // struct holding information about a single ordered pizza to display it with all information (not just the id and size index) which is required for displaying a ordered pizza
+
+    var name: String
+    var imageName: String
+    var sizeIndex: Int8
+    var price: Double
+    var ingredientDescription: String
+}
+
 struct OrderInfoView: View {
     var order: SingleOrder
     var numberFormatter: NumberFormatter {
@@ -14,7 +24,29 @@ struct OrderInfoView: View {
         numberFormatter.numberStyle = NumberFormatter.Style.none
         return numberFormatter
     }
+    var resolvePizzaIds = [Int32]()
+    var allPizzasOrderedResolved = [DisplayPizza]()
     
+    init(order: SingleOrder) {
+        self.order = order
+        
+        for pizza in order.pizzasOrdered {
+            resolvePizzaIds.append(pizza.pizzaId)
+        }
+        
+        for pizza in pizzaCatalog.pizzas {
+            if resolvePizzaIds.contains(pizza.id) {
+                let newDisplayPizza = DisplayPizza(
+                    name: pizza.name,
+                    imageName: pizza.imageName,
+                    sizeIndex: 0,
+                    price: pizza.prices[0],
+                    ingredientDescription: pizza.ingredientDescription)
+                
+                allPizzasOrderedResolved.append(newDisplayPizza)
+            }
+        }
+    }
     
     var body: some View {
         ScrollView {
@@ -70,6 +102,10 @@ struct OrderInfoView: View {
                             Text("Mit Karte")
                                 .minimumScaleFactor(0.9)
                         }
+                    }
+                    
+                    ForEach(allPizzasOrderedResolved, id: \.self) { pizza in
+                        Text(String(pizza.name))
                     }
                 }
             }

@@ -7,4 +7,4 @@
 
 import Foundation
 
-var PizzaData: PizzaInfo = downloadPizzaData(url: "https://www.space8.me/resources/allPizzas.json")
+var PizzaData: PizzaInfo = downloadPizzaData(url: "https://www.space8.me:7392/pizzaapp/static/allPizzas.json")
