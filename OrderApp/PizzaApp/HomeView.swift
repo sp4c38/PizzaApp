@@ -80,15 +80,15 @@ struct HomeView: View {
             }
             .navigationBarTitle("Pizza Paulo")
             .navigationBarItems(trailing:
-                NavigationLink (destination: ShoppingCartView().environment(\.managedObjectContext, managedObjectContext)) {
+                NavigationLink(destination: ShoppingCartView().environment(\.managedObjectContext, managedObjectContext)) {
                     HStack {
                         Text("Warenkorb")
                         Image(systemName: "cart")
                     }
                 }
             )
-            .navigationBarBackButtonHidden(true)
         }
+        .navigationBarHidden(true) // hides the navigation bar when comming from the checkout view
     }
 }
 

@@ -16,7 +16,7 @@ func checkoutValidateFields(_ orderDetails: OrderDetails) -> (Bool, String) {
                         if 1...5 ~= orderDetails.postalCode.count {
                             return (true, "")
                         } else {
-                            return (false, "Ihr Postleitzahl darf höchstens 5 Ziffern lang sein")
+                            return (false, "Ihre Postleitzahl darf höchstens 5 Ziffern lang sein")
                         }
                     } else {
                         return (false, "Ihr Stadtname muss zwischen 2 und 30 Buchstaben lang sein")

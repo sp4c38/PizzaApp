@@ -23,14 +23,20 @@ struct PizzaCollectionView: View {
                 .resizable()
                 .scaledToFit()
             
-            VStack(alignment: .leading, spacing: 5) {
-                Text("Pizza \(pizza.name)")
-                    .font(.title2)
-                    .bold()
-                    .multilineTextAlignment(.center)
-                    .shadow(radius: 4)
-                    .padding(.bottom, 10)
-            
+            VStack(alignment: .center, spacing: 5) {
+                VStack(alignment: .center, spacing: 0) {
+                    Text("Pizza \(pizza.name)")
+                        .font(.title2)
+                        .bold()
+                        .multilineTextAlignment(.center)
+                        .shadow(radius: 4)
+                    
+                    Text(pizza.ingredientDescription)
+                        .font(.caption)
+                        .multilineTextAlignment(.center)
+                        .shadow(radius: 4)
+                }.padding(.bottom, 10)
+                
                 HStack {
                     Text("Größe:")
                         .font(.title3)

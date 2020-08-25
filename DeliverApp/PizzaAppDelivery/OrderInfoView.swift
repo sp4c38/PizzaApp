@@ -49,7 +49,7 @@ struct OrderInfoView: View {
     }
     
     var body: some View {
-        ScrollView {
+        ScrollView(showsIndicators: false) {
             VStack(alignment: .center, spacing: 30) {
                 Image("LoginPizzaImage")
                     .resizable()
@@ -104,9 +104,21 @@ struct OrderInfoView: View {
                         }
                     }
                     
-                    ForEach(allPizzasOrderedResolved, id: \.self) { pizza in
-                        Text(String(pizza.name))
+                    NavigationLink(destination: InvoiceView(order: order, allPizzas: allPizzasOrderedResolved)) {
+                        Text("Rechnung einsehen")
+                            .bold()
+                        Spacer()
                     }
+                    
+                    
+                    VStack {
+                        ForEach(allPizzasOrderedResolved, id: \.self) { pizza in
+                            PizzaCollectionView(pizza: pizza)
+                                .padding(.leading, 16)
+                                .padding(.trailing, 16)
+                                .padding(.bottom, 5)
+                        }
+                    }.padding(.top, 25)
                 }
             }
             .padding()

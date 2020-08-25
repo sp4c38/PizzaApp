@@ -13,6 +13,7 @@
 		611AE3EA24EFA21100AB3099 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 611AE3E924EFA21100AB3099 /* Preview Assets.xcassets */; };
 		611AE3F524EFA21100AB3099 /* PizzaAppDeliveryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 611AE3F424EFA21100AB3099 /* PizzaAppDeliveryTests.swift */; };
 		611AE40024EFA21100AB3099 /* PizzaAppDeliveryUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 611AE3FF24EFA21100AB3099 /* PizzaAppDeliveryUITests.swift */; };
+		6155D57124F5892B005C108C /* InvoiceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6155D57024F5892B005C108C /* InvoiceView.swift */; };
 		61593EA924F3A595007B1487 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61593EA824F3A595007B1487 /* HomeView.swift */; };
 		61BDDCBD24EFB5F500CA1FC6 /* DownloadOrders.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61BDDCBC24EFB5F500CA1FC6 /* DownloadOrders.swift */; };
 		61BDDCC124EFE8C100CA1FC6 /* KeychainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61BDDCC024EFE8C100CA1FC6 /* KeychainStore.swift */; };
@@ -62,6 +63,7 @@
 		611AE3FB24EFA21100AB3099 /* PizzaAppDeliveryUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PizzaAppDeliveryUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		611AE3FF24EFA21100AB3099 /* PizzaAppDeliveryUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PizzaAppDeliveryUITests.swift; sourceTree = "<group>"; };
 		611AE40124EFA21100AB3099 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		6155D57024F5892B005C108C /* InvoiceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvoiceView.swift; sourceTree = "<group>"; };
 		61593EA824F3A595007B1487 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		61BDDCBC24EFB5F500CA1FC6 /* DownloadOrders.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadOrders.swift; sourceTree = "<group>"; };
 		61BDDCC024EFE8C100CA1FC6 /* KeychainStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainStore.swift; sourceTree = "<group>"; };
@@ -135,6 +137,7 @@
 				611AE3E424EFA20F00AB3099 /* StartViewRedirector.swift */,
 				61593EA824F3A595007B1487 /* HomeView.swift */,
 				61C523CD24F53C5E007782B4 /* OrderInfoView.swift */,
+				6155D57024F5892B005C108C /* InvoiceView.swift */,
 				61FAD08E24F0248D006132BF /* LoginView.swift */,
 				611AE3E224EFA20F00AB3099 /* PizzaAppDeliveryApp.swift */,
 				61E120C624F15DF100B27041 /* UserData+CoreDataClass.swift */,
@@ -339,6 +342,7 @@
 				61DB60DF24F3A90B001A6973 /* OrderCollectionView.swift in Sources */,
 				61C523D024F564EF007782B4 /* PizzaCatalog.swift in Sources */,
 				61593EA924F3A595007B1487 /* HomeView.swift in Sources */,
+				6155D57124F5892B005C108C /* InvoiceView.swift in Sources */,
 				61C523CE24F53C5E007782B4 /* OrderInfoView.swift in Sources */,
 				61BDDCBD24EFB5F500CA1FC6 /* DownloadOrders.swift in Sources */,
 				61E120D024F1A38300B27041 /* CheckCorrectLogin.swift in Sources */,

@@ -13,11 +13,11 @@ struct PaymentMethod: Identifiable {
 }
 
 class OrderDetails: ObservableObject {
-    @Published var firstname: String = "" // First name of the customer
-    @Published var lastname: String = "" // Last name of the customer
-    @Published var street: String = "" // Name of the street the customer lives on
-    @Published var city: String = "" // City or village the customer lives in
-    @Published var postalCode: String = "" // Postalcode of the city or village. This is treated as a String because it otherwise can't be used on TextField's
+    @Published var firstname: String = "Vorname" // First name of the customer
+    @Published var lastname: String = "Nachname" // Last name of the customer
+    @Published var street: String = "Straße" // Name of the street the customer lives on
+    @Published var city: String = "Stadt" // City or village the customer lives in
+    @Published var postalCode: String = "39549" // Postalcode of the city or village. This is treated as a String because it otherwise can't be used on TextField's
     
     let paymentMethods: [PaymentMethod] = [PaymentMethod(id: 1, name: "Vor Ort in Bar"), PaymentMethod(id: 2, name: "Mit Karte")]
     
@@ -55,6 +55,8 @@ struct CheckoutView: View {
                                     .bold()
                                     .font(.title3)
                                     .multilineTextAlignment(.center)
+                                    .padding()
+                                    .fixedSize(horizontal: false, vertical: true)
                             }
                             .foregroundColor(Color.red)
                         }
@@ -164,8 +166,6 @@ struct CheckoutView: View {
                             .padding(.top, 10)
                             .padding(.leading, 30)
                             .padding(.trailing, 30)
-                            
-                            Spacer()
                         }
                     }
                     .navigationBarTitle("Kasse", displayMode: .inline)
