@@ -24,28 +24,48 @@ struct OrderInfoView: View {
         numberFormatter.numberStyle = NumberFormatter.Style.none
         return numberFormatter
     }
-    var resolvePizzaIds = [Int32]()
-    var allPizzasOrderedResolved = [DisplayPizza]()
+    
+    var unresolvedPizzas = [(Int32, Int8)]()
+    var allPizzasOrdered = [DisplayPizza]()
     
     init(order: SingleOrder) {
         self.order = order
         
-        for pizza in order.pizzasOrdered {
-            resolvePizzaIds.append(pizza.pizzaId)
+        for orderedPizza in order.pizzasOrdered {
+            unresolvedPizzas.append((orderedPizza.pizzaId, orderedPizza.sizeIndex))
         }
-        
+  
         for pizza in pizzaCatalog.pizzas {
-            if resolvePizzaIds.contains(pizza.id) {
-                let newDisplayPizza = DisplayPizza(
-                    name: pizza.name,
-                    imageName: pizza.imageName,
-                    sizeIndex: 0,
-                    price: pizza.prices[0],
-                    ingredientDescription: pizza.ingredientDescription)
-                
-                allPizzasOrderedResolved.append(newDisplayPizza)
+            if unresolvedPizzas.contains(where: {$0.0 == pizza.id}) {
+                for orderedPizza in unresolvedPizzas.filter({$0.0 == pizza.id}) {
+                    print("Iteration")
+                    let newDisplayPizza = DisplayPizza(
+                        name: pizza.name,
+                        imageName: pizza.imageName,
+                        sizeIndex: orderedPizza.1,
+                        price: pizza.prices[Int(orderedPizza.1)],
+                        ingredientDescription: pizza.ingredientDescription)
+                    
+                    allPizzasOrdered.append(newDisplayPizza)
+                }
             }
         }
+        
+//        for orderedPizza in order.pizzasOrdered {
+//            for pizza in pizzaCatalog.pizzas {
+//                print("Iteration")
+//                if orderedPizza.pizzaId == pizza.id {
+//                    let newDisplayPizza = DisplayPizza(
+//                        name: pizza.name,
+//                        imageName: pizza.imageName,
+//                        sizeIndex: orderedPizza.sizeIndex,
+//                        price: pizza.prices[Int(orderedPizza.sizeIndex)],
+//                        ingredientDescription: pizza.ingredientDescription)
+//
+//                    allPizzasOrdered.append(newDisplayPizza)
+//                }
+//            }
+//        }
     }
     
     var body: some View {
@@ -104,7 +124,7 @@ struct OrderInfoView: View {
                         }
                     }
                     
-                    NavigationLink(destination: InvoiceView(order: order, allPizzas: allPizzasOrderedResolved)) {
+                    NavigationLink(destination: InvoiceView(order: order, allPizzas: allPizzasOrdered)) {
                         Text("Rechnung einsehen")
                             .bold()
                         Spacer()
@@ -112,7 +132,7 @@ struct OrderInfoView: View {
                     
                     
                     VStack {
-                        ForEach(allPizzasOrderedResolved, id: \.self) { pizza in
+                        ForEach(allPizzasOrdered, id: \.self) { pizza in
                             PizzaCollectionView(pizza: pizza)
                                 .padding(.leading, 16)
                                 .padding(.trailing, 16)

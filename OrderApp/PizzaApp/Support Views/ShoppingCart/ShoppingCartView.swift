@@ -37,6 +37,7 @@ struct ShoppingCartView: View {
                                     .padding(.top, 20)
                             }
                         }
+                        .padding(.bottom, 15)
                     }
                 
                     NavigationLink(destination: CheckoutView()) {

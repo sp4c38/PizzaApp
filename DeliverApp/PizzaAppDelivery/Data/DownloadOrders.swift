@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SinglePizzaOrdered: Codable, Hashable {
     var pizzaId: Int32
-    var sizeIndex: Int16
+    var sizeIndex: Int8
 }
 
 struct SingleOrder: Codable, Hashable {
