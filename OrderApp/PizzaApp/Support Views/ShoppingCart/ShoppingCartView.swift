@@ -18,18 +18,10 @@ struct ShoppingCartView: View {
     var body: some View {
         return VStack(spacing: 0) {
             
-            if shoppingCart.isEmpty {
-                
-                Spacer()
-                Text("Dein Warenkorb ist noch leer. Suche dir eine Pizza aus! 🍕")
-                    .font(.title)
-                    .multilineTextAlignment(.center)
-                    .padding(30)
-                Spacer()
-            } else if !shoppingCart.isEmpty {
+            if !shoppingCart.isEmpty {
                 if !continueToCheckout {
                     ScrollView {
-                        VStack {
+                        VStack(spacing: 0) {
                             ForEach(shoppingCart) { storedPizza in
                                 PizzaCollectionShoppingCartView(shoppingCartItem: storedPizza)
                                     .padding(.leading, 40)
@@ -57,6 +49,28 @@ struct ShoppingCartView: View {
                     .padding(.top, 10)
                     .padding(.bottom, 10)
                 }
+            } else {
+                Spacer()
+                
+                VStack(spacing: 30) {
+                    Image(systemName: "multiply.circle")
+                        .resizable()
+                        .scaledToFit()
+                        .foregroundColor(Color.red)
+                        .frame(width: 50, height: 50)
+                    
+                    Text("Dein Warenkorb ist noch leer.\n\nSuche dir eine Pizza aus! 🍕")
+                        .font(.title)
+                        .multilineTextAlignment(.center)
+                }
+                .padding()
+                .background(Color.white)
+                .cornerRadius(7)
+                .overlay(RoundedRectangle(cornerRadius:7).stroke(Color.black, lineWidth: 1))
+                .padding(28)
+                .shadow(radius: 6)
+                
+                Spacer()
             }
         }
         .navigationBarTitle("Warenkorb", displayMode: .inline)

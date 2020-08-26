@@ -34,6 +34,7 @@ struct PizzaInfoView: View {
                 .lineLimit(2)
                 .multilineTextAlignment(.center)
                 .padding(.bottom, 10)
+                .padding(.top, 4)
 
             Text(pizza.ingredientDescription)
                 .font(.callout)

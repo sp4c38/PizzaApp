@@ -162,9 +162,14 @@ struct CheckoutView: View {
                                         
                                     if wasSuccessful {
                                         orderProperty.showOrderSuccessful = true
-                                        
                                         let newSavedOrder = Order(context: managedObjectContext)
-                                        let orders = StoreOrderConvertedData(allStoredPizzas: [StoredOrderedPizza(pizzaId: 394, pizzaSizeIndex: 0)])
+                                        var allOrderedPizzas = [StoredOrderedPizza]()
+                                        
+                                        for pizza in shoppingCartArray {
+                                            allOrderedPizzas.append(StoredOrderedPizza(pizzaId: pizza.pizzaId, pizzaSizeIndex: pizza.sizeIndex))
+                                        }
+                                        
+                                        let orders = StoredOrderData(allStoredPizzas: allOrderedPizzas)
                                         let encodedOrders: Data
                                         
                                         let jsonEncoder = JSONEncoder()

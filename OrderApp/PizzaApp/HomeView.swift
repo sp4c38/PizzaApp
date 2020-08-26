@@ -32,15 +32,6 @@ func packPizzas() -> [[Pizza]] {
     return output
 }
 
-struct StoredOrderedPizza: Codable {
-    var pizzaId: Int32
-    var pizzaSizeIndex: Int16
-}
-
-struct StoreOrderConvertedData: Codable {
-    var allStoredPizzas: [StoredOrderedPizza]
-}
-
 struct HomeView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @EnvironmentObject var orderProperty: OrderProperty

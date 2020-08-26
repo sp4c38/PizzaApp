@@ -8,6 +8,70 @@
 import SwiftUI
 import CoreData
 
+struct DisplayPizzaCollectionView: View {
+    var pizza: DisplayPizza
+    var numberFormatter: NumberFormatter {
+        let numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .currency
+        numberFormatter.locale = Locale(identifier: "de_De")
+        
+        return numberFormatter
+    }
+    
+    var body: some View {
+        VStack(alignment: .center, spacing: 0) {
+            Image(pizza.imageName)
+                .resizable()
+                .scaledToFit()
+            
+            VStack(alignment: .center, spacing: 5) {
+                VStack(alignment: .center, spacing: 0) {
+                    Text("Pizza \(pizza.name)")
+                        .font(.title2)
+                        .bold()
+                        .multilineTextAlignment(.center)
+                        .shadow(radius: 4)
+                    
+                    Text(pizza.ingredientDescription)
+                        .font(.caption)
+                        .multilineTextAlignment(.center)
+                        .shadow(radius: 4)
+                }.padding(.bottom, 10)
+                
+                HStack {
+                    Text("Größe:")
+                        .font(.title3)
+                        .bold()
+                    Spacer()
+                    Text(PizzaCatalog.info["sizes"]![Int(pizza.sizeIndex)])
+                        .font(.headline)
+                }
+                
+                HStack {
+                    Text("Preis:")
+                        .font(.title3)
+                        .bold()
+                    Spacer()
+                    Text(numberFormatter.string(from: NSNumber(value: pizza.price))!)
+                        .font(.headline)
+                }
+            }
+            .padding(.leading, 20)
+            .padding(.trailing, 20)
+            .padding(.bottom, 10)
+            .padding(.top, 10)
+            .background(Color(hue: 0.9916, saturation: 0.9689, brightness: 0.8824))
+            .foregroundColor(Color.white)
+        }
+        .cornerRadius(10)
+        .overlay(
+            RoundedRectangle(cornerRadius: 10)
+                .stroke(Color.white, lineWidth: 7)
+        )
+        .shadow(radius: 5)
+    }
+}
+
 struct PizzaCollectionShoppingCartView: View {
     // A single pizza box which is shown in the shopping cart view
     @Environment(\.managedObjectContext) var managedObjectContext
