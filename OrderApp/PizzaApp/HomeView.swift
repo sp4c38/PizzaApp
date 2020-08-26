@@ -18,10 +18,10 @@ func packPizzas() -> [[Pizza]] {
     var output = [[Pizza]]()
     var currentIndex = 0
 
-    for pizza in PizzaData.pizzas {
+    for pizza in PizzaCatalog.pizzas {
         currentIndex += 1
-        if !(currentIndex + 1 > PizzaData.pizzas.count) {
-            output.append([pizza, PizzaData.pizzas[currentIndex + 1]])
+        if !(currentIndex + 1 > PizzaCatalog.pizzas.count) {
+            output.append([pizza, PizzaCatalog.pizzas[currentIndex + 1]])
             currentIndex += 2
         } else {
             output.append([pizza])
@@ -60,15 +60,15 @@ struct HomeView: View {
                 ForEach(packedPizzas, id: \.self) { pizza in
                     HStack(spacing: 20) {
                         if pizza.count > 1 {
-                            NavigationLink(destination: PizzaInfoView(info: PizzaData.info, pizza: pizza[0])) {
+                            NavigationLink(destination: PizzaInfoView(info: PizzaCatalog.info, pizza: pizza[0])) {
                                 PizzaCollectionView(pizza: pizza[0])
                             }
 
-                            NavigationLink(destination: PizzaInfoView(info: PizzaData.info, pizza:  pizza[1])) {
+                            NavigationLink(destination: PizzaInfoView(info: PizzaCatalog.info, pizza:  pizza[1])) {
                                 PizzaCollectionView(pizza: pizza[1])
                             }
                         } else if !(pizza.count > 1) {
-                            NavigationLink(destination: PizzaInfoView(info: PizzaData.info, pizza:  pizza[0])) {
+                            NavigationLink(destination: PizzaInfoView(info: PizzaCatalog.info, pizza:  pizza[0])) {
                                 PizzaCollectionView(pizza: pizza[0])
                             }
                             .padding(.leading, 78)

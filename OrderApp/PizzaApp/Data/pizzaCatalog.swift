@@ -6,8 +6,9 @@
 //
 
 import Foundation
-import UIKit
 import SwiftUI
+
+var PizzaCatalog: CatalogInfo = downloadPizzaData(url: "https://www.space8.me:7392/pizzaapp/static/allPizzas.json")
 
 struct Pizza: Codable, Hashable {
     var id: Int32
@@ -20,7 +21,7 @@ struct Pizza: Codable, Hashable {
     var ingredientDescription: String
 }
 
-struct PizzaInfo: Codable {
+struct CatalogInfo: Codable {
     var info: [String: [String]]
     var pizzas: [Pizza]
 }

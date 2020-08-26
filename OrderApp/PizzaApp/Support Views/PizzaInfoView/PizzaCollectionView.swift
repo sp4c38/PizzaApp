@@ -92,7 +92,7 @@ struct PizzaCollectionShoppingCartView: View {
                             .font(.title3)
                             .bold()
                         Spacer()
-                        Text(PizzaData.info["sizes"]![Int(shoppingCartItem.sizeIndex)])
+                        Text(PizzaCatalog.info["sizes"]![Int(shoppingCartItem.sizeIndex)])
                             .font(.headline)
                     }
                     
@@ -157,8 +157,8 @@ struct PizzaCollectionView: View {
 struct PizzaCollection_Previews: PreviewProvider {
     static var previews: some View {
         HStack(spacing: 20) {
-            PizzaCollectionView(pizza: PizzaData.pizzas[0])
-            PizzaCollectionView(pizza: PizzaData.pizzas[0])
+            PizzaCollectionView(pizza: PizzaCatalog.pizzas[0])
+            PizzaCollectionView(pizza: PizzaCatalog.pizzas[0])
         }.padding()
     }
 }

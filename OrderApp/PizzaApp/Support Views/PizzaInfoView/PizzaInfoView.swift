@@ -15,7 +15,7 @@ struct PizzaInfoView: View {
     var pizza: Pizza
 
     var body: some View {
-        ScrollView {
+        ScrollView(showsIndicators: false) {
             VStack {
                 pizza.image
                     .resizable()
@@ -64,16 +64,15 @@ struct PizzaInfoView: View {
                 .padding(.bottom, 10) // Padding to the button because of the notch
             }
         }
-        .edgesIgnoringSafeArea(.top)
         .navigationViewStyle(StackNavigationViewStyle())
-        
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 
 struct PizzaInfo_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            PizzaInfoView(info: PizzaData.info, pizza: PizzaData.pizzas[0])
+            PizzaInfoView(info: PizzaCatalog.info, pizza: PizzaCatalog.pizzas[0])
         }
     }
 }

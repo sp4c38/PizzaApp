@@ -49,6 +49,6 @@ struct PricesView: View {
 
 struct PricesView_Previews: PreviewProvider {
     static var previews: some View {
-        PizzaInfoView(info: PizzaData.info, pizza: PizzaData.pizzas[0])
+        PizzaInfoView(info: PizzaCatalog.info, pizza: PizzaCatalog.pizzas[0])
     }
 }

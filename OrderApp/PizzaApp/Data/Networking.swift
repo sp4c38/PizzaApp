@@ -7,7 +7,7 @@
 
 import Foundation
 
-func downloadPizzaData(url: String) -> PizzaInfo {
+func downloadPizzaData(url: String) -> CatalogInfo {
     // Download pizza data from the server
     // This will run synchronous because this data is absolutely needed to continue the workflow of the program
     
@@ -18,7 +18,7 @@ func downloadPizzaData(url: String) -> PizzaInfo {
     request.httpBody = "".data(using: .utf8)
     
     let semaphore: DispatchSemaphore = DispatchSemaphore(value: 0)
-    var outputData: PizzaInfo?
+    var outputData: CatalogInfo?
         
     let task = URLSession.shared.dataTask(with: request, completionHandler: {data, response, error in
         if let error = error {
@@ -28,7 +28,7 @@ func downloadPizzaData(url: String) -> PizzaInfo {
         let jsonDecoder = JSONDecoder()
         if let data = data {
             do {
-                let jsonDict = try jsonDecoder.decode(PizzaInfo.self, from: data)
+                let jsonDict = try jsonDecoder.decode(CatalogInfo.self, from: data)
                 outputData = jsonDict
             } catch {
                 fatalError("Couldn't parse Pizza Info JSON Data. Error: \(error)")

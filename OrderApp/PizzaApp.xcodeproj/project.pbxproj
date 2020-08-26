@@ -15,8 +15,7 @@
 		6126B03E24E7E91A008FD5B4 /* PizzaApp.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 6126B03C24E7E91A008FD5B4 /* PizzaApp.xcdatamodeld */; };
 		612731D524E7F6BE0046E68C /* ShoppingCartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 612731D424E7F6BE0046E68C /* ShoppingCartView.swift */; };
 		6139D41924E6E1D100DCBEFA /* AddToCartButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6139D41824E6E1D100DCBEFA /* AddToCartButton.swift */; };
-		6170495524E56DA700D83587 /* allData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6170495424E56DA700D83587 /* allData.swift */; };
-		6170495724E5700B00D83587 /* PizzaData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6170495624E5700B00D83587 /* PizzaData.swift */; };
+		6170495724E5700B00D83587 /* pizzaCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6170495624E5700B00D83587 /* pizzaCatalog.swift */; };
 		617E134224E5660A00C0337F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 617E134124E5660A00C0337F /* Assets.xcassets */; };
 		617E134524E5660A00C0337F /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 617E134424E5660A00C0337F /* Preview Assets.xcassets */; };
 		617E135024E5660B00C0337F /* PizzaAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 617E134F24E5660B00C0337F /* PizzaAppTests.swift */; };
@@ -58,8 +57,7 @@
 		6126B03D24E7E91A008FD5B4 /* PizzaApp.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = PizzaApp.xcdatamodel; sourceTree = "<group>"; };
 		612731D424E7F6BE0046E68C /* ShoppingCartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingCartView.swift; sourceTree = "<group>"; };
 		6139D41824E6E1D100DCBEFA /* AddToCartButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddToCartButton.swift; sourceTree = "<group>"; };
-		6170495424E56DA700D83587 /* allData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = allData.swift; sourceTree = "<group>"; };
-		6170495624E5700B00D83587 /* PizzaData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PizzaData.swift; sourceTree = "<group>"; };
+		6170495624E5700B00D83587 /* pizzaCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = pizzaCatalog.swift; sourceTree = "<group>"; };
 		617E133A24E5660800C0337F /* PizzaApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PizzaApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		617E134124E5660A00C0337F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		617E134424E5660A00C0337F /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
@@ -136,8 +134,7 @@
 		6170495324E56D9300D83587 /* Data */ = {
 			isa = PBXGroup;
 			children = (
-				6170495424E56DA700D83587 /* allData.swift */,
-				6170495624E5700B00D83587 /* PizzaData.swift */,
+				6170495624E5700B00D83587 /* pizzaCatalog.swift */,
 				61BFB48424EAE7E60034130F /* Networking.swift */,
 				61C7014424EE584C00EDBE45 /* CheckoutValidateFields.swift */,
 			);
@@ -359,7 +356,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				61F4C5FA24E80B1700280F52 /* CheckoutButton.swift in Sources */,
-				6170495724E5700B00D83587 /* PizzaData.swift in Sources */,
+				6170495724E5700B00D83587 /* pizzaCatalog.swift in Sources */,
 				617E136B24E568FA00C0337F /* PizzaApp.swift in Sources */,
 				61B1374E24E702E800BE1CBE /* PizzaCollectionView.swift in Sources */,
 				6126B03E24E7E91A008FD5B4 /* PizzaApp.xcdatamodeld in Sources */,
@@ -375,7 +372,6 @@
 				612731D524E7F6BE0046E68C /* ShoppingCartView.swift in Sources */,
 				6104F03B24EA459E008C7A05 /* ShoppingCartItem+CoreDataClass.swift in Sources */,
 				61C7014524EE584C00EDBE45 /* CheckoutValidateFields.swift in Sources */,
-				6170495524E56DA700D83587 /* allData.swift in Sources */,
 				6100991624EEC0DA0010FAC7 /* OrdersView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
