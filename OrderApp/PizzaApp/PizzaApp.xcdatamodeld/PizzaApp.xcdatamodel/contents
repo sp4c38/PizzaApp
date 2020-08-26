@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="17183" systemVersion="19G2021" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="17189" systemVersion="19G2021" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Order" representedClassName="Order" syncable="YES">
+        <attribute name="city" optional="YES" attributeType="String"/>
+        <attribute name="firstname" optional="YES" attributeType="String"/>
+        <attribute name="lastname" optional="YES" attributeType="String"/>
+        <attribute name="paymentMethod" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="pizzasOrdered" optional="YES" attributeType="Binary"/>
+        <attribute name="postalCode" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="street" optional="YES" attributeType="String"/>
+    </entity>
     <entity name="ShoppingCartItem" representedClassName="ShoppingCartItem" syncable="YES">
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="pictureName" optional="YES" attributeType="String"/>
@@ -9,5 +18,6 @@
     </entity>
     <elements>
         <element name="ShoppingCartItem" positionX="-63" positionY="-18" width="128" height="118"/>
+        <element name="Order" positionX="-63" positionY="18" width="128" height="148"/>
     </elements>
 </model>

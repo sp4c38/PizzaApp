@@ -36,29 +36,32 @@ struct PricesView: View {
                 Text("Größen:")
                     .font(.title2)
                     .bold()
-                    .padding(.bottom, 5)
+                    .padding(.bottom, 10)
                 Spacer()
             }
             
-            VStack {
-                ForEach(info["sizes"]!, id: \.self) { size in
-                    let index = info["sizes"]!.firstIndex(of: size)
-                    
-                    HStack {
-                        Text(size)
-                        Spacer()
-                        Text("\(String(pizza.prices[index!])) €")
-                    }
-                    .padding(.bottom, 2)
-                    .padding(2)
-                    .padding(.leading, 3)
-                    .padding(.trailing, 3)
-                    .background((index! == selectedSizeIndex.wrappedValue) ? Color.blue : nil)
-                    .cornerRadius(4)
-                    .animation()
+            ForEach(info["sizes"]!, id: \.self) { size in
+                let index = info["sizes"]!.firstIndex(of: size)
+                HStack {
+                    Text(size)
+                        .foregroundColor(Color.white)
+                        .padding(.leading, (index! == selectedSizeIndex.wrappedValue) ?  5 : 0)
+                        .padding(.leading, (!(index! == selectedSizeIndex.wrappedValue) ? 0 : (!(size.count > 6) ? 0 : 5)))
+                        .scaleEffect((index! == selectedSizeIndex.wrappedValue) ? 1.2 : 1.0)
+                    Spacer()
+                    Text("\(String(pizza.prices[index!])) €")
+                        .foregroundColor(Color.white)
+                        .padding(.trailing, (index! == selectedSizeIndex.wrappedValue) ?  5: 0)
+                        .scaleEffect((index! == selectedSizeIndex.wrappedValue) ? 1.2 : 1.0)
                 }
+                .padding(.bottom, 4)
+                .padding(3)
+                .padding(.top, 2)
+                .padding(.leading, 3)
+                .padding(.trailing, 3)
+                .background((index! == selectedSizeIndex.wrappedValue) ? Color(hue: 1.0000, saturation: 0.5814, brightness: 0.9400) : nil)
+                .cornerRadius(4)
             }
-            .padding(.bottom, 10)
             
             Picker(selection: selectedSizeIndex, label: Text("Größe auswählen: ")) {
                 ForEach(sizeSelection, id: \.id) { size in
@@ -67,17 +70,17 @@ struct PricesView: View {
             }
             .frame(maxWidth: .infinity)
             .padding(-1)
+            .background(Color.white)
+            .cornerRadius(10)
             .overlay(
                 RoundedRectangle(cornerRadius: 10)
                     .stroke(Color.black, lineWidth: 2)
             )
             .pickerStyle(SegmentedPickerStyle())
-            .background(Color.white)
-            .cornerRadius(10)
             .scaleEffect(1.25)
-            .scaledToFit()
             .padding(.leading, 30)
             .padding(.trailing, 30)
+            .padding(.top, 15)
         }
         .frame(maxWidth: .infinity)
         .foregroundColor(Color.white)
@@ -93,6 +96,7 @@ struct PricesView: View {
         .shadow(radius: 6)
         .padding(.leading, 16)
         .padding(.trailing, 16)
+        .animation(.easeOut(duration: 0.2))
     }
 }
 

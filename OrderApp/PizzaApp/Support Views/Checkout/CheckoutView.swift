@@ -14,11 +14,11 @@ struct PaymentMethod: Identifiable {
 }
 
 class OrderDetails: ObservableObject {
-    @Published var firstname: String = "Vorname" // First name of the customer
-    @Published var lastname: String = "Nachname" // Last name of the customer
-    @Published var street: String = "Straße" // Name of the street the customer lives on
-    @Published var city: String = "Stadt" // City or village the customer lives in
-    @Published var postalCode: String = "39549" // Postalcode of the city or village. This is treated as a String because it otherwise can't be used on TextField's
+    @Published var firstname: String = "" // First name of the customer
+    @Published var lastname: String = "" // Last name of the customer
+    @Published var street: String = "" // Name of the street the customer lives on
+    @Published var city: String = "" // City or village the customer lives in
+    @Published var postalCode: String = "" // Postalcode of the city or village. This is treated as a String because it otherwise can't be used on TextField's
     
     let paymentMethods: [PaymentMethod] = [PaymentMethod(id: 1, name: "Vor Ort in Bar"), PaymentMethod(id: 2, name: "Mit Karte")]
     
@@ -162,7 +162,30 @@ struct CheckoutView: View {
                                         
                                     if wasSuccessful {
                                         orderProperty.showOrderSuccessful = true
+                                        
+                                        let newSavedOrder = Order(context: managedObjectContext)
+                                        let orders = StoreOrderConvertedData(allStoredPizzas: [StoredOrderedPizza(pizzaId: 394, pizzaSizeIndex: 0)])
+                                        let encodedOrders: Data
+                                        
+                                        let jsonEncoder = JSONEncoder()
+                                        do {
+                                            encodedOrders = try jsonEncoder.encode(orders)
+                                        } catch {
+                                            fatalError("Couldn't convert ordered pizzas to json to store in Core Data.")
+                                        }
+                                        
+                                        newSavedOrder.pizzasOrdered = encodedOrders
+                                        newSavedOrder.firstname = orderDetails.firstname
+                                        newSavedOrder.lastname = orderDetails.lastname
+                                        newSavedOrder.street = orderDetails.street
+                                        newSavedOrder.postalCode = Int32(orderDetails.postalCode)!
+                                        newSavedOrder.city = orderDetails.city
+                                        newSavedOrder.paymentMethod = Int16(orderDetails.selectedPaymentMethod)
+                                        
+                                        // When deleting all shopping cart items in the next step the viewContext also get's stored. Don't need to store the data to the device twice here. Also when creating a new item here for the devices storage.
+                                        
                                         deleteAllShoppingCartItems(allItems: shoppingCartArray, viewContext: managedObjectContext)
+                                        print("Saved new order and deleted all shopping cart items out of the devices storage.")
                                     } else {
                                         showErrorMessage = "Ihre Bestellung kann nicht verarbeitet werden. Bitte versuchen Sie es später noch einmal."
                                     }

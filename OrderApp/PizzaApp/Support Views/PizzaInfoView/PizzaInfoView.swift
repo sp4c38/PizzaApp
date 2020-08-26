@@ -21,9 +21,10 @@ struct PizzaInfoView: View {
             pizza.image
                 .resizable()
                 .scaledToFit()
+                .cornerRadius(6)
                 .padding(.leading, -4) // Needed to hide the corner Radius when the image covers the total width of the screen
                 .padding(.trailing, -4)
-                .padding(.bottom, 10)
+                .padding(.bottom, 7)
             
             Text(pizza.name)
                 .font(.system(size: 40))
@@ -32,7 +33,7 @@ struct PizzaInfoView: View {
                 .padding(.trailing, 16)
                 .lineLimit(2)
                 .multilineTextAlignment(.center)
-                .padding(.bottom, 15)
+                .padding(.bottom, 10)
 
             Text(pizza.ingredientDescription)
                 .font(.callout)
@@ -42,7 +43,7 @@ struct PizzaInfoView: View {
                 .padding()
                 .frame(maxWidth: .infinity)
                 .background(Color(hue: 1.0000, saturation: 1.0000, brightness: 0.4824))
-                .padding(.bottom, 25)
+                .padding(.bottom, 20)
 
             PricesView(info: info, pizza: pizza, selectedSizeIndex: $selectedSizeIndex)
                 .padding(.bottom, 25)
@@ -67,6 +68,7 @@ struct PizzaInfoView: View {
                     .bold()
             }
             .buttonStyle(AddToCartButton())
+            .padding(.bottom, 15)
         }
         .navigationBarTitleDisplayMode(.inline)
     }

@@ -22,6 +22,8 @@
 		617E135B24E5660B00C0337F /* PizzaAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 617E135A24E5660B00C0337F /* PizzaAppUITests.swift */; };
 		617E136924E568DE00C0337F /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 617E136824E568DE00C0337F /* HomeView.swift */; };
 		617E136B24E568FA00C0337F /* PizzaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 617E136A24E568FA00C0337F /* PizzaApp.swift */; };
+		617E387024F6D95D00A410C9 /* Order+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 617E386E24F6D95D00A410C9 /* Order+CoreDataClass.swift */; };
+		617E387124F6D95D00A410C9 /* Order+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 617E386F24F6D95D00A410C9 /* Order+CoreDataProperties.swift */; };
 		617EC53724E6D94E00092769 /* PricesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 617EC53624E6D94E00092769 /* PricesView.swift */; };
 		61B1374E24E702E800BE1CBE /* PizzaCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61B1374D24E702E800BE1CBE /* PizzaCollectionView.swift */; };
 		61BFB48524EAE7E60034130F /* Networking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61BFB48424EAE7E60034130F /* Networking.swift */; };
@@ -70,6 +72,8 @@
 		617E135C24E5660B00C0337F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		617E136824E568DE00C0337F /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		617E136A24E568FA00C0337F /* PizzaApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PizzaApp.swift; sourceTree = "<group>"; };
+		617E386E24F6D95D00A410C9 /* Order+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Order+CoreDataClass.swift"; sourceTree = "<group>"; };
+		617E386F24F6D95D00A410C9 /* Order+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Order+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		617EC53624E6D94E00092769 /* PricesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PricesView.swift; sourceTree = "<group>"; };
 		61B1374D24E702E800BE1CBE /* PizzaCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PizzaCollectionView.swift; sourceTree = "<group>"; };
 		61BFB48424EAE7E60034130F /* Networking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Networking.swift; sourceTree = "<group>"; };
@@ -144,6 +148,8 @@
 		617E133124E5660800C0337F = {
 			isa = PBXGroup;
 			children = (
+				617E386E24F6D95D00A410C9 /* Order+CoreDataClass.swift */,
+				617E386F24F6D95D00A410C9 /* Order+CoreDataProperties.swift */,
 				6104F03924EA459E008C7A05 /* ShoppingCartItem+CoreDataClass.swift */,
 				6104F03A24EA459E008C7A05 /* ShoppingCartItem+CoreDataProperties.swift */,
 				617E133C24E5660800C0337F /* PizzaApp */,
@@ -168,8 +174,8 @@
 			children = (
 				6170495324E56D9300D83587 /* Data */,
 				61E224BF24E56B9A00A10F87 /* Support Views */,
-				617E136A24E568FA00C0337F /* PizzaApp.swift */,
 				617E136824E568DE00C0337F /* HomeView.swift */,
+				617E136A24E568FA00C0337F /* PizzaApp.swift */,
 				6126B03C24E7E91A008FD5B4 /* PizzaApp.xcdatamodeld */,
 				617E134124E5660A00C0337F /* Assets.xcassets */,
 				617E134624E5660A00C0337F /* Info.plist */,
@@ -365,7 +371,9 @@
 				61BFB48524EAE7E60034130F /* Networking.swift in Sources */,
 				61E224BE24E56B9000A10F87 /* PizzaInfoView.swift in Sources */,
 				617E136924E568DE00C0337F /* HomeView.swift in Sources */,
+				617E387024F6D95D00A410C9 /* Order+CoreDataClass.swift in Sources */,
 				617EC53724E6D94E00092769 /* PricesView.swift in Sources */,
+				617E387124F6D95D00A410C9 /* Order+CoreDataProperties.swift in Sources */,
 				6139D41924E6E1D100DCBEFA /* AddToCartButton.swift in Sources */,
 				6100991924EEC1830010FAC7 /* AllOrdersButton.swift in Sources */,
 				6104F03E24EA62A3008C7A05 /* CheckoutView.swift in Sources */,

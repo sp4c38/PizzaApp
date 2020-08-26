@@ -55,7 +55,7 @@ func sendPizzaOrder(_ url: String, shoppingCartItems: [ShoppingCartItem], orderD
         var lastname: String
         var street: String
         var city: String
-        var postalcode: String
+        var postalcode: Int32
         var pizzas = [[String: Int]]()
         var payment_method: Int8
         
@@ -64,7 +64,7 @@ func sendPizzaOrder(_ url: String, shoppingCartItems: [ShoppingCartItem], orderD
             self.lastname = orderDetails.lastname
             self.street = orderDetails.street
             self.city = orderDetails.city
-            self.postalcode = orderDetails.postalCode
+            self.postalcode = Int32(orderDetails.postalCode)!
             self.payment_method = orderDetails.selectedPaymentMethod
             
             for pizza in shoppingCart {

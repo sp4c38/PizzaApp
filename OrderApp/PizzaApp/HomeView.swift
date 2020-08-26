@@ -32,6 +32,15 @@ func packPizzas() -> [[Pizza]] {
     return output
 }
 
+struct StoredOrderedPizza: Codable {
+    var pizzaId: Int32
+    var pizzaSizeIndex: Int16
+}
+
+struct StoreOrderConvertedData: Codable {
+    var allStoredPizzas: [StoredOrderedPizza]
+}
+
 struct HomeView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @EnvironmentObject var orderProperty: OrderProperty
@@ -45,13 +54,17 @@ struct HomeView: View {
                     OrderSuccessful()
                 }
                 
-                NavigationLink(destination: OrdersView()) {
-                    Button(action: {
-                    
-                    }) {
-                        Text("Alle Bestellungen")
-                            .font(.headline)
-                            .foregroundColor(Color.white)
+                
+                Button(action: {
+
+                }) {
+                    NavigationLink(destination: OrdersView()) {
+                        VStack {
+                            Text("Alle Bestellungen")
+                                .font(.headline)
+                                .foregroundColor(Color.white)
+                        }
+                        .frame(maxWidth: .infinity)
                     }
                 }
                 .padding()
