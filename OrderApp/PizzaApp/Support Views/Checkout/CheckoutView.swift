@@ -5,6 +5,7 @@
 //  Created by Léon Becker on 17.08.20.
 //
 
+import CoreData
 import SwiftUI
 
 struct PaymentMethod: Identifiable {
@@ -24,11 +25,24 @@ class OrderDetails: ObservableObject {
     @Published var selectedPaymentMethod: Int8 = 1
 }
 
+func deleteAllShoppingCartItems(allItems: [ShoppingCartItem], viewContext: NSManagedObjectContext) {
+    for item in allItems {
+        viewContext.delete(item)
+    }
+    do {
+        try viewContext.save()
+    } catch {
+        fatalError("Couldn't save the view context after deleting all items from it after successful checkout. \(error)")
+    }
+}
+
 struct CheckoutView: View {
-    @ObservedObject var orderDetails = OrderDetails()
-    @FetchRequest(entity: ShoppingCartItem.entity(), sortDescriptors: []) var shoppingCart: FetchedResults<ShoppingCartItem>
-    @State var showErrorMessage: String = ""
+    @Environment(\.managedObjectContext) var managedObjectContext
     @EnvironmentObject var orderProperty: OrderProperty
+    @FetchRequest(entity: ShoppingCartItem.entity(), sortDescriptors: []) var shoppingCart: FetchedResults<ShoppingCartItem>
+    
+    @State var showErrorMessage: String = ""
+    @ObservedObject var orderDetails = OrderDetails()
     
     var shoppingCartArray: [ShoppingCartItem] {
         // Convert the FetchedResult<ShoppingCartItem> which contains an array to type Array<ShoppingCartItem>
@@ -148,6 +162,7 @@ struct CheckoutView: View {
                                         
                                     if wasSuccessful {
                                         orderProperty.showOrderSuccessful = true
+                                        deleteAllShoppingCartItems(allItems: shoppingCartArray, viewContext: managedObjectContext)
                                     } else {
                                         showErrorMessage = "Ihre Bestellung kann nicht verarbeitet werden. Bitte versuchen Sie es später noch einmal."
                                     }
