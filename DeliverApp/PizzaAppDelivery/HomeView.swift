@@ -52,6 +52,7 @@ struct HomeView: View {
                     Spacer()
                 }
             }
+            .animation(.easeInOut(duration: 0.3))
             .navigationBarHidden(true)
         }
     }
