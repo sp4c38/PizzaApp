@@ -38,7 +38,6 @@ struct OrderInfoView: View {
         for pizza in pizzaCatalog.pizzas {
             if unresolvedPizzas.contains(where: {$0.0 == pizza.id}) {
                 for orderedPizza in unresolvedPizzas.filter({$0.0 == pizza.id}) {
-                    print("Iteration")
                     let newDisplayPizza = DisplayPizza(
                         name: pizza.name,
                         imageName: pizza.imageName,
@@ -50,22 +49,6 @@ struct OrderInfoView: View {
                 }
             }
         }
-        
-//        for orderedPizza in order.pizzasOrdered {
-//            for pizza in pizzaCatalog.pizzas {
-//                print("Iteration")
-//                if orderedPizza.pizzaId == pizza.id {
-//                    let newDisplayPizza = DisplayPizza(
-//                        name: pizza.name,
-//                        imageName: pizza.imageName,
-//                        sizeIndex: orderedPizza.sizeIndex,
-//                        price: pizza.prices[Int(orderedPizza.sizeIndex)],
-//                        ingredientDescription: pizza.ingredientDescription)
-//
-//                    allPizzasOrdered.append(newDisplayPizza)
-//                }
-//            }
-//        }
     }
     
     var body: some View {
@@ -136,7 +119,7 @@ struct OrderInfoView: View {
                             PizzaCollectionView(pizza: pizza)
                                 .padding(.leading, 16)
                                 .padding(.trailing, 16)
-                                .padding(.bottom, 5)
+                                .padding(.bottom, 15)
                         }
                     }.padding(.top, 25)
                 }

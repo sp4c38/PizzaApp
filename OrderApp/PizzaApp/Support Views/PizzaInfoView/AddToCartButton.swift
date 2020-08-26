@@ -21,8 +21,7 @@ struct AddToCartButton: ButtonStyle {
                     .stroke(
                         Color(hue: 0.9916, saturation: 0.9689, brightness: 0.8824), lineWidth: 5)
             )
-            .shadow(radius: 10)
-            .padding(.top, 10)
+            .shadow(radius: 7)
             .scaleEffect(configuration.isPressed ? 0.8 : 1.0)
             .animation(.easeInOut(duration: 0.2))
     }

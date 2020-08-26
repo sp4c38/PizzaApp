@@ -42,7 +42,7 @@ struct PizzaCollectionView: View {
                         .font(.title3)
                         .bold()
                     Spacer()
-                    Text("Freddy")
+                    Text(pizzaCatalog.info["sizes"]![Int(pizza.sizeIndex)])
                         .font(.headline)
                 }
                 
