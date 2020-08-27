@@ -118,6 +118,6 @@ struct OrderCollectionView: View {
 
 struct OrderCollectionView_Previews: PreviewProvider {
     static var previews: some View {
-        OrderCollectionView(order: SingleOrder(firstname: "Firstname", lastname: "Lastname", street: "Apple Park Way", postalCode: 95014, city: "Cupertino", paymentMethod: 0, pizzasOrdered: [SinglePizzaOrdered(pizzaId: 1, sizeIndex: 0)]))
+        OrderCollectionView(order: SingleOrder(order_id: 29, firstname: "Firstname", lastname: "Lastname", street: "Apple Park Way", postalCode: 95014, city: "Cupertino", paymentMethod: 0, pizzasOrdered: [SinglePizzaOrdered(pizzaId: 1, sizeIndex: 0)]))
     }
 }

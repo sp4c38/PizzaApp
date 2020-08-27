@@ -18,6 +18,9 @@ struct DisplayPizza: Hashable {
 }
 
 struct OrderInfoView: View {
+    @Environment(\.keychainStore) var keychainStore
+    @EnvironmentObject var username: UsernameData
+    
     var order: SingleOrder
     var numberFormatter: NumberFormatter {
         let numberFormatter = NumberFormatter()
@@ -52,13 +55,27 @@ struct OrderInfoView: View {
     }
     
     var body: some View {
-        ScrollView(showsIndicators: false) {
-            VStack(alignment: .center, spacing: 30) {
-                Image("LoginPizzaImage")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 130)
-                
+        VStack(spacing: 0) {
+            Image("LoginPizzaImage")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 130)
+                .padding(.top, 7)
+            
+            NavigationLink(destination: HomeView()) {
+                Button(action: {
+                    deleteOrder(orderId: order.order_id, username: username.username, keychainStore: keychainStore)
+                }) {
+                   Text("Bestellung abschließen")
+                        .foregroundColor(Color.white)
+                        .font(.title2)
+                }
+                .padding()
+                .buttonStyle(CompleteOrderButtonStyle())
+                .padding(.bottom, 0)
+            }
+        
+            ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 10) {
                     HStack {
                         Text("Vorname: ")
@@ -121,17 +138,17 @@ struct OrderInfoView: View {
                                 .padding(.trailing, 16)
                                 .padding(.bottom, 15)
                         }
-                    }.padding(.top, 25)
+                    }.padding(.top, 20)
                 }
+                .padding()
+                .navigationBarTitle("Pizza Lieferung")
             }
-            .padding()
-            .navigationBarTitle("Pizza Lieferung")
         }
     }
 }
 
 struct OrderInfoView_Previews: PreviewProvider {
     static var previews: some View {
-        OrderInfoView(order: SingleOrder(firstname: "Firstname", lastname: "Lastname", street: "Apple Park Way", postalCode: 95014, city: "Cupertino", paymentMethod: 1, pizzasOrdered: [SinglePizzaOrdered(pizzaId: 1, sizeIndex: 0)]))
+        OrderInfoView(order: SingleOrder(order_id: 29, firstname: "Firstname", lastname: "Lastname", street: "Apple Park Way", postalCode: 95014, city: "Cupertino", paymentMethod: 1, pizzasOrdered: [SinglePizzaOrdered(pizzaId: 1, sizeIndex: 0)]))
     }
 }

@@ -49,7 +49,7 @@ struct OrdersView: View {
                     .font(.title)
                     .padding(.top, 16)
                 
-                ScrollView(showsIndicators: true) {
+                ScrollView(showsIndicators: false) {
                     VStack(spacing: 30) {
                         ForEach(allStoredOrders) { order -> SingleOrderCollection in
                             return SingleOrderCollection(order: order, allStoredOrders: allStoredOrders)

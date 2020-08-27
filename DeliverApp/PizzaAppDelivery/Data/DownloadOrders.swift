@@ -13,6 +13,7 @@ struct SinglePizzaOrdered: Codable, Hashable {
 }
 
 struct SingleOrder: Codable, Hashable {
+    var order_id: Int
     var firstname: String
     var lastname: String
     var street: String
