@@ -33,11 +33,11 @@ struct OrderInfoView: View {
     
     init(order: SingleOrder) {
         self.order = order
-        
+
         for orderedPizza in order.pizzasOrdered {
             unresolvedPizzas.append((orderedPizza.pizzaId, orderedPizza.sizeIndex))
         }
-  
+
         for pizza in pizzaCatalog.pizzas {
             if unresolvedPizzas.contains(where: {$0.0 == pizza.id}) {
                 for orderedPizza in unresolvedPizzas.filter({$0.0 == pizza.id}) {

@@ -17,18 +17,19 @@ func packPizzas() -> [[Pizza]] {
 
     var output = [[Pizza]]()
     var currentIndex = 0
-
-    for pizza in PizzaCatalog.pizzas {
-        currentIndex += 1
-        if !(currentIndex + 1 > PizzaCatalog.pizzas.count) {
-            output.append([pizza, PizzaCatalog.pizzas[currentIndex + 1]])
-            currentIndex += 2
+    
+    for _ in 0...(PizzaCatalog.pizzas.count - 3) {
+        if !(currentIndex + 1 >= PizzaCatalog.pizzas.count) {
+            output.append([PizzaCatalog.pizzas[currentIndex], PizzaCatalog.pizzas[currentIndex + 1]])
         } else {
-            output.append([pizza])
+            output.append([PizzaCatalog.pizzas[currentIndex]])
+
             return output
         }
+        
+        currentIndex += 2
     }
-
+    
     return output
 }
 
@@ -36,10 +37,11 @@ struct HomeView: View {
     @Environment(\.managedObjectContext) var managedObjectContext
     @EnvironmentObject var orderProperty: OrderProperty
     
-    var packedPizzas: [[Pizza]] = packPizzas()
+    var packedPizzas = packPizzas()
     
     var body: some View {
-        NavigationView {
+        print(packedPizzas)
+        return NavigationView {
             ScrollView(.vertical, showsIndicators: false) {
                 if orderProperty.showOrderSuccessful {
                     OrderSuccessful()

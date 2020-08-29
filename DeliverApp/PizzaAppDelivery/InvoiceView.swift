@@ -28,53 +28,55 @@ struct InvoiceView: View {
     }
     
     var body: some View {
-        VStack(alignment: .center, spacing: 40) {
-            Text("Danke für Ihren Einkauf bei Paulos Pizza")
-                .bold()
-                .font(.title)
-                .lineLimit(2)
-                .multilineTextAlignment(.center)
-            
-            VStack {
-                ForEach(allPizzas, id: \.self) { pizza in
-                    VStack(alignment: .leading) {
-                        HStack {
-                            Text(pizza.name)
-                            Spacer()
-                            Text(numberFormatter.string(from: NSNumber(value: pizza.price))!)
-                                .foregroundColor(Color.gray)
+        ScrollView(showsIndicators: false) {
+            VStack(alignment: .center, spacing: 40) {
+                Text("Danke für Ihren Einkauf bei Paulos Pizza")
+                    .bold()
+                    .font(.title)
+                    .lineLimit(2)
+                    .multilineTextAlignment(.center)
+                
+                VStack {
+                    ForEach(allPizzas, id: \.self) { pizza in
+                        VStack(alignment: .leading) {
+                            HStack {
+                                Text(pizza.name)
+                                Spacer()
+                                Text(numberFormatter.string(from: NSNumber(value: pizza.price))!)
+                                    .foregroundColor(Color.gray)
+                            }
+                            Divider()
                         }
-                        Divider()
                     }
-                }
-                
-                HStack {
-                    Text("Bezahloption: ")
-                    Spacer()
-                
-                    if order.paymentMethod == 1 {
-                        Text("Vor Ort in Bar")
-                            .minimumScaleFactor(0.9)
-                    } else if order.paymentMethod == 2 {
-                        Text("Mit Karte")
-                            .minimumScaleFactor(0.9)
+                    
+                    HStack {
+                        Text("Bezahloption: ")
+                        Spacer()
+                    
+                        if order.paymentMethod == 1 {
+                            Text("Vor Ort in Bar")
+                                .minimumScaleFactor(0.9)
+                        } else if order.paymentMethod == 2 {
+                            Text("Mit Karte")
+                                .minimumScaleFactor(0.9)
+                        }
+                    }.padding(.bottom, 5)
+                    
+                    HStack {
+                        Text("Summe: ")
+                            .font(.title2)
+                        Spacer()
+                        Text(numberFormatter.string(from: NSNumber(value: totalPrice))!)
+                            .font(.title2)
                     }
-                }.padding(.bottom, 5)
-                
-                HStack {
-                    Text("Summe: ")
-                        .font(.title2)
+                    
                     Spacer()
-                    Text(numberFormatter.string(from: NSNumber(value: totalPrice))!)
-                        .font(.title2)
                 }
-                
-                Spacer()
             }
+            .navigationBarTitle("Rechnung")
+            .navigationBarTitleDisplayMode(.inline)
+            .padding()
         }
-        .navigationBarTitle("Rechnung")
-        .navigationBarTitleDisplayMode(.inline)
-        .padding()
     }
 }
 
