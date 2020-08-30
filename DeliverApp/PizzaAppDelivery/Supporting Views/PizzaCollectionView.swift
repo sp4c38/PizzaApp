@@ -24,7 +24,7 @@ struct PizzaCollectionView: View {
                     .resizable()
                     .scaledToFit()
                 
-                VStack {
+                VStack(alignment: .trailing) {
                     if pizza.vegetarian {
                         IsVegetarianView()
                     }
