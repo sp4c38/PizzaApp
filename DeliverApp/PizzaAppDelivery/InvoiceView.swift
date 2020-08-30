@@ -82,6 +82,6 @@ struct InvoiceView: View {
 
 struct InvoiceView_Previews: PreviewProvider {
     static var previews: some View {
-        InvoiceView(order: SingleOrder(order_id: 29, firstname: "Firstname", lastname: "Lastname", street: "Street name", postalCode: 29392, city: "City name", paymentMethod: 1, pizzasOrdered: []), allPizzas: [DisplayPizza(name: "Margherita", imageName: "margherita", sizeIndex: 0, price: 6.99, ingredientDescription: "mit Pizzasoße und echtem Gouda"), DisplayPizza(name: "4 Käse", imageName: "4käse", sizeIndex: 0, price: 10.99, ingredientDescription: "mit Pizzasoße, Hirtenkäse, Mozzarella, Cheddar und echtem Gouda")])
+        InvoiceView(order: SingleOrder(order_id: 29, firstname: "Firstname", lastname: "Lastname", street: "Street name", postalCode: 29392, city: "City name", paymentMethod: 1, pizzasOrdered: []), allPizzas: [DisplayPizza(name: "Margherita", imageName: "margherita", sizeIndex: 0, price: 6.99, ingredientDescription: "mit Pizzasoße und echtem Gouda", vegetarian: true, vegan: false, spicy: false), DisplayPizza(name: "4 Käse", imageName: "4käse", sizeIndex: 0, price: 10.99, ingredientDescription: "mit Pizzasoße, Hirtenkäse, Mozzarella, Cheddar und echtem Gouda", vegetarian: true, vegan: false, spicy: false)])
     }
 }

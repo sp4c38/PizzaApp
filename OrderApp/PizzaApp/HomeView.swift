@@ -17,8 +17,9 @@ func packPizzas() -> [[Pizza]] {
 
     var output = [[Pizza]]()
     var currentIndex = 0
-    
-    for _ in 0...(PizzaCatalog.pizzas.count - 3) {
+    print(PizzaCatalog.pizzas)
+    print(PizzaCatalog.pizzas.count)
+    for _ in 1...(PizzaCatalog.pizzas.count / 2) {
         if !(currentIndex + 1 >= PizzaCatalog.pizzas.count) {
             output.append([PizzaCatalog.pizzas[currentIndex], PizzaCatalog.pizzas[currentIndex + 1]])
         } else {
@@ -26,7 +27,7 @@ func packPizzas() -> [[Pizza]] {
 
             return output
         }
-        
+
         currentIndex += 2
     }
     

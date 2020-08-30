@@ -19,9 +19,23 @@ struct PizzaCollectionView: View {
     
     var body: some View {
         VStack(alignment: .center, spacing: 0) {
-            Image(pizza.imageName)
-                .resizable()
-                .scaledToFit()
+            ZStack(alignment: Alignment(horizontal: .trailing, vertical: .top)) {
+                Image(pizza.imageName)
+                    .resizable()
+                    .scaledToFit()
+                
+                VStack {
+                    if pizza.vegetarian {
+                        IsVegetarianView()
+                    }
+                    if pizza.vegan {
+                        IsVeganView()
+                    }
+                    if pizza.spicy {
+                        IsSpicyView()
+                    }
+                }.padding()
+            }
             
             VStack(alignment: .center, spacing: 5) {
                 VStack(alignment: .center, spacing: 0) {
@@ -73,6 +87,6 @@ struct PizzaCollectionView: View {
 
 struct PizzaCollectionView_Previews: PreviewProvider {
     static var previews: some View {
-        PizzaCollectionView(pizza: DisplayPizza(name: "Margherita", imageName: "margherita", sizeIndex: 0, price: 6.99, ingredientDescription: "mit Pizzasoße und echtem Gouda"))
+        PizzaCollectionView(pizza: DisplayPizza(name: "Margherita", imageName: "margherita", sizeIndex: 0, price: 6.99, ingredientDescription: "mit Pizzasoße und echtem Gouda", vegetarian: true, vegan: false, spicy: false))
     }
 }

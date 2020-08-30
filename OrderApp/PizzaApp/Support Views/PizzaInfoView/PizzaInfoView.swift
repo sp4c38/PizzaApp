@@ -18,23 +18,28 @@ struct PizzaInfoView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            pizza.image
-                .resizable()
-                .scaledToFit()
-                .cornerRadius(6)
-                .padding(.leading, -4) // Needed to hide the corner Radius when the image covers the total width of the screen
-                .padding(.trailing, -4)
-                .padding(.bottom, 7)
-            
-            Text(pizza.name)
-                .font(.system(size: 40))
-                .bold()
-                .padding(.leading, 16)
-                .padding(.trailing, 16)
-                .lineLimit(2)
-                .multilineTextAlignment(.center)
-                .padding(.bottom, 10)
-                .padding(.top, 4)
+            ZStack(alignment: Alignment(horizontal: .trailing, vertical: .top)) {
+                    pizza.image
+                        .resizable()
+                        .scaledToFit()
+                        .cornerRadius(6)
+                        .padding(.leading, -4) // Needed to hide the corner Radius when the image covers the total width of the screen
+                        .padding(.trailing, -4)
+                        .padding(.bottom, 7)
+                    
+                }
+                    
+            HStack(spacing: 5) {
+                Text(pizza.name)
+                    .font(.system(size: 40))
+                    .bold()
+                    .padding(.leading, 16)
+                    .padding(.trailing, 16)
+                    .lineLimit(2)
+                    .multilineTextAlignment(.center)
+                    .padding(.bottom, 10)
+                    .padding(.top, 4)
+            }
 
             Text(pizza.ingredientDescription)
                 .font(.callout)
@@ -72,13 +77,28 @@ struct PizzaInfoView: View {
             .padding(.bottom, 15)
         }
         .navigationBarTitleDisplayMode(.inline)
+        .navigationBarItems(trailing:
+            HStack {
+                if pizza.vegetarian {
+                    IsVegetarianView()
+                }
+                if pizza.vegan {
+                    IsVeganView()
+                }
+                if pizza.spicy {
+                    IsSpicyView()
+                }
+            }
+        )
     }
 }
 
 struct PizzaInfo_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            PizzaInfoView(info: PizzaCatalog.info, pizza: PizzaCatalog.pizzas[0])
+            NavigationView {
+                PizzaInfoView(info: PizzaCatalog.info, pizza: PizzaCatalog.pizzas[5])
+            }
         }
     }
 }

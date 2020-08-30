@@ -19,6 +19,9 @@ struct Pizza: Codable, Hashable {
     }
     var prices: [Double]
     var ingredientDescription: String
+    var vegetarian: Bool
+    var vegan: Bool
+    var spicy: Bool
 }
 
 struct CatalogInfo: Codable {

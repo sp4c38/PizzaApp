@@ -15,6 +15,9 @@ struct DisplayPizza: Hashable {
     var sizeIndex: Int8
     var price: Double
     var ingredientDescription: String
+    var vegetarian: Bool
+    var vegan: Bool
+    var spicy: Bool
 }
 
 struct OrderInfoView: View {
@@ -46,8 +49,12 @@ struct OrderInfoView: View {
                         imageName: pizza.imageName,
                         sizeIndex: orderedPizza.1,
                         price: pizza.prices[Int(orderedPizza.1)],
-                        ingredientDescription: pizza.ingredientDescription)
-                    
+                        ingredientDescription: pizza.ingredientDescription,
+                        vegetarian: pizza.vegetarian,
+                        vegan: pizza.vegan,
+                        spicy: pizza.spicy
+                    )
+                        
                     allPizzasOrdered.append(newDisplayPizza)
                 }
             }
@@ -55,27 +62,27 @@ struct OrderInfoView: View {
     }
     
     var body: some View {
-        VStack(spacing: 0) {
-            Image("LoginPizzaImage")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 130)
-                .padding(.top, 7)
-            
-            NavigationLink(destination: HomeView()) {
-                Button(action: {
-                    deleteOrder(orderId: order.order_id, username: username.username, keychainStore: keychainStore)
-                }) {
-                   Text("Bestellung abschließen")
-                        .foregroundColor(Color.white)
-                        .font(.title2)
+        ScrollView(showsIndicators: false) {
+            VStack(spacing: 0) {
+                Image("LoginPizzaImage")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 130)
+                    .padding(.top, 7)
+                
+                NavigationLink(destination: HomeView()) {
+                    Button(action: {
+                        deleteOrder(orderId: order.order_id, username: username.username, keychainStore: keychainStore)
+                    }) {
+                       Text("Bestellung abschließen")
+                            .foregroundColor(Color.white)
+                            .font(.title2)
+                    }
+                    .padding()
+                    .buttonStyle(CompleteOrderButtonStyle())
+                    .padding(.bottom, 0)
                 }
-                .padding()
-                .buttonStyle(CompleteOrderButtonStyle())
-                .padding(.bottom, 0)
-            }
         
-            ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 10) {
                     HStack {
                         Text("Vorname: ")
