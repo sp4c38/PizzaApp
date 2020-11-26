@@ -12,4 +12,8 @@ To store and manage ordered pizzas orders are processed through a backend.
 
 Ordering App:
 
+<img src="https://github.com/sp4c38/PizzaApp/blob/master/OrderApp_demo.gif?raw=true" width="300"/>
+
 Delivery App:
+
+<img src="https://github.com/sp4c38/PizzaApp/blob/master/DeliverApp_demo.gif?raw=true" width="300"/>
