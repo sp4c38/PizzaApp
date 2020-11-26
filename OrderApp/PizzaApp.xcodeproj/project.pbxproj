@@ -12,7 +12,6 @@
 		6104F03B24EA459E008C7A05 /* ShoppingCartItem+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6104F03924EA459E008C7A05 /* ShoppingCartItem+CoreDataClass.swift */; };
 		6104F03C24EA459E008C7A05 /* ShoppingCartItem+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6104F03A24EA459E008C7A05 /* ShoppingCartItem+CoreDataProperties.swift */; };
 		6104F03E24EA62A3008C7A05 /* CheckoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6104F03D24EA62A3008C7A05 /* CheckoutView.swift */; };
-		6115C29824F832DE00D38B5C /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6115C29724F832DE00D38B5C /* Default-568h@2x.png */; };
 		6126B03E24E7E91A008FD5B4 /* PizzaApp.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 6126B03C24E7E91A008FD5B4 /* PizzaApp.xcdatamodeld */; };
 		612731D524E7F6BE0046E68C /* ShoppingCartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 612731D424E7F6BE0046E68C /* ShoppingCartView.swift */; };
 		612ED8E224FB87E5000EA733 /* PizzaExtraInfoViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 612ED8E124FB87E5000EA733 /* PizzaExtraInfoViews.swift */; };
@@ -62,7 +61,6 @@
 		6104F03924EA459E008C7A05 /* ShoppingCartItem+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ShoppingCartItem+CoreDataClass.swift"; sourceTree = "<group>"; };
 		6104F03A24EA459E008C7A05 /* ShoppingCartItem+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ShoppingCartItem+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		6104F03D24EA62A3008C7A05 /* CheckoutView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CheckoutView.swift; sourceTree = "<group>"; usesTabs = 0; };
-		6115C29724F832DE00D38B5C /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		6126B03D24E7E91A008FD5B4 /* PizzaApp.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = PizzaApp.xcdatamodel; sourceTree = "<group>"; };
 		612731D424E7F6BE0046E68C /* ShoppingCartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingCartView.swift; sourceTree = "<group>"; };
 		612ED8E124FB87E5000EA733 /* PizzaExtraInfoViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PizzaExtraInfoViews.swift; sourceTree = "<group>"; };
@@ -164,7 +162,6 @@
 		617E133124E5660800C0337F = {
 			isa = PBXGroup;
 			children = (
-				6115C29724F832DE00D38B5C /* Default-568h@2x.png */,
 				617E386E24F6D95D00A410C9 /* Order+CoreDataClass.swift */,
 				617E386F24F6D95D00A410C9 /* Order+CoreDataProperties.swift */,
 				6104F03924EA459E008C7A05 /* ShoppingCartItem+CoreDataClass.swift */,
@@ -355,7 +352,6 @@
 			files = (
 				617E134524E5660A00C0337F /* Preview Assets.xcassets in Resources */,
 				617E134224E5660A00C0337F /* Assets.xcassets in Resources */,
-				6115C29824F832DE00D38B5C /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
