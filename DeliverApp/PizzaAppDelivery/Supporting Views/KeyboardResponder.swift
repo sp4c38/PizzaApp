@@ -16,7 +16,6 @@ class KeyboardResponder: ObservableObject {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
             withAnimation(.easeInOut(duration: 0.5)) {
                 keyboardHeight = keyboardSize.height
-                print(keyboardHeight)
             }
         }
     }

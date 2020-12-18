@@ -19,7 +19,54 @@ struct OrderCollectionView: View {
     var numberFormatter: NumberFormatter {
         let numberFormatter = NumberFormatter()
         numberFormatter.numberStyle = NumberFormatter.Style.none
+        numberFormatter.minimumIntegerDigits = 5
         return numberFormatter
+    }
+    
+    var allPizzasOrdered = [DisplayPizza]()
+
+    var priceFormatter: NumberFormatter
+    
+    init(order: SingleOrder) {
+        self.order = order
+        var unresolvedPizzas = [(Int32, Int8)]()
+        
+        priceFormatter = NumberFormatter()
+        priceFormatter.numberStyle = .currency
+        priceFormatter.locale = Locale(identifier: "de_De")
+        
+        for orderedPizza in order.pizzasOrdered {
+            unresolvedPizzas.append((orderedPizza.pizzaId, orderedPizza.sizeIndex))
+        }
+        
+        for pizza in pizzaCatalog.pizzas {
+            if unresolvedPizzas.contains(where: {$0.0 == pizza.id}) {
+                for orderedPizza in unresolvedPizzas.filter({$0.0 == pizza.id}) {
+                    let newDisplayPizza = DisplayPizza(
+                        name: pizza.name,
+                        imageName: pizza.imageName,
+                        sizeIndex: orderedPizza.1,
+                        price: pizza.prices[Int(orderedPizza.1)],
+                        ingredientDescription: pizza.ingredientDescription,
+                        vegetarian: pizza.vegetarian,
+                        vegan: pizza.vegan,
+                        spicy: pizza.spicy
+                    )
+                        
+                    allPizzasOrdered.append(newDisplayPizza)
+                }
+            }
+        }
+    }
+    
+    func calculateAllPizzaPrices(pizzas: [DisplayPizza]) -> Double {
+        var allPrice = 0.00
+        
+        for each in pizzas {
+            allPrice += each.price
+        }
+        
+        return allPrice
     }
     
     var body: some View {
@@ -95,7 +142,7 @@ struct OrderCollectionView: View {
 
                     Spacer()
                     
-                    Text("12 €")
+                    Text(priceFormatter.string(from: NSNumber(value: calculateAllPizzaPrices(pizzas: allPizzasOrdered)))!)
                         .font(.headline)
                 }
                 .shadow(radius: 5)

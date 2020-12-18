@@ -11,7 +11,7 @@ func downloadPizzaData(url: String) -> CatalogInfo {
     // Download pizza data from the server
     // This will run synchronous because this data is absolutely needed to continue the workflow of the program
     
-    var request = URLRequest(url: URL(string: url)!)
+    var request = URLRequest(url: URL(string: url)!, cachePolicy: .reloadIgnoringLocalAndRemoteCacheData)
     request.httpMethod = "GET"
     
     // Parameters to pass
@@ -47,7 +47,7 @@ func downloadPizzaData(url: String) -> CatalogInfo {
 func sendPizzaOrder(_ url: String, shoppingCartItems: [ShoppingCartItem], orderDetails: OrderDetails) -> Bool {
     let orderDestination = URL(string: url)
     
-    var request = URLRequest(url: orderDestination!)
+    var request = URLRequest(url: orderDestination!, cachePolicy: .reloadIgnoringLocalAndRemoteCacheData)
     request.httpMethod = "POST"
     
     struct bodyData: Encodable {

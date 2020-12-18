@@ -28,6 +28,7 @@ struct OrderInfoView: View {
     var numberFormatter: NumberFormatter {
         let numberFormatter = NumberFormatter()
         numberFormatter.numberStyle = NumberFormatter.Style.none
+        numberFormatter.minimumIntegerDigits = 5
         return numberFormatter
     }
     
@@ -36,7 +37,7 @@ struct OrderInfoView: View {
     
     init(order: SingleOrder) {
         self.order = order
-
+        
         for orderedPizza in order.pizzasOrdered {
             unresolvedPizzas.append((orderedPizza.pizzaId, orderedPizza.sizeIndex))
         }
