@@ -17,15 +17,12 @@ func packPizzas() -> [[Pizza]] {
 
     var output = [[Pizza]]()
     var currentIndex = 0
-    print(PizzaCatalog.pizzas)
-    print(PizzaCatalog.pizzas.count)
 
-    for _ in 1...Int((Double(PizzaCatalog.pizzas.count) / 2).rounded(.up)) {
-        print(!(currentIndex + 1 > (PizzaCatalog.pizzas.count - 1)))
-        if !(currentIndex + 1 > (PizzaCatalog.pizzas.count - 1)) {
-            output.append([PizzaCatalog.pizzas[currentIndex], PizzaCatalog.pizzas[currentIndex + 1]])
+    for _ in 1...Int((Double(catalog.pizzas.count) / 2).rounded(.up)) {
+        if !(currentIndex + 1 > (catalog.pizzas.count - 1)) {
+            output.append([catalog.pizzas[currentIndex], catalog.pizzas[currentIndex + 1]])
         } else {
-            output.append([PizzaCatalog.pizzas[currentIndex]])
+            output.append([catalog.pizzas[currentIndex]])
 
         }
 
@@ -42,17 +39,13 @@ struct HomeView: View {
     var packedPizzas = packPizzas()
     
     var body: some View {
-        print(packedPizzas)
         return NavigationView {
             ScrollView(.vertical, showsIndicators: false) {
                 if orderProperty.showOrderSuccessful {
                     OrderSuccessful()
                 }
                 
-                
-                Button(action: {
-
-                }) {
+                Button(action: {}) {
                     NavigationLink(destination: OrdersView()) {
                         VStack {
                             Text("Alle Bestellungen")
@@ -68,15 +61,15 @@ struct HomeView: View {
                 ForEach(packedPizzas, id: \.self) { pizza in
                     HStack(spacing: 20) {
                         if pizza.count > 1 {
-                            NavigationLink(destination: PizzaInfoView(info: PizzaCatalog.info, pizza: pizza[0])) {
+                            NavigationLink(destination: PizzaInfoView(info: catalog.info, pizza: pizza[0])) {
                                 PizzaCollectionView(pizza: pizza[0])
                             }
 
-                            NavigationLink(destination: PizzaInfoView(info: PizzaCatalog.info, pizza:  pizza[1])) {
+                            NavigationLink(destination: PizzaInfoView(info: catalog.info, pizza:  pizza[1])) {
                                 PizzaCollectionView(pizza: pizza[1])
                             }
                         } else if !(pizza.count > 1) {
-                            NavigationLink(destination: PizzaInfoView(info: PizzaCatalog.info, pizza:  pizza[0])) {
+                            NavigationLink(destination: PizzaInfoView(info: catalog.info, pizza:  pizza[0])) {
                                 PizzaCollectionView(pizza: pizza[0])
                             }
                             .padding(.leading, 78)

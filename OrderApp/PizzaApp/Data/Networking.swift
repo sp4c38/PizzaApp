@@ -7,7 +7,7 @@
 
 import Foundation
 
-func downloadPizzaData(url: String) -> CatalogInfo {
+func downloadCatalogData(url: String) -> CatalogInfo {
     // Download pizza data from the server
     // This will run synchronous because this data is absolutely needed to continue the workflow of the program
     

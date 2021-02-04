@@ -38,7 +38,7 @@ struct OrderInfoView: View {
             unresolvedPizzas.append((orderedPizza.pizzaId, Int8(orderedPizza.pizzaSizeIndex)))
         }
   
-        for pizza in PizzaCatalog.pizzas {
+        for pizza in catalog.pizzas {
             if unresolvedPizzas.contains(where: {$0.0 == pizza.id}) {
                 for orderedPizza in unresolvedPizzas.filter({$0.0 == pizza.id}) {
                     let newDisplayPizza = DisplayPizza(

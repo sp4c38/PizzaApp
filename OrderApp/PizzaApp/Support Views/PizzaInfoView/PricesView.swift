@@ -18,7 +18,7 @@ struct PricesView: View {
     var info: [String: [String]]
     var pizza: Pizza
     
-    var sizeSelection = [SizeSelection(id: 0, name: PizzaCatalog.info["sizes"]![0]), SizeSelection(id: 1, name: PizzaCatalog.info["sizes"]![1]), SizeSelection(id: 2, name: "\(PizzaCatalog.info["sizes"]![2]) ")]
+    var sizeSelection = [SizeSelection(id: 0, name: catalog.info["sizes"]![0]), SizeSelection(id: 1, name: catalog.info["sizes"]![1]), SizeSelection(id: 2, name: "\(catalog.info["sizes"]![2]) ")]
 
     init(info: [String: [String]], pizza: Pizza, selectedSizeIndex: Binding<Int>) {
         UISegmentedControl.appearance().selectedSegmentTintColor = .white
@@ -102,6 +102,6 @@ struct PricesView: View {
 
 struct PricesView_Previews: PreviewProvider {
     static var previews: some View {
-        PizzaInfoView(info: PizzaCatalog.info, pizza: PizzaCatalog.pizzas[0])
+        PizzaInfoView(info: catalog.info, pizza: catalog.pizzas[0])
     }
 }

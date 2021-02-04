@@ -43,7 +43,7 @@ struct DisplayPizzaCollectionView: View {
                         .font(.title3)
                         .bold()
                     Spacer()
-                    Text(PizzaCatalog.info["sizes"]![Int(pizza.sizeIndex)])
+                    Text(catalog.info["sizes"]![Int(pizza.sizeIndex)])
                         .font(.headline)
                 }
                 
@@ -156,7 +156,7 @@ struct PizzaCollectionShoppingCartView: View {
                             .font(.title3)
                             .bold()
                         Spacer()
-                        Text(PizzaCatalog.info["sizes"]![Int(shoppingCartItem.sizeIndex)])
+                        Text(catalog.info["sizes"]![Int(shoppingCartItem.sizeIndex)])
                             .font(.headline)
                     }
                     
@@ -221,8 +221,8 @@ struct PizzaCollectionView: View {
 struct PizzaCollection_Previews: PreviewProvider {
     static var previews: some View {
         HStack(spacing: 20) {
-            PizzaCollectionView(pizza: PizzaCatalog.pizzas[0])
-            PizzaCollectionView(pizza: PizzaCatalog.pizzas[0])
+            PizzaCollectionView(pizza: catalog.pizzas[0])
+            PizzaCollectionView(pizza: catalog.pizzas[0])
         }.padding()
     }
 }

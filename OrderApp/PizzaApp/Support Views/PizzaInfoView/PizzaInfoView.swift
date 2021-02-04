@@ -97,7 +97,7 @@ struct PizzaInfo_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             NavigationView {
-                PizzaInfoView(info: PizzaCatalog.info, pizza: PizzaCatalog.pizzas[5])
+                PizzaInfoView(info: catalog.info, pizza: catalog.pizzas[5])
             }
         }
     }
