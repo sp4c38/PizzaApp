@@ -19,7 +19,7 @@ struct PizzaInfoView: View {
     var body: some View {
         VStack(spacing: 0) {
             ZStack(alignment: Alignment(horizontal: .trailing, vertical: .top)) {
-                    pizza.image
+                    Image(pizza.imageName)
                         .resizable()
                         .scaledToFit()
                         .cornerRadius(6)

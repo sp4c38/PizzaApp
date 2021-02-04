@@ -1,5 +1,5 @@
 //
-//  PizzaCatalog.swift
+//  Catalog.swift
 //  PizzaApp
 //
 //  Created by Léon Becker on 13.08.20.
@@ -8,15 +8,18 @@
 import Foundation
 import SwiftUI
 
-let catalog = downloadCatalogData(url: "https://www.space8.me:7392/pizzaapp/static/allPizzas.json")
+let catalog = downloadCatalogData(url: "https://www.space8.me:7392/pizzaapp/static/catalog.json")
 
-struct Pizza: Codable, Hashable {
+protocol CatalogItem: Hashable {
+    var id: Int32 { get set }
+    var name: String { get set }
+    var imageName: String { get set }
+}
+
+struct Pizza: CatalogItem, Codable {
     var id: Int32
     var name: String
     var imageName: String
-    var image: Image {
-        Image(imageName)
-    }
     var prices: [Double]
     var ingredientDescription: String
     var vegetarian: Bool

@@ -186,19 +186,19 @@ struct PizzaCollectionShoppingCartView: View {
     }
 }
 
-struct PizzaCollectionView: View {
+struct CollectionView<Item: CatalogItem>: View {
     // A single pizza box which is shown on the home/root screen
     
-    var pizza: Pizza
+    var item: Item
     
     var body: some View {
         VStack(spacing: 0) {
-            pizza.image
+            Image(item.imageName)
                 .resizable()
                 .scaledToFit()
                 .overlay(Rectangle().stroke(Color.white, lineWidth: 5))
 
-            Text(pizza.name)
+            Text(item.name)
                 .font(.subheadline)
                 .bold()
                 .multilineTextAlignment(.center)
@@ -215,14 +215,5 @@ struct PizzaCollectionView: View {
                 .stroke(Color.white, lineWidth: 3)
         )
         .shadow(radius: 5)
-    }
-}
-
-struct PizzaCollection_Previews: PreviewProvider {
-    static var previews: some View {
-        HStack(spacing: 20) {
-            PizzaCollectionView(pizza: catalog.pizzas[0])
-            PizzaCollectionView(pizza: catalog.pizzas[0])
-        }.padding()
     }
 }
