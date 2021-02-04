@@ -36,11 +36,15 @@ struct HomeView: View {
                 
                 CategorySelection(selectedCategory: $selectedCategory)
                 
-                if selectedCategory == 0 {
-                    CategoryItemsCollection<Pizza>(categorySelection: $selectedCategory)
-                }// else if selectedCategory == 1 {
-//                    CategoryItemsCollection(categorySelection: $selectedCategory)
-//                }
+                VStack {
+                    if selectedCategory == 0 {
+                        CategoryItemsCollection<Pizza>()
+                            .transition(.opacity)
+                    }// else if selectedCategory == 1 {
+    //                    CategoryItemsCollection(categorySelection: $selectedCategory)
+    //                }
+                }
+                .animation(.easeInOut)
             }
             .navigationBarTitle("Pizza Paulo")
             .navigationBarItems(trailing:

@@ -42,12 +42,18 @@ struct CategoryItemsPairCollection<Item: CatalogItem>: View {
         HStack(spacing: 20) {
             //                NavigationLink(destination: PizzaInfoView(info: catalog.info, pizza: items[0])) {
             CollectionView(item: items[0])
-            
+                .ifTrue(items.count == 1) { content in
+                    content
+                        .padding(.leading, 78)
+                        .padding(.trailing, 78)
+                }
             // }
 
 
 //                NavigationLink(destination: PizzaInfoView(info: catalog.info, pizza:  items[1])) {
-                    CollectionView(item: items[1])
+            if items.count == 2 {
+                CollectionView(item: items[1])
+            }
 //                }
 
         }.padding()
@@ -55,16 +61,17 @@ struct CategoryItemsPairCollection<Item: CatalogItem>: View {
 }
 
 struct CategoryItemsCollection<Item: CatalogItem>: View {
-    @Binding var categorySelection: Int
-    
     @State var packedItems = [[Item]]()
     
-    func makePackedItems(for categorySelection: Int) {
+    func makePackedItems() {
         var selectedItems = [Item]()
-        if categorySelection == 0 {
+        if Item.self == Pizza.self {
             selectedItems = catalog.pizzas as! [Item]
         }
-        let packedItems = packItems(selectedItems)
+        var packedItems = [[Item]]()
+        if selectedItems.count > 0 {
+            packedItems = packItems(selectedItems)
+        }
         self.packedItems = packedItems
     }
     
@@ -78,10 +85,7 @@ struct CategoryItemsCollection<Item: CatalogItem>: View {
             }
         }
         .onAppear {
-            makePackedItems(for: categorySelection)
-        }
-        .onChange(of: categorySelection) { newCategorySelection in
-            makePackedItems(for: newCategorySelection)
+            makePackedItems()
         }
     }
 }
