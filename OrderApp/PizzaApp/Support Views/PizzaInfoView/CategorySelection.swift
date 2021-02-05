@@ -33,11 +33,13 @@ struct CategorySelection: View {
                     selectedCategory = 0
                 }) {
                     Text("Pizza")
+                        .bold()
                 }
                 Button(action: {
                     selectedCategory = 1
                 }) {
                     Text("Eis & Dessert")
+                        .bold()
                 }
             }
             .buttonStyle(CategorySelectionButtonStyle())

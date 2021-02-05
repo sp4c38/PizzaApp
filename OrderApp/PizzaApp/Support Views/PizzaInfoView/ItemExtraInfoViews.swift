@@ -1,5 +1,5 @@
 //
-//  PizzaExtraInfoViews.swift
+//  ItemExtraInfoViews.swift
 //  PizzaApp
 //
 //  Created by Léon Becker on 30.08.20.

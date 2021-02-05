@@ -16,7 +16,7 @@ struct HomeView: View {
     
     var body: some View {
         NavigationView {
-            ScrollView(.vertical, showsIndicators: false) {
+            ScrollView(.vertical, showsIndicators: true) {
                 if orderProperty.showOrderSuccessful {
                     OrderSuccessful()
                 }

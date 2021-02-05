@@ -38,23 +38,63 @@ struct CategoryItemsPairCollection<Item: CatalogItem>: View {
         self.items = items
     }
     
+    func getDisplayInfo(for item: Item) -> ItemDisplayInfo {
+        if Item.self == Pizza.self {
+            let currentItem = item as! Pizza
+            
+            var dishHints = [DishHints]()
+            if currentItem.vegetarian { dishHints.append(.vegetarian) }
+            if currentItem.vegan { dishHints.append(.vegan) }
+            if currentItem.spicy { dishHints.append(.spicy) }
+            
+            let displayInfo = ItemDisplayInfo(
+                id: currentItem.id,
+                name: currentItem.name,
+                imageName: currentItem.imageName,
+                ingredientDescription: item.ingredientDescription,
+                dishHints: dishHints,
+                prices: currentItem.prices
+            )
+            return displayInfo
+        } else if Item.self == IceAndDessert.self {
+            let currentItem = item as! IceAndDessert
+            
+            var dishHints = [DishHints]()
+            if currentItem.vegan { dishHints.append(.vegan) }
+            
+            let displayInfo = ItemDisplayInfo(
+                id: currentItem.id,
+                name: currentItem.name,
+                imageName: currentItem.imageName,
+                ingredientDescription: currentItem.ingredientDescription,
+                dishHints: dishHints,
+                singlePrice: currentItem.price
+            )
+            return displayInfo
+        }
+        return ItemDisplayInfo(id: 0, name: "/", imageName: "", ingredientDescription: "/", dishHints: [], prices: [0, 0, 0])
+    }
+    
     var body: some View {
         HStack(spacing: 20) {
-            //                NavigationLink(destination: PizzaInfoView(info: catalog.info, pizza: items[0])) {
-            CollectionView(item: items[0])
-                .ifTrue(items.count == 1) { content in
-                    content
-                        .padding(.leading, 78)
-                        .padding(.trailing, 78)
-                }
-            // }
+            NavigationLink(
+                destination: ItemInfoView(info: catalog.info, item: getDisplayInfo(for: items[0]))
+            ) {
+                SingleItemView(item: items[0])
+                    .ifTrue(items.count == 1) { content in
+                        content
+                            .padding(.leading, 78)
+                            .padding(.trailing, 78)
+                    }
+             }
 
-
-//                NavigationLink(destination: PizzaInfoView(info: catalog.info, pizza:  items[1])) {
             if items.count == 2 {
-                CollectionView(item: items[1])
+                NavigationLink(
+                    destination: ItemInfoView(info: catalog.info, item: getDisplayInfo(for: items[1]))
+                ) {
+                    SingleItemView(item: items[1])
+                }
             }
-//                }
 
         }.padding()
     }
@@ -83,7 +123,7 @@ struct CategoryItemsCollection<Item: CatalogItem>: View {
                 HStack(spacing: 20) {
                     CategoryItemsPairCollection(items)
                 }
-                .padding()
+//                .padding()
             }
         }
         .onAppear {

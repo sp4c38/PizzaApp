@@ -1,5 +1,5 @@
 //
-//  PizzaInfo_OrderButton.swift
+//  AddToCartButton.swift
 //  PizzaApp
 //
 //  Created by Léon Becker on 14.08.20.
@@ -24,11 +24,5 @@ struct AddToCartButton: ButtonStyle {
             .shadow(radius: 7)
             .scaleEffect(configuration.isPressed ? 0.8 : 1.0)
             .animation(.easeInOut(duration: 0.2))
-    }
-}
-
-struct PizzaInfo_OrderButton_Previews: PreviewProvider {
-    static var previews: some View {
-        PizzaInfoView(info: catalog.info, pizza: catalog.pizzas[0])
     }
 }
