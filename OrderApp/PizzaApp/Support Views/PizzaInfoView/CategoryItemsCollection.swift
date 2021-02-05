@@ -67,6 +67,8 @@ struct CategoryItemsCollection<Item: CatalogItem>: View {
         var selectedItems = [Item]()
         if Item.self == Pizza.self {
             selectedItems = catalog.pizzas as! [Item]
+        } else if Item.self == IceAndDessert.self {
+            selectedItems = catalog.iceAndDessert as! [Item]
         }
         var packedItems = [[Item]]()
         if selectedItems.count > 0 {

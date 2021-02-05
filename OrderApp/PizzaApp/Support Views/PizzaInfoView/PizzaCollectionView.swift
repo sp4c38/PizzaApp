@@ -186,7 +186,7 @@ struct PizzaCollectionShoppingCartView: View {
     }
 }
 
-struct CollectionView<Item: CatalogItem>: View {
+struct SingleItemView<Item: CatalogItem>: View {
     // A single pizza box which is shown on the home/root screen
     
     var item: Item

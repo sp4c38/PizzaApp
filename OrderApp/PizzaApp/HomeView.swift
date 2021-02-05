@@ -40,9 +40,9 @@ struct HomeView: View {
                     if selectedCategory == 0 {
                         CategoryItemsCollection<Pizza>()
                             .transition(.opacity)
-                    }// else if selectedCategory == 1 {
-    //                    CategoryItemsCollection(categorySelection: $selectedCategory)
-    //                }
+                    } else if selectedCategory == 1 {
+                        CategoryItemsCollection<IceAndDessert>()
+                    }
                 }
                 .animation(.easeInOut)
             }
