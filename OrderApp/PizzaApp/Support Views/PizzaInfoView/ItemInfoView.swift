@@ -68,16 +68,16 @@ struct ItemInfoView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            ZStack(alignment: Alignment(horizontal: .trailing, vertical: .top)) {
-                    item.image
-                        .resizable()
-                        .scaledToFit()
-                        .cornerRadius(6)
-                        .padding(.leading, -4) // Needed to hide the corner Radius when the image covers the total width of the screen
-                        .padding(.trailing, -4)
-                        .padding(.bottom, 7)
-                    
-                }
+        ZStack(alignment: Alignment(horizontal: .trailing, vertical: .top)) {
+                item.image
+                    .resizable()
+                    .scaledToFit()
+                    .cornerRadius(6)
+                    .padding(.leading, -4) // Needed to hide the corner Radius when the image covers the total width of the screen
+                    .padding(.trailing, -4)
+                    .padding(.bottom, 7)
+                
+            }
                     
             HStack(spacing: 5) {
                 Text(item.name)
@@ -90,7 +90,7 @@ struct ItemInfoView: View {
                     .padding(.bottom, 10)
                     .padding(.top, 4)
             }
-
+            
             Text(item.ingredientDescription)
                 .font(.callout)
                 .foregroundColor(Color.white)
@@ -100,7 +100,6 @@ struct ItemInfoView: View {
                 .frame(maxWidth: .infinity)
                 .background(Color(hue: 1.0000, saturation: 1.0000, brightness: 0.4824))
                 .padding(.bottom, 20)
-
             
             VStack {
                 if !item.useSinglePrice {
@@ -111,6 +110,8 @@ struct ItemInfoView: View {
             }
             .padding(.bottom, 40)
     
+            Spacer()
+            
             Button(action: {
 //                let newCartItem = ShoppingCartItem(context: managedObjectContext)
 //                newCartItem.pizzaId = item.id
