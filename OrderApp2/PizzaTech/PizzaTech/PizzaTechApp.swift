@@ -6,6 +6,18 @@
 //
 
 import SwiftUI
+import OSLog
+
+struct PizzaTechServices: ViewModifier {
+    static var catalogService = CatalogService()
+    
+    func body(content: Content) -> some View {
+        content
+            .environmentObject(Self.catalogService)
+    }
+}
+
+let logger = Logger(.default)
 
 @main
 struct PizzaTechApp: App {
@@ -13,8 +25,8 @@ struct PizzaTechApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
-                .environment(\.managedObjectContext, persistenceController.container.viewContext)
+            HomeView()
+                .modifier(PizzaTechServices())
         }
     }
 }
