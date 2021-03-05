@@ -11,6 +11,8 @@
 		611B801A25F2D23200C300B7 /* Download.swift in Sources */ = {isa = PBXBuildFile; fileRef = 611B801925F2D23200C300B7 /* Download.swift */; };
 		611B801C25F2D46600C300B7 /* BackendAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 611B801B25F2D46600C300B7 /* BackendAPI.swift */; };
 		611B801F25F2E80900C300B7 /* HomeActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 611B801E25F2E80800C300B7 /* HomeActionView.swift */; };
+		611B802225F2ED1D00C300B7 /* CategoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 611B802125F2ED1D00C300B7 /* CategoryView.swift */; };
+		611B802425F2F1C900C300B7 /* CurrentCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 611B802325F2F1C900C300B7 /* CurrentCategory.swift */; };
 		61B72ECF25F2A2ED0065FB2A /* PizzaTechApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61B72ECE25F2A2ED0065FB2A /* PizzaTechApp.swift */; };
 		61B72ED125F2A2ED0065FB2A /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61B72ED025F2A2ED0065FB2A /* HomeView.swift */; };
 		61B72ED325F2A2EF0065FB2A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 61B72ED225F2A2EF0065FB2A /* Assets.xcassets */; };
@@ -24,6 +26,8 @@
 		611B801925F2D23200C300B7 /* Download.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Download.swift; sourceTree = "<group>"; };
 		611B801B25F2D46600C300B7 /* BackendAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackendAPI.swift; sourceTree = "<group>"; };
 		611B801E25F2E80800C300B7 /* HomeActionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeActionView.swift; sourceTree = "<group>"; };
+		611B802125F2ED1D00C300B7 /* CategoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryView.swift; sourceTree = "<group>"; };
+		611B802325F2F1C900C300B7 /* CurrentCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentCategory.swift; sourceTree = "<group>"; };
 		61B72ECB25F2A2ED0065FB2A /* PizzaTech.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PizzaTech.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		61B72ECE25F2A2ED0065FB2A /* PizzaTechApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PizzaTechApp.swift; sourceTree = "<group>"; };
 		61B72ED025F2A2ED0065FB2A /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
@@ -54,12 +58,21 @@
 			path = Catalog;
 			sourceTree = "<group>";
 		};
-		611B801D25F2E7DE00C300B7 /* HomeView */ = {
+		611B801D25F2E7DE00C300B7 /* Home View */ = {
 			isa = PBXGroup;
 			children = (
 				611B801E25F2E80800C300B7 /* HomeActionView.swift */,
 			);
-			path = HomeView;
+			path = "Home View";
+			sourceTree = "<group>";
+		};
+		611B802025F2ECFA00C300B7 /* Catalog View */ = {
+			isa = PBXGroup;
+			children = (
+				611B802125F2ED1D00C300B7 /* CategoryView.swift */,
+				611B802325F2F1C900C300B7 /* CurrentCategory.swift */,
+			);
+			path = "Catalog View";
 			sourceTree = "<group>";
 		};
 		61B72EC225F2A2ED0065FB2A = {
@@ -101,7 +114,8 @@
 			isa = PBXGroup;
 			children = (
 				61B72ED025F2A2ED0065FB2A /* HomeView.swift */,
-				611B801D25F2E7DE00C300B7 /* HomeView */,
+				611B801D25F2E7DE00C300B7 /* Home View */,
+				611B802025F2ECFA00C300B7 /* Catalog View */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -197,7 +211,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				61B72EDB25F2A2EF0065FB2A /* PizzaTech.xcdatamodeld in Sources */,
+				611B802225F2ED1D00C300B7 /* CategoryView.swift in Sources */,
 				611B801F25F2E80900C300B7 /* HomeActionView.swift in Sources */,
+				611B802425F2F1C900C300B7 /* CurrentCategory.swift in Sources */,
 				61B72ED825F2A2EF0065FB2A /* Persistence.swift in Sources */,
 				61B72ED125F2A2ED0065FB2A /* HomeView.swift in Sources */,
 				611B801A25F2D23200C300B7 /* Download.swift in Sources */,

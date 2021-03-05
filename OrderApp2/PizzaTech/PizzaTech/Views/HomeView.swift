@@ -15,8 +15,11 @@ struct HomeView: View {
     var body: some View {
         NavigationView {
             Group {
-                HomeActionView()
-                // CatalogView()
+                if catalogService.catalog != nil {
+                    HomeActionView()
+                    CategoryView()
+                        .border(Color.black, width: 100)
+                }
             }
             .navigationBarTitle("Pizza Tech")
         }

@@ -56,11 +56,28 @@ class IceDessertCategory: CatalogGeneralCategory {
 // Catalog
 struct Catalog: Codable {
     let pizzas: PizzaCategory
-    let iceAndDessert: IceDessertCategory
+    let iceDessert: IceDessertCategory
+    
+    let categories = {
+        ["Pizza", "Ice & Dessert"]
+    }()
+    
+    enum CodingKeys: CodingKey {
+        case pizzas
+        case iceDessert
+    }
 }
 
 class CatalogService: ObservableObject {
-    var catalog: Catalog? = nil
-    var downloadInProgress = false
-    var downloadErrorOccurred = false
+    @Published var catalog: Catalog? = nil
+    @Published var downloadInProgress = false
+    @Published var downloadErrorOccurred = false
+    
+    @Published var categorySelection: Int = 0
+}
+
+extension CatalogService {
+    func setCategorySelection(to newCategory: Int) {
+        self.categorySelection = newCategory
+    }
 }
