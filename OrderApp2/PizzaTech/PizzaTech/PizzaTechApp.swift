@@ -13,6 +13,7 @@ struct PizzaTechServices: ViewModifier {
     static var previewCatalogService: CatalogService = {
         let catalogService = CatalogService()
         catalogService.fetchCatalog()
+        catalogService.categorySelection = .iceDessert
         return catalogService
     }()
     

@@ -20,6 +20,8 @@ struct SelectedCategory: View {
         VStack {
             if selection == .pizza {
                 CategoryItemCollection(items: categories.pizza.items)
+            } else if selection == .iceDessert {
+                CategoryItemCollection(items: categories.iceDessert.items)
             }
         }
     }
@@ -29,7 +31,7 @@ struct CategoryItemNameModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
             .foregroundColor(.white)
-            .font(.subheadline.weight(.bold))
+            .font(.callout.weight(.bold))
             .multilineTextAlignment(.center)
             .padding(4)
     }
@@ -42,23 +44,31 @@ struct CategoryItemCollection<T: CatalogGeneralItem>: View {
         self.items = items
     }
     
+    let gridColumns: [GridItem] = [
+        GridItem(.flexible(), spacing: 30),
+        GridItem(.flexible())
+    ]
+    
     var body: some View {
-        VStack {
-            ForEach(items, id: \.id) { item in
-                VStack(spacing: 0) {
-                    Image(item.imageName)
-                        .resizable()
-                        .scaledToFit()
+        ScrollView {
+            LazyVGrid(columns: gridColumns, spacing: 30) {
+                ForEach(items, id: \.id) { item in
+                    VStack(spacing: 0) {
+                        Image(item.imageName)
+                            .resizable()
+                            .scaledToFit()
 
-                    Text(item.name)
-                        .modifier(CategoryItemNameModifier())
+                        Text(item.name)
+                            .modifier(CategoryItemNameModifier())
+                    }
+                    .background(
+                        Color(hue: 0.9916, saturation: 0.9689, brightness: 0.8824)
+                    )
+                    .cornerRadius(10)
+                    .shadow(radius: 4)
                 }
-                .background(
-                    Color(hue: 0.9916, saturation: 0.9689, brightness: 0.8824)
-                )
-                .cornerRadius(10)
-                .shadow(radius: 4)
             }
+            .padding([.leading, .trailing], 15)
         }
     }
 }

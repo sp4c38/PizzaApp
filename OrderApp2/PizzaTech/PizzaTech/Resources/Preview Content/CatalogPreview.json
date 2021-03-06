@@ -24,8 +24,8 @@
                 },
                 {
                     "id": 392102,
-                    "name": "4 KÃƒÆ’Ã‚Â¤se",
-                    "imageName": "vierKäse",
+                    "name": "4 Käse",
+                    "imageName": "VierKäse",
                     "prices": [10.99, 14.99, 19.99],
                     "ingredientDescription": "mit PizzasoÃƒÆ’Ã…Â¸e, HirtenkÃƒÆ’Ã‚Â¤se, Mozzarella, Cheddar und echtem Gouda",
                     "vegetarian": true,
