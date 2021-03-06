@@ -176,6 +176,59 @@
                     "vegan": true
                 }
             ]
+        },
+        "drinks": {
+            "sizeNames": ["S", "M", "L"],
+            "items": [{
+                    "id": 1,
+                    "name": "Wasser",
+                    "imageName": "Water",
+                    "prices": [1.24]
+                    "ingredientDescription": "0,5l frisches Mineralwasser.\n0,25ct Pfand enthalten."
+                },
+                {
+                    "id": 2,
+                    "name": "Tee",
+                    "imageName": "Tea",
+                    "prices": [1.5],
+                    "ingredientDescription": "0,5l köstlicher Haustee."
+                },
+                {
+                    "id": 3,
+                    "name": "Apfelsaft",
+                    "imageName": "AppleJuice",
+                    "prices": [1.49]
+                    "ingredientDescription": "0,2l purer Apfelsaft."
+                },
+                {
+                    "id": 4,
+                    "name": "Erdbeersaft",
+                    "imageName": "StrawberryJuice",
+                    "prices": [1.49]
+                    "ingredientDescription": "0,2l feinster Erdbeersaft."
+                },
+                {
+                    "id": 5,
+                    "name": "Orangensaft",
+                    "imageName": "OrangeJuice",
+                    "prices": [1.49]
+                    "ingredientDescription": "0,2l schmackhafter Orangensaft."
+                },
+                {
+                    "id": 6,
+                    "name": "Wein",
+                    "imageName": "Wine",
+                    "prices": [7.89],
+                    "ingredientDescription": "0,75l des besten Weins."
+                },
+                {
+                    "id": 7,
+                    "name": "Bier",
+                    "imageName": "Beer",
+                    "prices": [2.57],
+                    "ingredientDescription": "0,5l leckeres Radeberger Bier."
+                }
+            ]
         }
     }
 }
