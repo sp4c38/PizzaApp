@@ -8,7 +8,7 @@
 import Foundation
 
 extension CatalogService {
-     func startDownload() {
+    private func startDownload() {
         logger.debug("Starting download of catalog data.")
         
         downloadInProgress = true
@@ -44,5 +44,13 @@ extension CatalogService {
                 self.downloadErrorOccurred = true
             }
         }.resume()
+    }
+    
+    func fetchCatalog() {
+        #if PREVIEW
+            catalog = loadPreviewJSON("CatalogPreview")
+        #else
+            startDownload()
+        #endif
     }
 }

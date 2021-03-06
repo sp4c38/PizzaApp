@@ -23,7 +23,7 @@ struct HomeView: View {
             }
             .navigationBarTitle("Pizza Tech")
         }
-        .onAppear { catalogService.startDownload() }
+        .onAppear { catalogService.fetchCatalog() }
         // Will hide inline navigation bar when other view linked here.
         .navigationBarHidden(true)
     }

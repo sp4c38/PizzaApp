@@ -22,6 +22,7 @@ struct CategorySelection: View {
                     Text(categories[categoryID])
                 }
             }
+            Text(catalogService.catalog!.iceDessert.items[0].name.description)
         }
     }
 }
@@ -36,15 +37,9 @@ struct CategoryView: View {
 }
 
 struct CategoryView_Previews: PreviewProvider {
-    static var catalogService: CatalogService = {
-        let catalogService = CatalogService()
-        catalogService.startDownload()
-        return catalogService
-    }()
-    
     static var previews: some View {
         CategoryView()
-            .environmentObject(catalogService)
+            .environmentObject(previewCatalogService)
             
     }
 }

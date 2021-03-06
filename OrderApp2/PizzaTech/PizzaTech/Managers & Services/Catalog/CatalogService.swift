@@ -81,3 +81,9 @@ extension CatalogService {
         self.categorySelection = newCategory
     }
 }
+
+var previewCatalogService: CatalogService = {
+    let catalogService = CatalogService()
+    catalogService.fetchCatalog()
+    return catalogService
+}()

@@ -13,6 +13,8 @@
 		611B801F25F2E80900C300B7 /* HomeActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 611B801E25F2E80800C300B7 /* HomeActionView.swift */; };
 		611B802225F2ED1D00C300B7 /* CategoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 611B802125F2ED1D00C300B7 /* CategoryView.swift */; };
 		611B802425F2F1C900C300B7 /* CurrentCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 611B802325F2F1C900C300B7 /* CurrentCategory.swift */; };
+		611B802825F3751500C300B7 /* CatalogPreview.json in Resources */ = {isa = PBXBuildFile; fileRef = 611B802725F3751500C300B7 /* CatalogPreview.json */; };
+		611B802A25F3753700C300B7 /* GetCatalogPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 611B802925F3753700C300B7 /* GetCatalogPreview.swift */; };
 		61B72ECF25F2A2ED0065FB2A /* PizzaTechApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61B72ECE25F2A2ED0065FB2A /* PizzaTechApp.swift */; };
 		61B72ED125F2A2ED0065FB2A /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61B72ED025F2A2ED0065FB2A /* HomeView.swift */; };
 		61B72ED325F2A2EF0065FB2A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 61B72ED225F2A2EF0065FB2A /* Assets.xcassets */; };
@@ -28,6 +30,8 @@
 		611B801E25F2E80800C300B7 /* HomeActionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeActionView.swift; sourceTree = "<group>"; };
 		611B802125F2ED1D00C300B7 /* CategoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryView.swift; sourceTree = "<group>"; };
 		611B802325F2F1C900C300B7 /* CurrentCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentCategory.swift; sourceTree = "<group>"; };
+		611B802725F3751500C300B7 /* CatalogPreview.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = CatalogPreview.json; sourceTree = "<group>"; };
+		611B802925F3753700C300B7 /* GetCatalogPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetCatalogPreview.swift; sourceTree = "<group>"; };
 		61B72ECB25F2A2ED0065FB2A /* PizzaTech.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PizzaTech.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		61B72ECE25F2A2ED0065FB2A /* PizzaTechApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PizzaTechApp.swift; sourceTree = "<group>"; };
 		61B72ED025F2A2ED0065FB2A /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
@@ -106,6 +110,8 @@
 			isa = PBXGroup;
 			children = (
 				61B72ED525F2A2EF0065FB2A /* Preview Assets.xcassets */,
+				611B802725F3751500C300B7 /* CatalogPreview.json */,
+				611B802925F3753700C300B7 /* GetCatalogPreview.swift */,
 			);
 			path = "Preview Content";
 			sourceTree = "<group>";
@@ -198,6 +204,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				611B802825F3751500C300B7 /* CatalogPreview.json in Resources */,
 				61B72ED625F2A2EF0065FB2A /* Preview Assets.xcassets in Resources */,
 				61B72ED325F2A2EF0065FB2A /* Assets.xcassets in Resources */,
 			);
@@ -220,12 +227,96 @@
 				61B72ECF25F2A2ED0065FB2A /* PizzaTechApp.swift in Sources */,
 				611B801725F2C0B000C300B7 /* CatalogService.swift in Sources */,
 				611B801C25F2D46600C300B7 /* BackendAPI.swift in Sources */,
+				611B802A25F3753700C300B7 /* GetCatalogPreview.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		611B802525F3720F00C300B7 /* Preview */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = PREVIEW;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Preview;
+		};
+		611B802625F3720F00C300B7 /* Preview */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_ASSET_PATHS = "\"PizzaTech/Resources/Preview Content\"";
+				DEVELOPMENT_TEAM = RC32A2AMHF;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = PizzaTech/Resources/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = test.me.space8.PizzaTech;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Preview;
+		};
 		61B72EDD25F2A2EF0065FB2A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -393,6 +484,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				61B72EDD25F2A2EF0065FB2A /* Debug */,
+				611B802525F3720F00C300B7 /* Preview */,
 				61B72EDE25F2A2EF0065FB2A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -402,6 +494,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				61B72EE025F2A2EF0065FB2A /* Debug */,
+				611B802625F3720F00C300B7 /* Preview */,
 				61B72EE125F2A2EF0065FB2A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;

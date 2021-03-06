@@ -1,0 +1,178 @@
+{
+    "pizzas": {
+        "items": [{
+                "id": 194021,
+                "name": "Margherita",
+                "imageName": "margherita",
+                "prices": [6.99, 9.99, 11.99],
+                "ingredientDescription": "mit PizzasoÃƒÆ’Ã…Â¸e und echtem Gouda",
+                "vegetarian": true,
+                "vegan": false,
+                "spicy": false
+            }, {
+                "id": 59258,
+                "name": "Margherita Vegan",
+                "imageName": "margherita_vegan",
+                "prices": [6.99, 9.99, 11.99],
+                "ingredientDescription": "mit PizzasoÃƒÆ’Ã…Â¸e und veganem Reibegenuss von Simply V",
+                "vegetarian": false,
+                "vegan": true,
+                "spicy": false
+            },
+            {
+                "id": 392102,
+                "name": "4 KÃƒÆ’Ã‚Â¤se",
+                "imageName": "4kÃƒÆ’Ã‚Â¤se",
+                "prices": [10.99, 14.99, 19.99],
+                "ingredientDescription": "mit PizzasoÃƒÆ’Ã…Â¸e, HirtenkÃƒÆ’Ã‚Â¤se, Mozzarella, Cheddar und echtem Gouda",
+                "vegetarian": true,
+                "vegan": false,
+                "spicy": false
+            },
+            {
+                "id": 59202,
+                "name": "Venedig",
+                "imageName": "venedig",
+                "prices": [8.99, 12.99, 18.99],
+                "ingredientDescription": "mit PizzasoÃƒÆ’Ã…Â¸e, Tomaten, Mozzarella, Basilikum und echtem Gouda",
+                "vegetarian": true,
+                "vegan": false,
+                "spicy": false
+            },
+            {
+                "id": 51247,
+                "name": "Dublin",
+                "imageName": "dublin",
+                "prices": [8.99, 12.99, 17.99],
+                "ingredientDescription": "mit PizzasoÃƒÆ’Ã…Â¸e, Champignons, Paprika, Broccoli, Mais und echtem Gouda",
+                "vegetarian": true,
+                "vegan": false,
+                "spicy": false
+            }
+        ]
+    },
+
+    "iceDessert": {
+        "items": [{
+                "id": 1,
+                "name": "XXL-Cookie Choclate (Hell)",
+                "imageName": "XXLCookieChocolateLight",
+                "prices": [1.99],
+                "ingredientDescription": "XXL-Cookie mit Milchschokolade (103g)",
+                "vegan": false
+            },
+            {
+                "id": 2,
+                "name": "XXL-Cookie Double-Chocolate (Dunkel)",
+                "imageName": "XXLCookieDoubleChocolateDark",
+                "prices": [1.99],
+                "ingredientDescription": "XXL-Cookie mit doppelt Milchschokolade (103g)",
+                "vegan": false
+            },
+            {
+                "id": 3,
+                "name": "Donut",
+                "imageName": "ChocolateDonut",
+                "prices": [1.99],
+                "ingredientDescription": "Donut mit Alpenmilchschokolade (56g)",
+                "vegan": false
+            },
+            {
+                "id": 4,
+                "name": "Belgian Chocolate",
+                "imageName": "HaagenBelgianChocolate",
+                "prices": [7.49],
+                "ingredientDescription": "460ml - Schokoladen-Eiscreme mit Belgischer Schokolade",
+                "vegan": false
+            },
+            {
+                "id": 5,
+                "name": "Cookies & Cream",
+                "imageName": "HaagenCookiesAndCream",
+                "prices": [7.49],
+                "ingredientDescription": "460ml - Feinste, cremige Vanille-Eiscreme in Kombination mit leckeren Schokoladenkeks-StÃƒÆ’Ã‚Â¼ckchen!",
+                "vegan": false
+            },
+            {
+                "id": 6,
+                "name": "Macadamia nut brittle",
+                "imageName": "HaagenMacadamiaNutBrittle",
+                "prices": [7.49],
+                "ingredientDescription": "460ml - FÃƒÆ’Ã‚Â¼r Nuss-GenieÃƒÆ’Ã…Â¸er mit Feinschmecker-Gen! Feinste Vanille-Eiscreme kombiniert mit knusprig-karamellisierten Macadamianuss-StÃƒÆ’Ã‚Â¼ckchen!",
+                "vegan": false
+            },
+            {
+                "id": 7,
+                "name": "Mango & Raspberry",
+                "imageName": "HaagenMangoAndRaspberry",
+                "prices": [7.49],
+                "ingredientDescription": "460ml - Fruchtig exotisch und himmlisch erfrischend. Mango-Eiscreme durchzogen mit fruchtiger Himbeersauce.",
+                "vegan": false
+            },
+            {
+                "id": 8,
+                "name": "Peanut Butter Crunch",
+                "imageName": "HaagenPeanutButterCrunch",
+                "prices": [7.49],
+                "ingredientDescription": "460ml - Erdnussbutter Eiscreme durchzogen mit cremiger Erdnussbuttersauce und karamellisierten ErdnussstÃƒÆ’Ã‚Â¼ckchen.",
+                "vegan": false
+            },
+            {
+                "id": 9,
+                "name": "Vanilla Caramel Brownie",
+                "imageName": "HaagenVanillaCaramelBrownie",
+                "prices": [7.49],
+                "ingredientDescription": "460ml - Zartschmelzende Vanille-Eiscreme mit kÃƒÆ’Ã‚Â¶stlicher Karamellsauce und den heiÃƒÆ’Ã…Â¸ begehrten Schokokuchen-StÃƒÆ’Ã‚Â¼ckchen, fein kombiniert fÃƒÆ’Ã‚Â¼r einen einzigartigen Eiscremegenuss!",
+                "vegan": false
+            },
+            {
+                "id": 10,
+                "name": "Blondie Brownie Core",
+                "imageName": "BenJerryBlondieBrownieCore",
+                "prices": [7.49],
+                "ingredientDescription": "465ml - Schokoladeneiscreme mit saftigen SchokogebÃƒÆ’Ã‚Â¤ckstÃƒÆ’Ã‚Â¼ckchen",
+                "vegan": false
+            },
+            {
+                "id": 11,
+                "name": "Chocolate Fudge Brownie",
+                "imageName": "BenJerryChocolateFudgeBrownie",
+                "prices": [7.49],
+                "ingredientDescription": "465ml - Schokoladeneiscreme mit saftigen SchokogebÃƒÆ’Ã‚Â¤ckstÃƒÆ’Ã‚Â¼ckchen",
+                "vegan": false
+            },
+            {
+                "id": 12,
+                "name": "Cookie Dough",
+                "imageName": "BenJerryCookieDough",
+                "prices": [7.49],
+                "ingredientDescription": "465ml - Vanielleeiscreme mit leckeren KnusperstÃƒÆ’Ã‚Â¼ckchen",
+                "vegan": false
+            },
+            {
+                "id": 13,
+                "name": "Half Baked",
+                "imageName": "BenJerryHalfBaked",
+                "prices": [7.49],
+                "ingredientDescription": "465ml - Schokoladen- und Vanilleeiscreme mit SchokogebÃƒÆ’Ã‚Â¤ckstÃƒÆ’Ã‚Â¼cken, kakaohaltigen Bits und RiesenstÃƒÆ’Ã‚Â¼cken aus PlÃƒÆ’Ã‚Â¤tzchenteig",
+                "vegan": false
+            },
+            {
+                "id": 14,
+                "name": "Strawberry Cheesecake",
+                "imageName": "BenJerryStrawberryCheesecake",
+                "prices": [7.49],
+                "ingredientDescription": "465ml - Erdbeer- und KÃƒÆ’Ã‚Â¤sekucheneiscreme, ErdbeerstÃƒÆ’Ã‚Â¼ckchen und PlÃƒÆ’Ã‚Â¤tzchenteig",
+                "vegan": false
+            },
+            {
+                "id": 15,
+                "name": "Peanut Butter & Cookies Vegan",
+                "imageName": "BenJerryPeanutButterAndCookiesVegan",
+                "prices": [7.99],
+                "ingredientDescription": "465ml - Vanilleeis auf Mandelbasis mit gefÃƒÆ’Ã‚Â¼llten Kakao-Doppelkeksen, durchzogen von Erdnussbutter",
+                "vegan": true
+            }
+        ]
+    }
+}
