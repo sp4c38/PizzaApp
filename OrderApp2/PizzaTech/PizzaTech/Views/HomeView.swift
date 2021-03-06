@@ -8,20 +8,18 @@
 import SwiftUI
 import CoreData
 
-
 struct HomeView: View {
     @EnvironmentObject var catalogService: CatalogService
     
     var body: some View {
         NavigationView {
-            Group {
-                if catalogService.catalog != nil {
+            if catalogService.catalog != nil {
+                VStack {
                     HomeActionView()
                     CategoryView()
-                        .border(Color.black, width: 100)
                 }
+                .navigationBarTitle("Pizza Tech")
             }
-            .navigationBarTitle("Pizza Tech")
         }
         .onAppear { catalogService.fetchCatalog() }
         // Will hide inline navigation bar when other view linked here.

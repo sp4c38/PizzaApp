@@ -10,10 +10,28 @@ import OSLog
 
 struct PizzaTechServices: ViewModifier {
     static var catalogService = CatalogService()
+    static var previewCatalogService: CatalogService = {
+        let catalogService = CatalogService()
+        catalogService.fetchCatalog()
+        return catalogService
+    }()
     
-    func body(content: Content) -> some View {
+    private func servicesForPreview(_ content: Content) -> some View {
+        content
+            .environmentObject(Self.previewCatalogService)
+    }
+    
+    private func services(_ content: Content) -> some View {
         content
             .environmentObject(Self.catalogService)
+    }
+    
+    func body(content: Content) -> some View {
+        #if PREVIEW
+            return servicesForPreview(content)
+        #else
+           return services(content)
+        #endif
     }
 }
 

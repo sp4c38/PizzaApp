@@ -42,30 +42,43 @@ class PizzaItem: CatalogGeneralItem {
 protocol CatalogGeneralCategory: Codable {
     associatedtype CatalogGeneralItem
     
+    var name: String { get set }
+    var sizeNames: [String] { get set }
     var items: [CatalogGeneralItem] { get set }
 }
 
 class PizzaCategory: CatalogGeneralCategory {
+    var name: String
+    var sizeNames: [String]
     var items: [PizzaItem]
 }
 
 class IceDessertCategory: CatalogGeneralCategory {
+    var name: String
+    var sizeNames: [String]
     var items: [IceDessertItem]
+}
+
+enum CategoryID: Int {
+    case pizza = 1
+    case iceDessert = 2
+}
+
+struct Categories: Codable {
+    var pizza: PizzaCategory
+    var iceDessert: IceDessertCategory
+    
+    let categoryIDs: [CategoryID] = [.pizza, .iceDessert]
+    
+    enum CodingKeys: CodingKey {
+        case pizza
+        case iceDessert
+    }
 }
 
 // Catalog
 struct Catalog: Codable {
-    let pizzas: PizzaCategory
-    let iceDessert: IceDessertCategory
-    
-    let categories = {
-        ["Pizza", "Ice & Dessert"]
-    }()
-    
-    enum CodingKeys: CodingKey {
-        case pizzas
-        case iceDessert
-    }
+    var categories: Categories
 }
 
 class CatalogService: ObservableObject {
@@ -73,17 +86,11 @@ class CatalogService: ObservableObject {
     @Published var downloadInProgress = false
     @Published var downloadErrorOccurred = false
     
-    @Published var categorySelection: Int = 0
+    @Published var categorySelection: CategoryID = .pizza
 }
 
 extension CatalogService {
-    func setCategorySelection(to newCategory: Int) {
+    func setCategorySelection(to newCategory: CategoryID) {
         self.categorySelection = newCategory
     }
 }
-
-var previewCatalogService: CatalogService = {
-    let catalogService = CatalogService()
-    catalogService.fetchCatalog()
-    return catalogService
-}()
