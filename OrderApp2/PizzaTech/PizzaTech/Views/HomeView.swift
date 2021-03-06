@@ -13,14 +13,18 @@ struct HomeView: View {
     
     var body: some View {
         NavigationView {
-            if catalogService.catalog != nil {
-                VStack(spacing: 15) {
-                    MainActionsView()
-                        .padding(.top, 10)
-                    CategoryView()
+            Group {
+                if catalogService.catalog != nil {
+                    ScrollView {
+                        VStack(spacing: 22) {
+                            MainActionsView()
+                            CategoryView()
+                        }
+                    }
+                    .padding(.top, 5)
                 }
-                .navigationBarTitle("Pizza Tech")
             }
+            .navigationBarTitle("Pizza Tech")
         }
         .onAppear { catalogService.fetchCatalog() }
         // Will hide inline navigation bar when other view linked here.

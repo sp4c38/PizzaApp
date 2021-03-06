@@ -10,7 +10,7 @@ import SwiftUI
 struct MainActionButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .font(.headline)
+            .font(.subheadline.bold())
             .multilineTextAlignment(.center)
             .foregroundColor(.white)
             .frame(maxWidth: .infinity)
@@ -24,7 +24,7 @@ struct MainActionButtonStyle: ButtonStyle {
 
 struct MainActionsView: View {
     var body: some View {
-        HStack(spacing: 20) {
+        HStack(spacing: 13) {
             Button(action: {
                 
             }) {

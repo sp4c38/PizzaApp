@@ -51,31 +51,29 @@ struct CategoryItemCollection<T: CatalogGeneralItem>: View {
     }
     
     let gridColumns: [GridItem] = [
-        GridItem(.flexible(), spacing: 30),
+        GridItem(.flexible(), spacing: 13),
         GridItem(.flexible())
     ]
     
     var body: some View {
-        ScrollView() {
-            LazyVGrid(columns: gridColumns, spacing: 30) {
-                ForEach(items, id: \.id) { item in
-                    VStack(spacing: 0) {
-                        Image(item.imageName)
-                            .resizable()
-                            .scaledToFit()
+        LazyVGrid(columns: gridColumns, spacing: 30) {
+            ForEach(items, id: \.id) { item in
+                VStack(spacing: 0) {
+                    Image(item.imageName)
+                        .resizable()
+                        .scaledToFit()
 
-                        Text(item.name)
-                            .modifier(CategoryItemNameModifier())
-                    }
-                    .background(
-                        Color(hue: 0.9916, saturation: 0.9689, brightness: 0.8824)
-                    )
-                    .cornerRadius(10)
-                    .shadow(radius: 4)
+                    Text(item.name)
+                        .modifier(CategoryItemNameModifier())
                 }
+                .background(
+                    Color(hue: 0.9916, saturation: 0.9689, brightness: 0.8824)
+                )
+                .cornerRadius(10)
+                .shadow(radius: 4)
             }
-            .padding([.leading, .trailing], 15)
         }
+        .padding([.leading, .trailing], 16)
     }
 }
 
