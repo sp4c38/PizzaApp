@@ -14,7 +14,7 @@ struct HomeView: View {
     var body: some View {
         NavigationView {
             if catalogService.catalog != nil {
-                VStack(spacing: 10) {
+                VStack(spacing: 15) {
                     MainActionsView()
                         .padding(.top, 10)
                     CategoryView()
