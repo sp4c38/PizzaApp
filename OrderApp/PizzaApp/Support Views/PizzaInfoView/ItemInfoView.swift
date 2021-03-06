@@ -16,6 +16,7 @@ class ItemDisplayInfo {
     let id: Int32
     let name: String
     let image: Image
+    let imageName: String
     let ingredientDescription: String
     let dishHints: [DishHints]
     
@@ -34,6 +35,7 @@ class ItemDisplayInfo {
         self.id = id
         self.name = name
         image = Image(imageName)
+        self.imageName = imageName
         self.ingredientDescription = ingredientDescription
         self.dishHints = dishHints
         useSinglePrice = false
@@ -51,6 +53,7 @@ class ItemDisplayInfo {
         self.id = id
         self.name = name
         image = Image(imageName)
+        self.imageName = imageName
         self.ingredientDescription = ingredientDescription
         self.dishHints = dishHints
         useSinglePrice = true
@@ -111,20 +114,26 @@ struct ItemInfoView: View {
             }
             .padding(.bottom, 40)
     
+            Spacer()
+            
             Button(action: {
-//                let newCartItem = ShoppingCartItem(context: managedObjectContext)
-//                newCartItem.pizzaId = item.id
-//                newCartItem.name = pizza.name
-//                newCartItem.pictureName = pizza.imageName
-//                newCartItem.price = pizza.prices[selectedSizeIndex]
-//                newCartItem.sizeIndex = Int16(selectedSizeIndex)
-//
-//                do {
-//                    try managedObjectContext.save()
-//                    print("Added item to shopping cart.")
-//                } catch {
-//                    print("Error when trying to save a new Cart item. Error: \(error)")
-//                }
+                let newCartItem = ShoppingCartItem(context: managedObjectContext)
+                newCartItem.pizzaId = item.id
+                newCartItem.name = item.name
+                newCartItem.pictureName = item.imageName
+                if item.useSinglePrice {
+                    newCartItem.price = item.singlePrice
+                } else {
+                    newCartItem.price = item.prices[selectedSizeIndex]
+                }
+                newCartItem.sizeIndex = Int16(selectedSizeIndex)
+
+                do {
+                    try managedObjectContext.save()
+                    print("Added item to shopping cart.")
+                } catch {
+                    print("Error when trying to save a new Cart item. Error: \(error)")
+                }
 
             }) {
                 Text("Zum Warenkorb hinzufügen")

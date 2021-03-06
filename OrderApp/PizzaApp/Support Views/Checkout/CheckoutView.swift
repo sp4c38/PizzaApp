@@ -152,7 +152,7 @@ struct CheckoutView: View {
                         .padding(.leading, 16)
                         .padding(.trailing, 16)
                         
-                        NavigationLink(destination: HomeView(), isActive: $orderProperty.showOrderSuccessful) {
+                        NavigationLink(destination: HomeView().environmentObject(orderProperty), isActive: $orderProperty.showOrderSuccessful) {
                             Button(action: {
                                 // All requirements to the order details are also again checked on server side
                                 let fieldsEnteredCorrectly = checkoutValidateFields(orderDetails)
