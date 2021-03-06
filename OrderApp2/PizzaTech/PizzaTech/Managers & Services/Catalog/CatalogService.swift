@@ -42,33 +42,48 @@ class PizzaItem: CatalogGeneralItem {
 protocol CatalogGeneralCategory: Codable {
     associatedtype CatalogGeneralItem
     
-    var name: String { get set }
     var sizeNames: [String] { get set }
     var items: [CatalogGeneralItem] { get set }
 }
 
 class PizzaCategory: CatalogGeneralCategory {
-    var name: String
     var sizeNames: [String]
     var items: [PizzaItem]
 }
 
 class IceDessertCategory: CatalogGeneralCategory {
-    var name: String
     var sizeNames: [String]
     var items: [IceDessertItem]
 }
 
-enum CategoryID: Int {
-    case pizza = 1
-    case iceDessert = 2
+enum CategoryID {
+    case pizza
+    case iceDessert
+    
+    var identification: Int {
+        switch self {
+        case .pizza:
+            return 0
+        case .iceDessert:
+            return 1
+        }
+    }
+    
+    var name: String {
+        switch self {
+        case .pizza:
+            return "Pizza"
+        case .iceDessert:
+            return "Eis & Dessert"
+        }
+    }
 }
 
 struct Categories: Codable {
     var pizza: PizzaCategory
     var iceDessert: IceDessertCategory
     
-    let categoryIDs: [CategoryID] = [.pizza, .iceDessert]
+    let categoryID: [CategoryID] = [.pizza, .iceDessert]
     
     enum CodingKeys: CodingKey {
         case pizza

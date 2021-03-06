@@ -1,7 +1,6 @@
 {
     "categories": {
         "pizza": {
-            "name": "Pizza",
             "sizeNames": ["Freddy", "Maxi", "Super Maxi"],
             "items": [{
                     "id": 194021,
@@ -55,7 +54,6 @@
             ]
         },
         "iceDessert": {
-            "name": "Ice & Desserts",
             "sizeNames": ["S", "M", "L"],
             "items": [{
                     "id": 1,

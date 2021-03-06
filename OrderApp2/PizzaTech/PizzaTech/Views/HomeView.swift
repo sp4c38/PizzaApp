@@ -14,8 +14,9 @@ struct HomeView: View {
     var body: some View {
         NavigationView {
             if catalogService.catalog != nil {
-                VStack {
-                    HomeActionView()
+                VStack(spacing: 10) {
+                    MainActionsView()
+                        .padding(.top, 10)
                     CategoryView()
                 }
                 .navigationBarTitle("Pizza Tech")

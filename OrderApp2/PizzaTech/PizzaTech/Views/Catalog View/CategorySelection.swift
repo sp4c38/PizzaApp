@@ -27,8 +27,8 @@ struct CategorySelectionButton: View {
     let categoryID: CategoryID
     let categoryName: String
     
-    init(identifier: CategoryID, name: String) {
-        self.categoryID = identifier
+    init(id: CategoryID, name: String) {
+        self.categoryID = id
         self.categoryName = name
     }
     
@@ -55,14 +55,17 @@ struct CategorySelection: View {
     var body: some View {
         ScrollView(.horizontal, showsIndicators: true) {
             HStack(spacing: 15) {
-//                ForEach(categories.categoryIDs) { categoryID in
-//                    CategorySelectionButton(
-//                        identifier: categoryID.rawValue,
-//                        name: categories.categoryIDs
-//                    )
-//                }
+                ForEach(categories.categoryID, id: \.identification) { categoryID in
+                    getCategorySelectionButton(for: categoryID)
+                }
             }
+            .padding([.leading], 16)
         }
-        .padding([.leading], 16)
+    }
+    
+    func getCategorySelectionButton(for categoryID: CategoryID) -> some View {
+        let name = categoryID.name
+        
+        return CategorySelectionButton(id: categoryID, name: name)
     }
 }
