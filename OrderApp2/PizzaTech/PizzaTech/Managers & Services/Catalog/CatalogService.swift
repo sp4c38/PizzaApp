@@ -7,65 +7,42 @@
 
 import Foundation
 
-// Category items
+protocol CatalogFoodCharacteristics {
+    var vegetarian: Bool { get }
+    var vegan: Bool { get }
+    var spicy: Bool { get }
+}
+
 protocol CatalogGeneralItem: Codable {
-    var id: Int { get set }
-    var name: String { get set }
-    var imageName: String { get set }
-    var prices: [Float] { get set }
-    var ingredientDescription: String { get set }
+    var id: Int { get }
+    var name: String { get }
+    var imageName: String { get }
+    var prices: [Float] { get }
+    var ingredientDescription: String { get }
 }
 
-class IceDessertItem: CatalogGeneralItem {
-    var id: Int
-    var name: String
-    var imageName: String
-    
-    var prices: [Float]
-    var ingredientDescription: String
-}
-
-class PizzaItem: CatalogGeneralItem {
-    var id: Int
-    var name: String
-    var imageName: String
-    
-    var prices: [Float]
-    var ingredientDescription: String
-    
-    var vegetarian: Bool
-    var vegan: Bool
-    var spicy: Bool
-}
-
-// Categories
 protocol CatalogGeneralCategory: Codable {
     associatedtype CatalogGeneralItem
     
-    var sizeNames: [String] { get set }
-    var items: [CatalogGeneralItem] { get set }
-}
-
-class PizzaCategory: CatalogGeneralCategory {
-    var sizeNames: [String]
-    var items: [PizzaItem]
-}
-
-class IceDessertCategory: CatalogGeneralCategory {
-    var sizeNames: [String]
-    var items: [IceDessertItem]
+    var sizeNames: [String] { get }
+    var items: [CatalogGeneralItem] { get }
 }
 
 enum CategoryID {
-    case pizza
-    case iceDessert
+    case pizza, burger, salad, iceDessert, drink
     
     var identification: Int {
         switch self {
         case .pizza:
             return 0
-        case .iceDessert:
+        case .burger:
             return 1
+        case .salad:
+            return 2
+        case .iceDessert:
+            return 3
+        case .drink:
+            return 4
         }
     }
     
@@ -73,21 +50,29 @@ enum CategoryID {
         switch self {
         case .pizza:
             return "Pizza"
+        case .burger:
+            return "Burger"
+        case .salad:
+            return "Salad"
         case .iceDessert:
             return "Eis & Dessert"
+        case .drink:
+            return "Getränke"
         }
     }
 }
 
 struct Categories: Codable {
     var pizza: PizzaCategory
+    var burger: BurgerCategory
+    var salad: SaladCategory
     var iceDessert: IceDessertCategory
+    var drink: DrinkCategory
     
-    let categoryID: [CategoryID] = [.pizza, .iceDessert]
+    let categoryID: [CategoryID] = [.pizza, .burger, .salad, .iceDessert, .drink]
     
     enum CodingKeys: CodingKey {
-        case pizza
-        case iceDessert
+        case pizza, burger, salad, iceDessert, drink
     }
 }
 

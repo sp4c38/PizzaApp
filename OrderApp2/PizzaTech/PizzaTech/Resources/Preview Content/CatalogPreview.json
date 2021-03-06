@@ -23,8 +23,8 @@
                 },
                 {
                     "id": 392102,
-                    "name": "4 Käse",
-                    "imageName": "VierKäse",
+                    "name": "4 Käse",
+                    "imageName": "VierKäse",
                     "prices": [10.99, 14.99, 19.99],
                     "ingredientDescription": "mit PizzasoÃƒÆ’Ã…Â¸e, HirtenkÃƒÆ’Ã‚Â¤se, Mozzarella, Cheddar und echtem Gouda",
                     "vegetarian": true,
@@ -52,6 +52,42 @@
                     "spicy": false
                 }
             ]
+        },
+        "burger": {
+            "sizeNames": ["S", "M", "L"],
+            "items": [{
+                "id": 1,
+                "name": "Cheeseburger",
+                "imageName": "Cheeseburger",
+                "prices": [8.49],
+                "ingredientDescription": "Leckerer hausgemachter Cheeseburger.",
+                "vegetarian": true,
+                "vegan": false,
+                "spicy": false
+            }]
+        },
+        "salad": {
+            "sizeNames": ["S", "M", "L"],
+            "items": [{
+                "id": 1,
+                "name": "Gemischter Salat",
+                "imageName": "MixedSalad",
+                "prices": [6.49],
+                "ingredientDescription": "mit Salatmischung, Kirschtomate, Gurke, Mais, Paprika und Petersilie",
+                "vegetarian": true,
+                "vegan": true,
+                "spicy": false
+            },
+            {
+                "id": 2,
+                "name": "Balsamico Dressing",
+                "imageName": "BalsamicoDressing",
+                "prices": [0.99],
+                "ingredientDescription": "Leckerer Dressing - Perfekt für deinen Salat!",
+                "vegetarian": true,
+                "vegan": false,
+                "spicy": false
+            }]
         },
         "iceDessert": {
             "sizeNames": ["S", "M", "L"],
@@ -177,13 +213,13 @@
                 }
             ]
         },
-        "drinks": {
+        "drink": {
             "sizeNames": ["S", "M", "L"],
             "items": [{
                     "id": 1,
                     "name": "Wasser",
                     "imageName": "Water",
-                    "prices": [1.24]
+                    "prices": [1.24],
                     "ingredientDescription": "0,5l frisches Mineralwasser.\n0,25ct Pfand enthalten."
                 },
                 {
@@ -197,21 +233,21 @@
                     "id": 3,
                     "name": "Apfelsaft",
                     "imageName": "AppleJuice",
-                    "prices": [1.49]
+                    "prices": [1.49],
                     "ingredientDescription": "0,2l purer Apfelsaft."
                 },
                 {
                     "id": 4,
                     "name": "Erdbeersaft",
                     "imageName": "StrawberryJuice",
-                    "prices": [1.49]
+                    "prices": [1.49],
                     "ingredientDescription": "0,2l feinster Erdbeersaft."
                 },
                 {
                     "id": 5,
                     "name": "Orangensaft",
                     "imageName": "OrangeJuice",
-                    "prices": [1.49]
+                    "prices": [1.49],
                     "ingredientDescription": "0,2l schmackhafter Orangensaft."
                 },
                 {

@@ -20,8 +20,14 @@ struct SelectedCategory: View {
         VStack {
             if selection == .pizza {
                 CategoryItemCollection(items: categories.pizza.items)
+            } else if selection == .burger {
+                CategoryItemCollection(items: categories.burger.items)
+            } else if selection == .salad {
+                CategoryItemCollection(items: categories.salad.items)
             } else if selection == .iceDessert {
                 CategoryItemCollection(items: categories.iceDessert.items)
+            } else if selection == .drink {
+                CategoryItemCollection(items: categories.drink.items)
             }
         }
     }
@@ -50,7 +56,7 @@ struct CategoryItemCollection<T: CatalogGeneralItem>: View {
     ]
     
     var body: some View {
-        ScrollView {
+        ScrollView() {
             LazyVGrid(columns: gridColumns, spacing: 30) {
                 ForEach(items, id: \.id) { item in
                     VStack(spacing: 0) {
