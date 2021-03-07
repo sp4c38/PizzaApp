@@ -43,6 +43,18 @@ class SaladItem: CatalogGeneralItem, CatalogFoodCharacteristics {
     var spicy: Bool
 }
 
+class PastaItem: CatalogGeneralItem, CatalogFoodCharacteristics {
+    var id: Int
+    var name: String
+    var imageName: String
+    var prices: [Float]
+    var ingredientDescription: String
+    
+    var vegetarian: Bool
+    var vegan: Bool
+    var spicy: Bool
+}
+
 class IceDessertItem: CatalogGeneralItem {
     var id: Int
     var name: String

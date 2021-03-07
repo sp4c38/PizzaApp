@@ -89,6 +89,19 @@
                 "spicy": false
             }]
         },
+        "pasta": {
+            "sizeNames": ["S", "M", "L"],
+            "items": [{
+                "id": 1,
+                "name": "Pasta Lucca",
+                "imageName": "PastaLucca",
+                "prices": [7.99],
+                "ingredientDescription": "mit Penne (Makkaroni), Käse-Sahne-Soße, Kirschtomaten, Basilikum, Petersilie",
+                "vegetarian": true,
+                "vegan": false,
+                "spicy": false
+            }]
+        },
         "iceDessert": {
             "sizeNames": ["S", "M", "L"],
             "items": [{

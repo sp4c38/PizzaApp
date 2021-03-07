@@ -63,14 +63,24 @@ struct CategorySelection: View {
         catalogService.catalog!.categories
     }
     
+    let gridColumns: [GridItem] = [
+        GridItem(.adaptive(minimum: 100), spacing: 20, alignment: .center)
+    ]
+    
     var body: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 15) {
-                ForEach(categories.categoryID, id: \.identification) { categoryID in
-                    CategorySelectionButton(id: categoryID)
-                }
+        LazyVGrid(columns: gridColumns, alignment: .center, spacing: 10) {
+            ForEach(categories.categoryID, id: \.identification) { categoryID in
+                CategorySelectionButton(id: categoryID)
             }
-            .padding([.leading, .trailing], 16)
+            .fixedSize(horizontal: true, vertical: false)
         }
+        .padding([.leading, .trailing], 16)
+    }
+}
+
+struct CategorySelectin_Preview: PreviewProvider {
+    static var previews: some View {
+        CategorySelection()
+            .modifier(PizzaTechServices())
     }
 }

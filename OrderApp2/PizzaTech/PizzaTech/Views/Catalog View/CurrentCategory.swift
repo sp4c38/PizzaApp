@@ -24,6 +24,8 @@ struct SelectedCategory: View {
                 CategoryItemCollection(items: categories.burger.items)
             } else if selection == .salad {
                 CategoryItemCollection(items: categories.salad.items)
+            } else if selection == .pasta {
+                CategoryItemCollection(items: categories.pasta.items)
             } else if selection == .iceDessert {
                 CategoryItemCollection(items: categories.iceDessert.items)
             } else if selection == .drink {

@@ -22,6 +22,11 @@ class SaladCategory: CatalogGeneralCategory {
     var items: [SaladItem]
 }
 
+class PastaCategory: CatalogGeneralCategory {
+    var sizeNames: [String]
+    var items: [PastaItem]
+}
+
 class IceDessertCategory: CatalogGeneralCategory {
     var sizeNames: [String]
     var items: [IceDessertItem]

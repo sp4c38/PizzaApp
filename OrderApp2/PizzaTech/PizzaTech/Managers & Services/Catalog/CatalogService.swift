@@ -29,7 +29,7 @@ protocol CatalogGeneralCategory: Codable {
 }
 
 enum CategoryID {
-    case pizza, burger, salad, iceDessert, drink
+    case pizza, burger, salad, pasta, iceDessert, drink
     
     var identification: Int {
         switch self {
@@ -39,10 +39,12 @@ enum CategoryID {
             return 1
         case .salad:
             return 2
-        case .iceDessert:
+        case .pasta:
             return 3
-        case .drink:
+        case .iceDessert:
             return 4
+        case .drink:
+            return 5
         }
     }
     
@@ -53,7 +55,9 @@ enum CategoryID {
         case .burger:
             return "Burger"
         case .salad:
-            return "Salad"
+            return "Salat"
+        case .pasta:
+            return "Pasta"
         case .iceDessert:
             return "Eis & Dessert"
         case .drink:
@@ -66,13 +70,14 @@ struct Categories: Codable {
     var pizza: PizzaCategory
     var burger: BurgerCategory
     var salad: SaladCategory
+    var pasta: PastaCategory
     var iceDessert: IceDessertCategory
     var drink: DrinkCategory
     
-    let categoryID: [CategoryID] = [.pizza, .burger, .salad, .iceDessert, .drink]
+    let categoryID: [CategoryID] = [.pizza, .drink, .burger, .salad, .iceDessert, .pasta]
     
     enum CodingKeys: CodingKey {
-        case pizza, burger, salad, iceDessert, drink
+        case pizza, burger, salad, pasta, iceDessert, drink
     }
 }
 
