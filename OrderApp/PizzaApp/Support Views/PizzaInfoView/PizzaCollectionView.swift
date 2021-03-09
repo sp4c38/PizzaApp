@@ -144,20 +144,31 @@ struct PizzaCollectionShoppingCartView: View {
                     .scaledToFit()
                 
                 VStack(alignment: .leading, spacing: 5) {
-                    Text("Pizza \(shoppingCartItem.name)")
-                        .font(.title2)
-                        .bold()
-                        .multilineTextAlignment(.center)
-                        .shadow(radius: 4)
-                        .padding(.bottom, 10)
-                
-                    HStack {
-                        Text("Größe:")
-                            .font(.title3)
+                    if shoppingCartItem.pizzaId > 50 {
+                        Text("Pizza \(shoppingCartItem.name)")
+                            .font(.title2)
                             .bold()
-                        Spacer()
-                        Text(catalog.info["sizes"]![Int(shoppingCartItem.sizeIndex)])
-                            .font(.headline)
+                            .multilineTextAlignment(.center)
+                            .shadow(radius: 4)
+                            .padding(.bottom, 10)
+                    } else {
+                        Text("\(shoppingCartItem.name)")
+                            .font(.title2)
+                            .bold()
+                            .multilineTextAlignment(.center)
+                            .shadow(radius: 4)
+                            .padding(.bottom, 10)
+                    }
+                
+                    if shoppingCartItem.pizzaId > 50 {
+                        HStack {
+                            Text("Größe:")
+                                .font(.title3)
+                                .bold()
+                            Spacer()
+                            Text(catalog.info["sizes"]![Int(shoppingCartItem.sizeIndex)])
+                                .font(.headline)
+                        }
                     }
                     
                     HStack {
