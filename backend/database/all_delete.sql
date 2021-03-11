@@ -1,0 +1,11 @@
+-- For SQLite DBMS.
+
+DROP TABLE IF EXISTS delivery_users;
+
+DROP TABLE IF EXISTS categories;
+
+DROP TABLE IF EXISTS items;
+
+DROP TABLE IF EXISTS order_items;
+
+DROP TABLE IF EXISTS orders;
