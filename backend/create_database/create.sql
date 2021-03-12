@@ -18,9 +18,28 @@ CREATE TABLE items(
 	item_id INTEGER PRIMARY KEY,
 	name VARCHAR NOT NULL,
 	image_name VARCHAR,
+	ingredient_description VARCHAR,
 	category_id INT,
 	
 	FOREIGN KEY(category_id) REFERENCES categories(category_id) ON DELETE SET NULL
+);
+
+CREATE TABLE prices(
+	item_id INTEGER NOT NULL,
+	price_id INTEGER NOT NULL,
+	price DECIMAL(6, 2),
+	
+	PRIMARY KEY(item_id, price_id),
+	FOREIGN KEY(item_id) REFERENCES categories(item_id) ON DELETE CASCADE
+);
+
+CREATE TABLE item_specialities(
+	item_id INT PRIMARY KEY,
+	vegetarian BOOLEAN,
+	vegan BOOLEAN,
+	spicy BOOLEAN,
+	
+	FOREIGN KEY(item_id) REFERENCES items(item_id) ON DELETE CASCADE
 );
 
 CREATE TABLE orders(
