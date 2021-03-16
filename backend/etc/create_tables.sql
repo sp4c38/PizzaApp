@@ -55,6 +55,7 @@ CREATE TABLE orders(
 CREATE TABLE order_items(
 	order_id INT,
 	item_id INT,
+	unit_price DECIMAL(6, 2),
 	quantity INT,
 	
 	PRIMARY KEY(order_id, item_id),
