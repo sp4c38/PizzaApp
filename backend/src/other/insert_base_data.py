@@ -4,10 +4,11 @@ import csv
 import sqlite3
 import traceback
 
-from pathlib import Path 
+from pathlib import Path
 
 from config import read_config
 from database import DatabaseManager, check_table_exists, sanitize_string
+
 
 def get_base_data_files():
     data_dir = Path(__file__).parents[2] / "res" / "base_db_data"
@@ -23,16 +24,18 @@ def get_base_data_files():
 
     return data_csv
 
+
 def parse_csvs(files: [Path]):
     all_data = {}
     for file in files:
         table_name = file.name.removesuffix(".csv")
         with file.open("r", encoding="utf-8-sig") as fp:
             reader = csv.DictReader(fp, delimiter=",")
-            file_data = [row for row in reader] 
+            file_data = [row for row in reader]
             all_data[table_name] = file_data
 
     return all_data
+
 
 def insert_base_data(manager: DatabaseManager, base_data: dict):
     cursor = manager.conn.cursor()
@@ -53,17 +56,19 @@ def insert_base_data(manager: DatabaseManager, base_data: dict):
                     print(f"Couldn't insert base data {base_row}: {exp}.")
 
         else:
-            print(f"Won't insert base data as table doesn't exist: {table}")   
+            print(f"Won't insert base data as table doesn't exist: {table}")
 
     manager.conn.commit()
     cursor.close()
 
+
 def main():
-    config = read_config() 
+    config = read_config()
     data_files = get_base_data_files()
     db_manager = DatabaseManager(config)
     base_data = parse_csvs(data_files)
     insert_base_data(db_manager, base_data)
+
 
 if __name__ == "__main__":
     main()

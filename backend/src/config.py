@@ -1,17 +1,19 @@
 import sys
 
-from configparser import ConfigParser 
+from configparser import ConfigParser
 from pathlib import Path
 
 from box import Box
 
 from defaults import DEFAULT_CONFIG
 
+
 def create_config(path: Path):
     print(f"Creating config as it doesn't exist: {path.as_posix()}.")
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w") as fp:
         fp.write(DEFAULT_CONFIG)
+
 
 def read_config() -> ConfigParser:
     find_config_paths = (
@@ -34,12 +36,15 @@ def read_config() -> ConfigParser:
         print(f"Config file found at: {config_path.as_posix()}.")
         config_parsed.read(config_path)
 
-    config_json = {sec: dict(config_parsed.items(sec)) for sec in config_parsed.sections()}
+    config_json = {
+        sec: dict(config_parsed.items(sec)) for sec in config_parsed.sections()
+    }
     config = Box(config_json)
 
     config.db.path = Path(config.db.path).expanduser()
 
     return config
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     read_config()
