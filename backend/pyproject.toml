@@ -4,15 +4,17 @@ version = "0.0.1"
 description = "Backend for the PizzaTech-App."
 authors = ["Léon Becker <lb@alien8.de>"]
 packages = [
-	{include = "pizza-project-backend"}	
+    {include = "src"}	
 ]
 include = ["res/base_db_data"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
 Flask = "^1.1.2"
+python-box = "^5.3.0"
 
 [tool.poetry.dev-dependencies]
+ipython = "^7.21.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
