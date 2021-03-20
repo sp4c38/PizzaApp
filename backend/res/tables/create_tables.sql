@@ -30,7 +30,7 @@ CREATE TABLE prices(
 	price DECIMAL(6, 2),
 	
 	PRIMARY KEY(item_id, price_id),
-	FOREIGN KEY(item_id) REFERENCES categories(item_id) ON DELETE CASCADE
+	FOREIGN KEY(item_id) REFERENCES items(item_id) ON DELETE CASCADE
 );
 
 CREATE TABLE item_specialities(
