@@ -3,12 +3,13 @@ import sys
 from configparser import ConfigParser 
 from pathlib import Path
 
+from box import Box
+
 from defaults import DEFAULT_CONFIG
 
 def create_config(path: Path):
     print(f"Creating config as it doesn't exist: {path.as_posix()}.")
     path.parent.mkdir(parents=True, exist_ok=True)
-
     with path.open("w") as fp:
         fp.write(DEFAULT_CONFIG)
 
@@ -24,14 +25,19 @@ def read_config() -> ConfigParser:
             config_path = path
             break
 
-    config = ConfigParser()
+    config_parsed = ConfigParser()
     if config_path is None:
         new_config_path = find_config_paths[0]
         create_config(new_config_path)
-        config.read(new_config_path)
+        config_parsed.read(new_config_path)
     else:
         print(f"Config file found at: {config_path.as_posix()}.")
-        config.read(config_path)
+        config_parsed.read(config_path)
+
+    config_json = {sec: dict(config_parsed.items(sec)) for sec in config_parsed.sections()}
+    config = Box(config_json)
+
+    config.db.path = Path(config.db.path).expanduser()
 
     return config
 
