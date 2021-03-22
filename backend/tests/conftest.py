@@ -14,7 +14,7 @@ def setup_config() -> Box:
 
 
 @pytest.fixture(scope="session")
-def setup_database(setup_config) -> DatabaseManager:
+def db_manager(setup_config) -> DatabaseManager:
     db_path = setup_config.db.path
     db_manager = make_mock_database()
     yield db_manager
