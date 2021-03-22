@@ -1,13 +1,13 @@
 from pathlib import Path
 
 from src.database import DatabaseManager
-from src.other.insert_base_data import base_data_populate
+from src.tools.insert_base_data import base_data_populate
 
 
 def make_mock_database() -> DatabaseManager:
     db_manager = DatabaseManager(Path(":memory:"))
 
-    create_table = Path(__file__).parents[1] / "res" / "tables" / "create_tables.sql"
+    create_table = Path(__file__).parents[1] / "src" / "tools" / "create_tables.sql"
     create_table_query = create_table.read_text()
     db_manager.conn.executescript(create_table_query)
     db_manager.conn.commit()

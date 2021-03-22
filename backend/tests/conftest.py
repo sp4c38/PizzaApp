@@ -8,14 +8,20 @@ from tests.mock_database import make_mock_database
 
 
 @pytest.fixture(scope="session")
-def setup_config() -> Box:
+def config() -> Box:
     config = read_config()
     return config
 
 
 @pytest.fixture(scope="session")
-def db_manager(setup_config) -> DatabaseManager:
-    db_path = setup_config.db.path
+def mock_db_manager() -> DatabaseManager:
     db_manager = make_mock_database()
+    yield db_manager
+    db_manager.conn.close()
+
+
+@pytest.fixture(scope="session")
+def real_db_manager(config) -> DatabaseManager:
+    db_manager = DatabaseManager(config.db.path)
     yield db_manager
     db_manager.conn.close()
