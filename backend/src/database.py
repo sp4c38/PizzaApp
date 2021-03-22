@@ -8,25 +8,27 @@ from pathlib import Path, PosixPath
 
 class DatabaseManager:
     conn: sqlite3.Connection
+    location: PosixPath
 
     def __init__(self, db_location: PosixPath):
-        self._connect(db_location)
+        self.location = db_location
+        self._connect()
 
-    def _connect(self, db_location: PosixPath):
-        if not db_location == Path(":memory:"):
-            path = Path(db_location)
-            if not path.parent.exists():
-                print(f"Creating database parent directory at {path.parent}.")
-                path.parent.mkdir()
+    def _connect(self):
+        if not self.location == Path(":memory:"):
+            parent = self.location.parent
+            if not parent.exists():
+                print(f"Creating database parent directory at {location.parent}.")
+                parent.mkdir()
 
-            if not path.exists():
-                print(f"Creating new SQLite database at {path}.")
+            if not self.location.exists():
+                print(f"Creating new SQLite database at {self.location}.")
             else:
-                if not path.is_file():
-                    print(f"Path {path} is a directory, no SQLite database file.")
+                if not self.location.is_file():
+                    print(f"Path {self.location} is a directory, no SQLite database file.")
                     sys.exit()
 
-        self.conn = sqlite3.connect(db_location)
+        self.conn = sqlite3.connect(self.location)
 
 
 def check_table_exists(cursor: sqlite3.Cursor, name: str) -> bool:

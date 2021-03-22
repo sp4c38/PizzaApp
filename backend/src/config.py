@@ -33,7 +33,6 @@ def read_config() -> Box:
         _create_config(new_config_path)
         config_parsed.read(new_config_path)
     else:
-        print(f"Config file found at: {config_path.as_posix()}.")
         config_parsed.read(config_path)
 
     config_json = {
