@@ -11,15 +11,5 @@ db_manager = DatabaseManager(config.db.path)
 catalog = Catalog()
 catalog.construct(db_manager)
 
-
-@app.route("/catalog/")
-def get_catalog():
-    from flask import jsonify
-
-    # import IPython;IPython.embed()
-    print("Got catalog request")
-    return "Test"
-
-
 if __name__ == "__main__":
     app.run()

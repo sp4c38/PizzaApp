@@ -1,0 +1,19 @@
+# Collection of short queries needed to be run by the backend.
+
+catalog:
+  get_categories: 
+    SELECT category_id, name 
+    FROM categories;
+  get_items:
+    SELECT 
+      it.item_id, 
+      it.name, 
+      it.image_name, 
+      it.ingredient_description,
+      it.category_id,
+      its.vegetarian,
+      its.vegan,
+      its.spicy
+    FROM items it
+    LEFT JOIN item_specialities its
+      ON it.item_id = its.item_id;
