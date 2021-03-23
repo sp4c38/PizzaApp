@@ -1,10 +1,13 @@
 import pytest
 
+from pathlib import Path
+
 from box import Box
 
 from src.config import read_config
 from src.database import DatabaseManager
-from tests.mock_database import make_mock_database
+from src.tools.insert_base_data import base_data_populate
+from src.tools.tables import create_tables
 
 
 @pytest.fixture(scope="session")
@@ -15,7 +18,9 @@ def config() -> Box:
 
 @pytest.fixture(scope="session")
 def mock_db_manager() -> DatabaseManager:
-    db_manager = make_mock_database()
+    db_manager = DatabaseManager(Path(":memory:"))
+    create_tables(db_manager)
+    base_data_populate(db_manager)
     yield db_manager
     db_manager.conn.close()
 

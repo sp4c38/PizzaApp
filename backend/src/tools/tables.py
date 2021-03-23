@@ -36,7 +36,7 @@ def run_query(db_manager: DatabaseManager, query: str):
     cursor = db_manager.conn.cursor()
     cursor.executescript(query)
     db_manager.conn.commit()
-    cusor.close()
+    cursor.close()
 
 def create_tables(db_manager: DatabaseManager):
     query = get_tools_query("create_tables.sql")
@@ -56,7 +56,6 @@ def delete_tables(db_manager: DatabaseManager):
 def main():
     parser = get_parser()
     args = parser.parse_args()
-
     config = read_config()
     db_manager = DatabaseManager(config.db.path)
 
@@ -68,7 +67,7 @@ def main():
         elif args.operation == TABLE_OPERATIONS[1]:
             delete_tables(db_manager)
     else:
-        console.print("[yellow]Parse -h or --help to see usage information.[yellow]")
+        console.print("[yellow]Run with -h or --help for usage information.[yellow]")
 
 if __name__ == "__main__":
     main()
