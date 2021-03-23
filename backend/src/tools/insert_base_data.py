@@ -6,8 +6,8 @@ import traceback
 
 from pathlib import Path
 
-from src.config import read_config
-from src.database import DatabaseManager, check_table_exists
+from src.pizzaapp.config import read_config
+from src.pizzaapp.database import DatabaseManager, check_table_exists
 
 
 def get_base_data_files():
@@ -58,7 +58,7 @@ def insert_base_data(manager: DatabaseManager, base_data: dict):
                 except sqlite3.IntegrityError as exp:
                     print(f"Couldn't insert base data {base_row}: {exp}.")
 
-            print(f"Ran base data insertions for table {table_name}.")
+            print(f"Inserted base data for table {table_name}.")
 
             manager.conn.commit()
         else:

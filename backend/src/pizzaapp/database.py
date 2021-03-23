@@ -25,7 +25,9 @@ class DatabaseManager:
                 print(f"Creating new SQLite database at {self.location}.")
             else:
                 if not self.location.is_file():
-                    print(f"Path {self.location} is a directory, no SQLite database file.")
+                    print(
+                        f"Path {self.location} is a directory, no SQLite database file."
+                    )
                     sys.exit()
 
         self.conn = sqlite3.connect(self.location)

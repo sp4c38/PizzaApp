@@ -6,14 +6,15 @@ import sys
 from rich.console import Console
 from rich.prompt import Confirm
 
-from src.config import read_config
-from src.database import DatabaseManager
+from src.pizzaapp.config import read_config
+from src.pizzaapp.database import DatabaseManager
 from src.tools.utils import get_tools_query
 
 
 TABLE_OPERATIONS = ["create", "delete"]
 
 console = Console(highlight=True)
+
 
 def get_parser():
     parser = argparse.ArgumentParser(
@@ -32,26 +33,34 @@ def get_parser():
     )
     return parser
 
-def run_query(db_manager: DatabaseManager, query: str):
+
+def run_query_script(db_manager: DatabaseManager, query: str):
     cursor = db_manager.conn.cursor()
     cursor.executescript(query)
     db_manager.conn.commit()
     cursor.close()
 
+
 def create_tables(db_manager: DatabaseManager):
     query = get_tools_query("create_tables.sql")
-    run_query(db_manager, query)
-    console.print("[green bold]Created missing PizzaProject tables in database.[/green bold]")
+    run_query_script(db_manager, query)
+    console.print(
+        "[green bold]Created missing PizzaProject tables in database.[/green bold]"
+    )
+
 
 def delete_tables(db_manager: DatabaseManager):
-    really_delete = Confirm.ask("[red bold]Delete all existing PizzaProject tables?[/red bold]")
+    really_delete = Confirm.ask(
+        "[red bold]Delete all existing PizzaProject tables?[/red bold]"
+    )
 
     if really_delete:
         query = get_tools_query("delete_tables.sql")
-        run_query(db_manager, query)
+        run_query_script(db_manager, query)
         console.print("[green bold]Operation successful.[/green bold]")
     else:
         console.print("[green bold]Operation cancelled.[/green bold]")
+
 
 def main():
     parser = get_parser()
@@ -68,6 +77,7 @@ def main():
             delete_tables(db_manager)
     else:
         console.print("[yellow]Run with -h or --help for usage information.[yellow]")
+
 
 if __name__ == "__main__":
     main()

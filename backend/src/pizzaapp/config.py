@@ -5,7 +5,7 @@ from pathlib import Path
 
 from box import Box
 
-from src.defaults import DEFAULT_CONFIG
+from src.pizzaapp.defaults import DEFAULT_CONFIG
 
 
 def _create_config(path: Path):
