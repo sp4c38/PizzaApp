@@ -4,8 +4,8 @@ from pathlib import Path
 
 from box import Box
 
-from src.config import read_config
-from src.database import DatabaseManager
+from src.pizzaapp.config import read_config
+from src.pizzaapp.database import DatabaseManager
 from src.tools.insert_base_data import base_data_populate
 from src.tools.tables import create_tables
 

@@ -1,36 +1,47 @@
 import re
-import sqlite3
 import sys
 
+from pathlib import Path
+
 from box import Box
-from pathlib import Path, PosixPath
+from sqlalchemy import create_engine
+from sqlalchemy.engine import Engine
 
 
 class DatabaseManager:
-    conn: sqlite3.Connection
-    location: PosixPath
+    engine: Engine
+    db_location: str
 
-    def __init__(self, db_location: PosixPath):
-        self.location = db_location
-        self._connect()
+    def __init__(self, db_location: str):
+        self._connect(db_location)
 
-    def _connect(self):
-        if not self.location == Path(":memory:"):
-            parent = self.location.parent
-            if not parent.exists():
-                print(f"Creating database parent directory at {location.parent}.")
+    def _connect(self, location: str):
+        database_url = None
+        if location == ":memory:":
+            self.db_location = ":memory:"
+            database_url = "sqlite+pysqlite:///:memory:"
+        else:
+            db_path = Path(location)
+            db_path_posix = db_path.as_posix()
+            self.db_location = db_path_posix
+            db_path_parent = db_path.parent
+
+            if not db_path_parent.exists():
+                print(f"Creating database parent directory at {db_path_parent}.")
                 parent.mkdir()
 
-            if not self.location.exists():
-                print(f"Creating new SQLite database at {self.location}.")
+            if not db_path.exists():
+                print(f"Creating new SQLite database at {db_path_posix}.")
             else:
-                if not self.location.is_file():
+                if not db_path.is_file():
                     print(
-                        f"Path {self.location} is a directory, no SQLite database file."
+                        f"Path {db_path_posix} is a directory, no SQLite database file."
                     )
                     sys.exit()
 
-        self.conn = sqlite3.connect(self.location)
+            database_url = f"sqlite+pysqlite:///{location}"
+
+        self.engine = create_engine(database_url, future=True)
 
 
 def check_table_exists(cursor: sqlite3.Cursor, name: str) -> bool:
