@@ -5,12 +5,16 @@ from pathlib import Path
 
 from box import Box
 from sqlalchemy import create_engine
+from sqlalchemy import and_, bindparam, select, Table
 from sqlalchemy.engine import Engine
+from sqlalchemy.orm import registry
 
 
 class DatabaseManager:
-    engine: Engine
     db_location: str
+    engine: Engine
+    registry: registry
+    sqlite_master_table: Table
 
     def __init__(self, db_location: str):
         self._connect(db_location)
@@ -42,14 +46,17 @@ class DatabaseManager:
             database_url = f"sqlite+pysqlite:///{location}"
 
         self.engine = create_engine(database_url, future=True)
+        self.registry = registry()
+        self.sqlite_master_table = Table("sqlite_master", self.registry.metadata, autoload_with=self.engine)
 
 
-def check_table_exists(cursor: sqlite3.Cursor, name: str) -> bool:
-    cursor.execute(
-        """SELECT * FROM sqlite_master WHERE type = "table" AND name = ?""", (name,)
-    )
-    matches = cursor.fetchall()
-    if len(matches) > 0:
+def check_table_exists(db_manager: DatabaseManager, name: str) -> bool:
+    sqm_table = db_manager.sqlite_master_table
+    stmt = select(sqm_table).where(and_(sqm_table.c.type == "table", "name" == bindparam("name")))
+    
+    with db_manager.engine.connect() as conn:
+        table_matches = conn.execute(stmt, [{"name": name}]).all()
+    if len(table_matches) > 0:
         return True
     else:
         return False
