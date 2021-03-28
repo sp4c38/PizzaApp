@@ -1,34 +1,38 @@
-from src.pizzaapp.defaults import QUERIES
-from src.pizzaapp.database import DatabaseManager
+from sqlalchemy import Table, Column
+from sqlalchemy import Boolean, ForeignKey, Integer, Numeric, String
+from sqlalchemy.orm import relationship
 
+from src.pizzaapp import Base
 
-class Catalog:
-    def __init__(self):
-        pass
+class Category(Base):
+    print("Run categories")
+    __tablename__ = "category"
 
-    def _get_categories(self, cursor):
-        cursor.execute(QUERIES.catalog.get_categories)
-        categories = cursor.fetchall()
-        return categories
+    category_id = Column(Integer, primary_key=True)
+    name = Column(String)
 
-    def _get_category_items(self, cursor):
-        cursor.execute(QUERIES.catalog.get_items)
-        items = cursor.fetchall()
-        return items
+class Item(Base):
+    print("Run items")
+    __tablename__ = "item"
 
-    def _combine_catalog(self, categories: list, items: list):
-        catalog = {}
-        for category in categories:
-            catalog[category[0]] = {"id": category[1]}
-        for item in items:
-            pass
+    item_id = Column(Integer, primary_key=True)
+    name = Column(String)
+    image_name = Column(String)
+    ingredient_description = Column(String)
+    category_id = Column(ForeignKey("category.category_id"))
 
-    def construct(self, db_manager: DatabaseManager):
-        cursor = db_manager.conn.cursor()
-        categories = self._get_categories(cursor)
-        category_items = self.get_category_items(cursor)
+    category = relationship("Category", backref="items")
 
-        catalog = {"categories": []}
-        catalog["categories"] = _combine_to_categories(categories, category_items)
+class Price(Base):
+    item_id = Column(ForeignKey("item.item_id"), primary_key=True) 
+    price_id = Column(Integer, primary_key=True)
+    price = Column(Numeric(6, 2, asdecimal=True))
 
-        print(categories)
+class ItemSpecialities(Base):
+    __tablename__ = "item_specialities"
+    vegetarian = Column(Boolean)
+    vegan = Column(Boolean)
+    spicy = Column(Boolean)
+
+# if __name__ == "__main__":
+#     import IPython;IPython.embed()
