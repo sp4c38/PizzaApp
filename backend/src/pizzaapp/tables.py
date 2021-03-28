@@ -91,3 +91,6 @@ def confirm_required_tables_exist():
         if not required_table in existing_tables:
             raise RequiredTableMissing(required_table, config.db.path)
             sys.exit(1)
+
+if __name__ == "__main__":
+    import IPython;IPython.embed()
