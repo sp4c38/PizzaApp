@@ -82,3 +82,12 @@ class DeliveryUser(Base):
     username = Column(String, unique=True)
     pw_hash = Column(String(60))  # Includes hash and salt.
     date_created = Column(Date)
+
+def confirm_required_tables_exist():
+    existing_tables = inspector.get_table_names()
+    required_tables = NAMES_OF_TABLES.values()
+
+    for required_table in required_tables:
+        if not required_table in existing_tables:
+            raise RequiredTableMissing(required_table, config.db.path)
+            sys.exit(1)
