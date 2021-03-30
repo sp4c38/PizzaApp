@@ -7,7 +7,7 @@ from sqlalchemy import and_, bindparam, MetaData, select, Table
 from sqlalchemy.engine import Engine
 
 
-def connect(location: str) -> Engine:
+def connect(location: str, debug: bool) -> Engine:
     database_url = None
     if location == ":memory:":
         database_url = "sqlite+pysqlite:///:memory:"
@@ -29,6 +29,6 @@ def connect(location: str) -> Engine:
 
         database_url = f"sqlite+pysqlite:///{location}"
 
-    engine = create_engine(database_url, future=True)
+    engine = create_engine(database_url, future=True, echo=debug)
 
     return engine

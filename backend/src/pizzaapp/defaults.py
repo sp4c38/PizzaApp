@@ -3,6 +3,9 @@ from pathlib import Path
 from box import Box
 
 DEFAULT_CONFIG = """\
+[pizzaapp]
+debug = off
+
 [db]
 path = ~/.pizzaapp/db.sqlite3
 """

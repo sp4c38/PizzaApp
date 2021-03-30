@@ -8,7 +8,7 @@ from src.pizzaapp.database import connect
 
 config = read_config()
 
-engine = connect(config.db.path)
+engine = connect(config.db.path, config.pizzaapp.debug)
 
 inspector = inspect(engine)
 
