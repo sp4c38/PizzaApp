@@ -1,10 +1,31 @@
 import sys
 
+from decimal import Decimal
 from pathlib import Path
 
 from sqlalchemy import create_engine
-from sqlalchemy import and_, bindparam, MetaData, select, Table
+from sqlalchemy import MetaData, Table
 from sqlalchemy.engine import Engine
+from sqlalchemy.types import Integer, TypeDecorator
+
+
+class SQLiteDecimal(TypeDecorator):
+    impl = Integer
+
+    def __init__(self, scale):
+        super(SQLiteDecimal, self).__init__()
+        self.scale = scale
+        self.multiplier = 10 ** self.scale
+
+    def process_bind_param(self, value, dialect):
+        if value is not None:
+            converted_value = int(value * self.multiplier)
+        return converted_value
+
+    def process_result_value(self, value, dialect):
+        if value is not None:
+            converted_value = value / self.multiplier
+        return converted_value
 
 
 def connect(location: str, debug: bool) -> Engine:
