@@ -7,7 +7,6 @@ from src.pizzaapp.tables import confirm_required_tables_exist
 confirm_required_tables_exist()
 
 catalog = Catalog(engine)
-catalog.as_json()
 
 # app = Flask("PizzaApp")
 

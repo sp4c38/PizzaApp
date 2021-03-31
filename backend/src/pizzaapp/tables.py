@@ -1,12 +1,13 @@
-from sqlalchemy import Table, Column
-from sqlalchemy import Boolean, Date, ForeignKey, Integer, Numeric, String
+from sqlalchemy.types import Boolean, Date, Integer, String
+from sqlalchemy.schema import Column, ForeignKey, Table
 from sqlalchemy.orm import relationship
 
 from src.pizzaapp import Base, config, inspector
+from src.pizzaapp.database import SQLiteDecimal
 from src.pizzaapp.defaults import NAMES_OF_TABLES
 from src.pizzaapp.exceptions import RequiredTableMissing
 
-price_type = Numeric(6, 2, asdecimal=True)
+price_type = SQLiteDecimal(scale=2)
 
 # Catalog tables
 class Category(Base):
@@ -14,6 +15,8 @@ class Category(Base):
 
     category_id = Column(Integer, primary_key=True)
     name = Column(String)
+
+    items = relationship("Item", back_populates="category", lazy="selectin")
 
 
 class Item(Base):
@@ -25,7 +28,11 @@ class Item(Base):
     ingredient_description = Column(String)
     category_id = Column(ForeignKey("category.category_id"))
 
-    category = relationship("Category", backref="items")
+    category = relationship("Category", back_populates="items", lazy="selectin")
+    prices = relationship("Price", back_populates="item", lazy="selectin")
+    speciality = relationship(
+        "ItemSpeciality", uselist=False, back_populates="item", lazy="selectin"
+    )
 
 
 class Price(Base):
@@ -35,18 +42,18 @@ class Price(Base):
     price_id = Column(Integer, primary_key=True)
     price = Column(price_type)
 
-    item = relationship("Item", backref="prices")
+    item = relationship("Item", back_populates="prices", lazy="selectin")
 
 
 class ItemSpeciality(Base):
     __tablename__ = NAMES_OF_TABLES["item_speciality_table"]
-    
+
     item_id = Column(ForeignKey("item.item_id"), primary_key=True)
     vegetarian = Column(Boolean)
     vegan = Column(Boolean)
     spicy = Column(Boolean)
 
-    item = relationship("Item", backref="speciality")
+    item = relationship("Item", back_populates="speciality", lazy="selectin")
 
 
 # Order tables
@@ -83,6 +90,7 @@ class DeliveryUser(Base):
     pw_hash = Column(String(60))  # Includes hash and salt.
     date_created = Column(Date)
 
+
 def confirm_required_tables_exist():
     existing_tables = inspector.get_table_names()
     required_tables = NAMES_OF_TABLES.values()
@@ -91,6 +99,3 @@ def confirm_required_tables_exist():
         if not required_table in existing_tables:
             raise RequiredTableMissing(required_table, config.db.path)
             sys.exit(1)
-
-if __name__ == "__main__":
-    import IPython;IPython.embed()

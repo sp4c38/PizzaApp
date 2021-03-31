@@ -15,6 +15,7 @@ def _create_config(path: Path):
     with path.open("w") as fp:
         fp.write(DEFAULT_CONFIG)
 
+
 def _translate_to_bool(key: str, value: str, config_path: str) -> bool:
     true_strings = ["true", "on", "yes"]
     false_strings = ["false", "off", "no"]
@@ -26,6 +27,7 @@ def _translate_to_bool(key: str, value: str, config_path: str) -> bool:
         return False
     else:
         raise ConfigValueNotBool(key, value, config_path)
+
 
 def read_config() -> Box:
     find_config_paths = (
@@ -52,7 +54,9 @@ def read_config() -> Box:
     }
     config = Box(config_json)
 
-    config.pizzaapp.debug = _translate_to_bool("debug", config.pizzaapp.debug, config_path.as_posix())
+    config.pizzaapp.debug = _translate_to_bool(
+        "debug", config.pizzaapp.debug, config_path.as_posix()
+    )
     config.db.path = Path(config.db.path).expanduser()
 
     return config
