@@ -10,7 +10,7 @@ from src.pizzaapp.tables import Category, Item, Price, ItemSpeciality
 
 class Catalog:
     # The start points to access any object of the Catalog are the Category objects.
-    # For example Item objects can be access through them by using Category.items.
+    # For example Item objects can be access by using Category.items.
     categories: tuple[Category]
 
     def __init__(self, engine: Engine):

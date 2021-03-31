@@ -90,6 +90,8 @@ class DeliveryUser(Base):
     pw_hash = Column(String(60))  # Includes hash and salt.
     date_created = Column(Date)
 
+def map_tables():
+    pass
 
 def confirm_required_tables_exist():
     existing_tables = inspector.get_table_names()
