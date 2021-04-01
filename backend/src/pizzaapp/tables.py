@@ -1,5 +1,5 @@
 from sqlalchemy.types import Boolean, Date, Integer, String
-from sqlalchemy.schema import Column, ForeignKey, Table
+from sqlalchemy.schema import Column, ForeignKey
 from sqlalchemy.orm import relationship
 
 from src.pizzaapp import Base, config, inspector

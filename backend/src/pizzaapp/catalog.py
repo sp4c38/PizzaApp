@@ -1,11 +1,7 @@
 from box import Box
-from sqlalchemy import select
 from sqlalchemy.engine import Engine
 from sqlalchemy.orm import Session
-from sqlalchemy.orm import selectinload
-
-from src.pizzaapp import Base
-from src.pizzaapp.tables import Category, Item, ItemPrice, ItemSpeciality
+from src.pizzaapp.tables import Category
 
 
 class Catalog:

@@ -1,12 +1,11 @@
 #!/usr/bin/env python
 
 import argparse
-import sys
 
 from rich.console import Console
 from rich.prompt import Confirm
 
-from src.pizzaapp import config, engine, registry
+from src.pizzaapp import config, registry
 from src.tools.base_data import base_data_populate
 
 console = Console(highlight=True)

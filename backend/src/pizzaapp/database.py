@@ -4,7 +4,6 @@ from decimal import Decimal
 from pathlib import Path
 
 from sqlalchemy import create_engine
-from sqlalchemy import MetaData, Table
 from sqlalchemy.engine import Engine
 from sqlalchemy.types import Integer, TypeDecorator
 
