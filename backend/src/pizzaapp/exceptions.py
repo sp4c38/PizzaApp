@@ -20,7 +20,4 @@ class RequiredTableMissing(Exception):
         self.db_path = db_path
 
     def __str__(self):
-        return textwrap.dedent(
-            f"""
-            Required table "{self.table_name}" does not exist in database at {self.db_path}."""
-        )
+        return f'Required table "{self.table_name}" does not exist in database at {self.db_path}.'

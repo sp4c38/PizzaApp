@@ -17,7 +17,7 @@ path = ~/.pizzaapp/db.sqlite3
 NAMES_OF_TABLES = {
     "category_table": "category",
     "item_table": "item",
-    "price_table": "price",
+    "item_price_table": "item_price",
     "item_speciality_table": "item_speciality",
     "order_table": "order",
     "order_item_table": "order_item",

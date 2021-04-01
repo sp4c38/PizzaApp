@@ -19,7 +19,7 @@ class SQLiteDecimal(TypeDecorator):
 
     def process_bind_param(self, value, dialect):
         if value is not None:
-            converted_value = int(value * self.multiplier)
+            converted_value = int(Decimal(value) * self.multiplier)
         return converted_value
 
     def process_result_value(self, value, dialect):

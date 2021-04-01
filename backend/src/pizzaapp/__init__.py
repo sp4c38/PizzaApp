@@ -11,11 +11,12 @@ engine = connect(config.db.path, config.pizzaapp.debug)
 
 inspector = inspect(engine)
 
-registry = orm_registry()
+_metadata = MetaData(engine)
+registry = orm_registry(_metadata)
 Base = registry.generate_base()  # SQLAlchemy declarative ORM Base class
 
-# Import map_tables function at this point because it reliese on the Base class declared above.
-# If this import statment would stand before the Base declaration the program would fail due to circular imports.
+# Import map_tables function at this point, because it reliese on the Base class declared above.
+# If anything from src.pizzaapp.tables would be imported before the Base declaration the program would fail, due to circular imports.
 from src.pizzaapp.tables import map_tables
 
 map_tables()

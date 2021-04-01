@@ -29,14 +29,14 @@ class Item(Base):
     category_id = Column(ForeignKey("category.category_id"))
 
     category = relationship("Category", back_populates="items", lazy="selectin")
-    prices = relationship("Price", back_populates="item", lazy="selectin")
+    prices = relationship("ItemPrice", back_populates="item", lazy="selectin")
     speciality = relationship(
         "ItemSpeciality", uselist=False, back_populates="item", lazy="selectin"
     )
 
 
-class Price(Base):
-    __tablename__ = NAMES_OF_TABLES["price_table"]
+class ItemPrice(Base):
+    __tablename__ = NAMES_OF_TABLES["item_price_table"]
 
     item_id = Column(ForeignKey("item.item_id"), primary_key=True)
     price_id = Column(Integer, primary_key=True)
@@ -53,7 +53,9 @@ class ItemSpeciality(Base):
     vegan = Column(Boolean)
     spicy = Column(Boolean)
 
-    item = relationship("Item", back_populates="speciality", lazy="selectin")
+    item = relationship(
+        "Item", uselist=False, back_populates="speciality", lazy="selectin"
+    )
 
 
 # Order tables
@@ -90,8 +92,10 @@ class DeliveryUser(Base):
     pw_hash = Column(String(60))  # Includes hash and salt.
     date_created = Column(Date)
 
+
 def map_tables():
     pass
+
 
 def confirm_required_tables_exist():
     existing_tables = inspector.get_table_names()
