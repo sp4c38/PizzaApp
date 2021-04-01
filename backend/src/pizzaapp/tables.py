@@ -9,6 +9,7 @@ from src.pizzaapp.exceptions import RequiredTableMissing
 
 price_type = SQLiteDecimal(scale=2)
 
+
 # Catalog tables
 class Category(Base):
     __tablename__ = NAMES_OF_TABLES["category_table"]

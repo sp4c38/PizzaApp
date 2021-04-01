@@ -1,12 +1,18 @@
 import pytest
 
+from sqlalchemy import Table
+from sqlalchemy.engine import Engine
+
 
 @pytest.mark.parametrize(
     "db_manager",
     pytest.lazy_fixture(["mock_db_manager", "real_db_manager"]),
 )
 def test_database_manager(db_manager):
-    assert not db_manager.conn is None
+    assert isinstance(db_manager.engine, Engine)
+    conn = db_manager.engine.connect()
+    conn.close()
+    assert isinstance(db_manager.sqlite_master_table, Table)
 
 
 @pytest.mark.parametrize(

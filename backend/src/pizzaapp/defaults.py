@@ -11,8 +11,8 @@ path = ~/.pizzaapp/db.sqlite3
 """
 
 # Names for required database tables used by the backend.
-# NOTE: At startup the backend will check if all tables exist. It'll exit if not so. Use the
-# table insert and delete CLI tool program to make the database ready before
+# NOTE: At startup the backend will check if all tables exist. It'll exit if not so.
+# Use the table insert and delete CLI tool program to make the database ready before
 # starting the backend.
 NAMES_OF_TABLES = {
     "category_table": "category",
