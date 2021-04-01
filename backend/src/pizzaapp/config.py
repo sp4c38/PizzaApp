@@ -22,10 +22,9 @@ def _translate_to_bool(key: str, value: str, config_path: str) -> bool:
     condition = value.lower()
     if condition in true_strings:
         return True
-    elif condition in false_strings:
+    if condition in false_strings:
         return False
-    else:
-        raise ConfigValueNotBool(key, value, config_path)
+    raise ConfigValueNotBool(key, value, config_path)
 
 
 def read_config() -> Box:
