@@ -7,12 +7,12 @@ from rich.console import Console
 from rich.prompt import Confirm
 
 from src.pizzaapp import config, engine, registry
-
-TABLE_OPERATIONS = ["create", "delete"]
+from src.tools.base_data import base_data_populate
 
 console = Console(highlight=True)
 
 metadata = registry.metadata
+
 
 def get_parser():
     parser = argparse.ArgumentParser(
@@ -22,21 +22,37 @@ def get_parser():
         "-g", action="store_true", help="return database path", dest="show_db_path"
     )
     parser.add_argument(
-        "operation",
-        action="store",
-        nargs="?",
-        default=None,
-        choices=TABLE_OPERATIONS,
-        help="manipulate PizzaApp tables",
+        "-c",
+        "--create",
+        action="store_true",
+        default=False,
+        help="create pizzaapp tables",
+    )
+    parser.add_argument(
+        "-i",
+        "--insert",
+        action="store_true",
+        default=False,
+        help="insert pizzaapp base data into tables",
+    )
+    parser.add_argument(
+        "-d",
+        "--delete",
+        action="store_true",
+        default=False,
+        help="delete pizzaapp tables",
     )
     return parser
 
 
 def create_tables():
     metadata.create_all(checkfirst=True)
-    console.print(
-        "[green bold]Created PizzaApp tables in database.[/green bold]"
-    )
+    console.print("[green bold]Created PizzaApp tables in database.[/green bold]")
+
+
+def insert_base_data():
+    base_data_populate()
+    console.print("[green bold]Inserted PizzaApp base data.[/green bold]")
 
 
 def delete_tables():
@@ -57,11 +73,12 @@ def main():
 
     if args.show_db_path:
         console.print(f"[bold blue]Database path:[/bold blue] {config.db.path}")
-    elif args.operation is not None:
-        if args.operation == TABLE_OPERATIONS[0]:
-            create_tables()
-        elif args.operation == TABLE_OPERATIONS[1]:
-            delete_tables()
+    elif args.create is True:
+        create_tables()
+    elif args.insert is True:
+        insert_base_data()
+    elif args.delete is True:
+        delete_tables()
     else:
         console.print("[yellow]Run with -h or --help for usage information.[yellow]")
 
