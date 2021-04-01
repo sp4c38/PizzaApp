@@ -10,7 +10,6 @@ from sqlalchemy.orm import Session
 from src.pizzaapp import Base, engine
 from src.pizzaapp.defaults import NAMES_OF_TABLES
 from src.pizzaapp.tables import Category, Item, ItemPrice, ItemSpeciality
-from src.pizzaapp.tables import confirm_required_tables_exist
 
 
 def get_files() -> list[Path]:
