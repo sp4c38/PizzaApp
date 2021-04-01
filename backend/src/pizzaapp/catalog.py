@@ -5,22 +5,24 @@ from sqlalchemy.orm import Session
 from sqlalchemy.orm import selectinload
 
 from src.pizzaapp import Base
-from src.pizzaapp.tables import Category, Item, Price, ItemSpeciality
+from src.pizzaapp.tables import Category, Item, ItemPrice, ItemSpeciality
 
 
 class Catalog:
-    # The start points to access any object of the Catalog are the Category objects.
-    # For example Item objects can be access by using Category.items.
-    categories: tuple[Category]
-
     def __init__(self, engine: Engine):
+        # Only store categories, as they are the main access points to get
+        # any catalog object (i.e.: Category.items).
+        self.categories = self._load_categories(engine)
+        self._parsed_json = None
+
+    def _load_categories(self, engine: Engine) -> list[Category]:
         with Session(engine) as session:
-            self.categories = session.query(Category).all()
+            categories = session.query(Category).all()
+        return categories
 
     def to_json(self):
-        if hasattr(self, "_parsed_json"):
-            if self._parsed_json is not None:
-                return self._parsed_json
+        if self._parsed_json is not None:
+            return self._parsed_json
 
         parsed_data = Box()
         parsed_data.categories = {}

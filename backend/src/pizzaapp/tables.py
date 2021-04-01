@@ -95,6 +95,12 @@ class DeliveryUser(Base):
 
 
 def map_tables():
+    """
+    After the Base class from src.pizzaapp was created the table
+    classes above which conform to Base need to be processed to be
+    added to the Base's metadata. A simple import would be sufficient, 
+    but to increase code readability this function can be called.
+    """
     pass
 
 
@@ -103,6 +109,5 @@ def confirm_required_tables_exist():
     required_tables = NAMES_OF_TABLES.values()
 
     for required_table in required_tables:
-        if not required_table in existing_tables:
+        if required_table not in existing_tables:
             raise RequiredTableMissing(required_table, config.db.path)
-            sys.exit(1)

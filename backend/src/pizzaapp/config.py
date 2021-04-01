@@ -60,9 +60,3 @@ def read_config() -> Box:
     config.db.path = Path(config.db.path).expanduser()
 
     return config
-
-
-if __name__ == "__main__":
-    config = read_config()
-    config_toml = config.to_dict()
-    print(f"Read config: {config_toml}")

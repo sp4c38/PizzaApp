@@ -9,7 +9,7 @@ class ConfigValueNotBool(Exception):
 
     def __str__(self):
         return (
-            f"Key \"{self.key}\" with value \"{self.value}\" in "
+            f'Key "{self.key}" with value "{self.value}" in '
             f"config file {self.config_path} can't be converted to a bool. "
             "Use values like true, on, yes or false, off, no (case insensitive)."
         )
@@ -22,6 +22,6 @@ class RequiredTableMissing(Exception):
 
     def __str__(self):
         return (
-            f"Required table \"{self.table_name}\" does not exist in database "
+            f'Required table "{self.table_name}" does not exist in database '
             f"at {self.db_path}."
         )
