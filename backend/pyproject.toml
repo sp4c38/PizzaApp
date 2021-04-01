@@ -6,7 +6,7 @@ authors = ["Léon Becker <lb@alien8.de>"]
 packages = [
     {include = "src"}	
 ]
-include = ["res/base_db_data"]
+include = ["res/base_data"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
@@ -22,6 +22,9 @@ pytest = "^6.2.2"
 pytest-cov = "^2.11.1"
 pytest-randomly = "^3.5.0"
 pytest-lazy-fixture = "^0.6.3"
+
+[tool.black]
+line-length = 90
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
