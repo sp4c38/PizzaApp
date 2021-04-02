@@ -13,6 +13,10 @@ from src.pizzaapp.tables import Category, Item, ItemPrice, ItemSpeciality
 
 
 def get_files() -> list[Path]:
+    """Get paths of all CSV files containing base table data.
+
+    CSV files are tried to be lcoated in backend/res/base_data. 
+    """
     file_dir = Path(__file__).parents[2] / "res" / "base_data"
     dir_items = file_dir.iterdir()
     file_paths = []
@@ -29,6 +33,12 @@ def get_files() -> list[Path]:
 
 
 def transform_row(row: Box) -> Box:
+    """Apply multiple transformations on the values of a row.
+
+    Example:
+    Map all \\True (one backslash) values to a python boolean. 
+    """
+
     for column in row.keys():
         if row[column] == "\\True":
             row[column] = True
@@ -39,6 +49,10 @@ def transform_row(row: Box) -> Box:
 
 
 def load_base_data(files: [Path]) -> Box:
+    """Load the base data CSV files.
+
+    Also runs the row transformation function on each row.
+    """
     base_data = Box()
 
     for file in files:
@@ -54,6 +68,12 @@ def load_base_data(files: [Path]) -> Box:
 
 
 def _create_table_records(Table: Base, rows: list[dict]) -> list:
+    """Create table objects base on multiple rows of the CSV files.
+
+    For each row create a certain single table object (like Category or Item).
+    The type of the table object is parsed to the function. 
+    Returned are all table objects.
+    """
     table_records = []
     for row in rows:
         record = Table(**row)
@@ -63,6 +83,12 @@ def _create_table_records(Table: Base, rows: list[dict]) -> list:
 
 
 def map_base_data(data: dict):
+    """Map the base data rows to their exact table object.
+
+    The difference to _create_table_records is that this function takes
+    care of mapping all rows of a table to their exact table object type (like Category).
+    It then calls _create_table_records to get all table objects of a certain type.
+    """
     base_data = []
 
     for table_name in data.keys():
@@ -89,6 +115,7 @@ def map_base_data(data: dict):
 
 
 def insert_mapped_base_data(data: list):
+    """Inserts a set of rows containing one or multiple different table object row types."""
     with Session(engine, future=True) as session:
         for item in data:
             session.add(item)
@@ -96,6 +123,7 @@ def insert_mapped_base_data(data: list):
 
 
 def base_data_populate():
+    """Simple helper to call all module functions in the correct order to insert base data."""
     file_paths = get_files()
     base_data = load_base_data(file_paths)
     mapped_base_data = map_base_data(base_data)

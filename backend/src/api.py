@@ -8,7 +8,7 @@ confirm_required_tables_exist()
 
 catalog = Catalog(engine)
 
-# app = Flask("PizzaApp")
+app = Flask("PizzaApp")
 
 # if __name__ == "__main__":
 #     app.run()

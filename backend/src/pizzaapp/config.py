@@ -46,9 +46,7 @@ def read_config() -> Box:
     else:
         config_parsed.read(config_path)
 
-    config_json = {
-        sec: dict(config_parsed.items(sec)) for sec in config_parsed.sections()
-    }
+    config_json = {sec: dict(config_parsed.items(sec)) for sec in config_parsed.sections()}
     config = Box(config_json)
 
     config.pizzaapp.debug = _translate_to_bool(

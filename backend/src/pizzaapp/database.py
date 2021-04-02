@@ -10,7 +10,8 @@ from sqlalchemy.types import Integer, TypeDecorator
 
 # skipcq: PYL-W0223
 class SQLiteDecimal(TypeDecorator):
-    """ A SQLAlchemy TypedDecorator that makes it able to store decimals to SQLite with pysqlite.
+    """A SQLAlchemy TypedDecorator that makes it able to store decimals to SQLite with pysqlite.
+
     As the SQLAlchemy dialect pysqlite doesn't support decimals this type decorator helps.
     At database insertion decimal values are converted to integers. When the database
     is read the integers are converted back to decimal values.
@@ -18,6 +19,7 @@ class SQLiteDecimal(TypeDecorator):
     To convert decimals to integers the maximum scale which should be respected needs to be
     parsed to the initialization method.
     """
+
     impl = Integer
 
     def __init__(self, scale):

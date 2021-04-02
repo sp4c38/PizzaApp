@@ -5,9 +5,13 @@ from src.pizzaapp.tables import Category
 
 
 class Catalog:
+    """Catalog holds all Category objects and contains multiple helper functions.
+
+    Through the Category sub-category-objects can be accessed like
+    Category.items or Category.items[index].speciality.
+    """
+
     def __init__(self, engine: Engine):
-        # Only store categories, as they are the main access points to get
-        # any catalog object (i.e.: Category.items).
         self.categories = self._load_categories(engine)
         self._parsed_json = None
 
