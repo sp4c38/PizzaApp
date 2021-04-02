@@ -94,11 +94,12 @@ class DeliveryUser(Base):
     date_created = Column(Date)
 
 
+# skipcq: PTC-W0049
 def map_tables():
-    """
+    """Run to add above tables to the Base's metadata.
     After the Base class from src.pizzaapp was created the table
     classes above which conform to Base need to be processed to be
-    added to the Base's metadata. A simple import would be sufficient, 
+    added to the Base's metadata. A simple import would be sufficient,
     but to increase code readability this function can be called.
     """
     pass

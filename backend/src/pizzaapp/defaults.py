@@ -1,4 +1,3 @@
-
 DEFAULT_CONFIG = """\
 [pizzaapp]
 debug = off

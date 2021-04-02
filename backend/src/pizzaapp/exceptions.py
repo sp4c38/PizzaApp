@@ -1,7 +1,6 @@
-
-
 class ConfigValueNotBool(Exception):
     def __init__(self, key: str, value: str, config_path: str):
+        super().__init__(key, value, config_path)
         self.key = key
         self.value = value
         self.config_path = config_path
@@ -16,6 +15,7 @@ class ConfigValueNotBool(Exception):
 
 class RequiredTableMissing(Exception):
     def __init__(self, table_name: str, db_path: str):
+        super().__init__(table_name, db_path)
         self.table_name = table_name
         self.db_path = db_path
 

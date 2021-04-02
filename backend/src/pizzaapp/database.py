@@ -8,6 +8,7 @@ from sqlalchemy.engine import Engine
 from sqlalchemy.types import Integer, TypeDecorator
 
 
+# skipcq: PYL-W0223
 class SQLiteDecimal(TypeDecorator):
     impl = Integer
 
@@ -38,7 +39,7 @@ def connect(location: str, debug: bool) -> Engine:
 
         if not db_path_parent.exists():
             print(f"Creating database parent directory at {db_path_parent}.")
-            parent.mkdir()
+            db_path_parent.mkdir()
 
         if not db_path.exists():
             print(f"Creating new SQLite database at {db_path_posix}.")
