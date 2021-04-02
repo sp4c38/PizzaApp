@@ -102,7 +102,6 @@ def map_tables():
     added to the Base's metadata. A simple import would be sufficient,
     but to increase code readability this function can be called.
     """
-    pass
 
 
 def confirm_required_tables_exist():

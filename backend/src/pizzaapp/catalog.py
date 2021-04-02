@@ -11,7 +11,8 @@ class Catalog:
         self.categories = self._load_categories(engine)
         self._parsed_json = None
 
-    def _load_categories(self, engine: Engine) -> list[Category]:
+    @staticmethod
+    def _load_categories(engine: Engine) -> list[Category]:
         with Session(engine) as session:
             categories = session.query(Category).all()
         return categories
