@@ -12,6 +12,8 @@ price_type = SQLiteDecimal(scale=2)
 
 # Catalog tables
 class Category(Base):
+    """ A Category has a name is the parent/root of multiple Item objects.
+    """
     __tablename__ = NAMES_OF_TABLES["category_table"]
 
     category_id = Column(Integer, primary_key=True)
@@ -21,6 +23,9 @@ class Category(Base):
 
 
 class Item(Base):
+    """ An Item holds information about a product.
+    It has relationships to the child tables ItemPrice and ItemSpeciality.
+    """
     __tablename__ = NAMES_OF_TABLES["item_table"]
 
     item_id = Column(Integer, primary_key=True)
@@ -37,6 +42,7 @@ class Item(Base):
 
 
 class ItemPrice(Base):
+    """ An ItemPrice holds information about the price for a product."""
     __tablename__ = NAMES_OF_TABLES["item_price_table"]
 
     item_id = Column(ForeignKey("item.item_id"), primary_key=True)
@@ -47,6 +53,7 @@ class ItemPrice(Base):
 
 
 class ItemSpeciality(Base):
+    """ An ItemSpeciality holds information about specific special traits for a product."""
     __tablename__ = NAMES_OF_TABLES["item_speciality_table"]
 
     item_id = Column(ForeignKey("item.item_id"), primary_key=True)
@@ -61,6 +68,11 @@ class ItemSpeciality(Base):
 
 # Order tables
 class Order(Base):
+    """ An Order holds contact and address information for a placed order.
+    PizzaApp doesn't use a user table approche because it doesn't support accounts.
+    That's why all contact and address information of the person placing the order
+    are stored together with the order.
+    """
     __tablename__ = NAMES_OF_TABLES["order_table"]
 
     order_id = Column(Integer, primary_key=True)
@@ -73,6 +85,9 @@ class Order(Base):
 
 
 class OrderItem(Base):
+    """ An OrderItem is a single item coupled to an order. 
+    The item is coupled together with 
+    """
     __tablename__ = NAMES_OF_TABLES["order_item_table"]
 
     order_id = Column(ForeignKey("order.order_id"), primary_key=True)
@@ -86,6 +101,9 @@ class OrderItem(Base):
 
 # User tables
 class DeliveryUser(Base):
+    """ DeliveryUser stores information about users able to deliver products.
+    A delivery user is able to authenticate in the delivery app.
+    """
     __tablename__ = NAMES_OF_TABLES["delivery_user_table"]
 
     user_id = Column(Integer, primary_key=True)
