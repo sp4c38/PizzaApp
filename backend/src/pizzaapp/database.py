@@ -10,14 +10,17 @@ from sqlalchemy.types import Integer, TypeDecorator
 
 # skipcq: PYL-W0223
 class SQLiteDecimal(TypeDecorator):
-    """A SQLAlchemy TypedDecorator that makes it able to store decimals to SQLite with pysqlite.
+    """A SQLAlchemy TypeDecorator that stores decimals to SQLite.
 
-    As the SQLAlchemy dialect pysqlite doesn't support decimals this type decorator helps.
-    At database insertion decimal values are converted to integers. When the database
-    is read the integers are converted back to decimal values.
+    Problem:
+        The SQLAlchemy pysqlite dialect doesn't support decimals.
 
-    To convert decimals to integers the maximum scale which should be respected needs to be
-    parsed to the initialization method.
+    Before database insertion decimals are converted to integers.
+    After database read operations integers are converted to decimals.
+
+    Initialization:
+    :param scale: Maximum scale respected when converting from decimals to integers.
+        When converting all decimal digits after the amount of scale digits are truncated.
     """
 
     impl = Integer
@@ -28,17 +31,26 @@ class SQLiteDecimal(TypeDecorator):
         self.multiplier = 10 ** self.scale
 
     def process_bind_param(self, value, dialect):
+        """Convert a decimal value to an integer (usually called before db write operations)."""
         if value is not None:
             converted_value = int(Decimal(value) * self.multiplier)
         return converted_value
 
     def process_result_value(self, value, dialect):
+        """Convert an interger value to a decimal (usually called after db read operations)."""
         if value is not None:
             converted_value = value / self.multiplier
         return converted_value
 
 
 def connect(location: str, debug: bool) -> Engine:
+    """Connect to the SQLite database with SQLAlchemy.
+
+    :param location: Location of the database. If location is :memory: the function will use
+        an in-memory database connection. If location is a file system path the function
+        will read the file. 
+    :returns: A SQLAlchemy Engine object.
+    """
     database_url = None
     if location == ":memory:":
         database_url = "sqlite+pysqlite:///:memory:"

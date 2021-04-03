@@ -130,6 +130,11 @@ def map_tables():
 
 
 def confirm_required_tables_exist():
+    """Check if all required tables exist in the database.
+
+    The table names specified in defaults.py are used to identify and thus check if
+    tables exist.
+    """
     existing_tables = inspector.get_table_names()
     required_tables = NAMES_OF_TABLES.values()
 

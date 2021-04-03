@@ -8,6 +8,12 @@ from src.pizzaapp.defaults import DEFAULT_CONFIG
 
 
 def _create_config(path: Path):
+    """Insert the default config file content to a config file.
+
+    Will create missing directories and the file if not existing. 
+
+    :param path: Path at which to create the config file.
+    """
     print(f"Creating config as it doesn't exist: {path.as_posix()}.")
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w") as fp:
@@ -15,6 +21,7 @@ def _create_config(path: Path):
 
 
 def _translate_to_bool(key: str, value: str, config_path: str) -> bool:
+    """Convert a config value to a python boolean."""
     true_strings = ["true", "on", "yes"]
     false_strings = ["false", "off", "no"]
 
@@ -27,6 +34,10 @@ def _translate_to_bool(key: str, value: str, config_path: str) -> bool:
 
 
 def read_config() -> Box:
+    """Read the PizzaApp configuration file.
+
+    If the config file doesn't exist it will be created and filled with a default configuration.
+    """
     find_config_paths = (
         Path("~", ".config", "pizzaapp", "config.ini").expanduser(),
         Path("etc", "pizzaapp", "config.ini"),
