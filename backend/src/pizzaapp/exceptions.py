@@ -1,5 +1,5 @@
 class ConfigValueNotBool(Exception):
-    """ Exception indicating that a value inside the config can't be mapped to a python boolean."""
+    """Exception indicating that a value inside the config can't be mapped to a python boolean."""
 
     def __init__(self, key: str, value: str, config_path: str):
         super().__init__(key, value, config_path)
@@ -17,6 +17,7 @@ class ConfigValueNotBool(Exception):
 
 class RequiredTableMissing(Exception):
     """Exception raised whenever a required table is missing inside the database.
+
     Example:
     At startup the program checks if all tables required for the backend exist.
     """

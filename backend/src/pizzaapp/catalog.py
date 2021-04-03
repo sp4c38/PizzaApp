@@ -17,11 +17,17 @@ class Catalog:
 
     @staticmethod
     def _load_categories(engine: Engine) -> list[Category]:
+        """Load all Category objects and their associated objects.
+
+        Associated objects are table rows associated directly or indirectly with Category objects.
+        For example Category.items or Category.items[index].speciality.
+        """
         with Session(engine) as session:
             categories = session.query(Category).all()
         return categories
 
-    def to_json(self):
+    def to_json(self) -> dict:
+        """Convert the catalog to a json representation."""
         if self._parsed_json is not None:
             return self._parsed_json
 

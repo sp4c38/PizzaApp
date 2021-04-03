@@ -10,7 +10,7 @@ from src.pizzaapp.defaults import DEFAULT_CONFIG
 def _create_config(path: Path):
     """Insert the default config file content to a config file.
 
-    Will create missing directories and the file if not existing. 
+    Will create missing directories and the file if not existing.
 
     :param path: Path at which to create the config file.
     """

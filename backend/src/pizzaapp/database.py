@@ -48,7 +48,7 @@ def connect(location: str, debug: bool) -> Engine:
 
     :param location: Location of the database. If location is :memory: the function will use
         an in-memory database connection. If location is a file system path the function
-        will read the file. 
+        will read the file.
     :returns: A SQLAlchemy Engine object.
     """
     database_url = None

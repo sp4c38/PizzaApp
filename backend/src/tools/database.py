@@ -67,7 +67,6 @@ def delete_tables():
 
     See the create_table function how these tables are located.
     """
-
     really_delete = Confirm.ask("[red bold]Delete all existing PizzaApp tables?[/red bold]")
 
     if really_delete:
@@ -78,7 +77,7 @@ def delete_tables():
 
 
 def main():
-    """Main start point to handle all commands to this CLI."""
+    """Handle commands to this CLI."""
     parser = get_parser()
     args = parser.parse_args()
 

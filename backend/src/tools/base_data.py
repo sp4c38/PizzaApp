@@ -15,7 +15,7 @@ from src.pizzaapp.tables import Category, Item, ItemPrice, ItemSpeciality
 def get_files() -> list[Path]:
     """Get paths of all CSV files containing base table data.
 
-    CSV files are tried to be lcoated in backend/res/base_data. 
+    CSV files are tried to be lcoated in backend/res/base_data.
     """
     file_dir = Path(__file__).parents[2] / "res" / "base_data"
     dir_items = file_dir.iterdir()
@@ -33,12 +33,11 @@ def get_files() -> list[Path]:
 
 
 def transform_row(row: Box) -> Box:
-    """Apply multiple transformations on the values of a row.
+    r"""Apply multiple transformations on the values of a row.
 
     Example:
-    Map all \\True (one backslash) values to a python boolean. 
+    Map all \True (one backslash) values to a python boolean.
     """
-
     for column in row.keys():
         if row[column] == "\\True":
             row[column] = True
@@ -71,7 +70,7 @@ def _create_table_records(Table: Base, rows: list[dict]) -> list:
     """Create table objects base on multiple rows of the CSV files.
 
     For each row create a certain single table object (like Category or Item).
-    The type of the table object is parsed to the function. 
+    The type of the table object is parsed to the function.
     Returned are all table objects.
     """
     table_records = []
@@ -115,7 +114,7 @@ def map_base_data(data: dict):
 
 
 def insert_mapped_base_data(data: list):
-    """Inserts a set of rows containing one or multiple different table object row types."""
+    """Insert a set of rows containing one or multiple different table object row types."""
     with Session(engine, future=True) as session:
         for item in data:
             session.add(item)
@@ -123,7 +122,7 @@ def insert_mapped_base_data(data: list):
 
 
 def base_data_populate():
-    """Simple helper to call all module functions in the correct order to insert base data."""
+    """Insert base data into database by reading CSV files."""
     file_paths = get_files()
     base_data = load_base_data(file_paths)
     mapped_base_data = map_base_data(base_data)
