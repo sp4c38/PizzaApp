@@ -2,11 +2,15 @@
 
 import argparse
 
+from sqlalchemy import MetaData
+from sqlalchemy.engine import Engine
 from rich.console import Console
 from rich.prompt import Confirm
 
-from src.pizzaapp import config, registry
+from src.pizzaapp import config, engine, registry
 from src.tools.base_data import base_data_populate
+from src.tools.tables import create_tables, delete_tables
+from src.tools.base_data import get_files
 
 console = Console(highlight=True)
 
@@ -43,34 +47,27 @@ def get_parser():
     return parser
 
 
-def create_tables():
-    """Create all of the project tables.
-
-    The projects tables must have been added to the projects MetaData.
-    This is handled by the main projects __init__.py.
-    """
-    metadata.create_all(checkfirst=True)
+def cmd_create_tables(metadata: MetaData):
+    """Handle CLI command to create all projects tables."""
+    create_tables(metadata)
     console.print("[green bold]Created PizzaApp tables in database.[/green bold]")
 
 
-def insert_base_data():
-    """Insert base data by reading CSV files into the database.
-
-    Those CSV files are stored in backend/res/base_data.
-    """
-    base_data_populate()
+def cmd_insert_base_data(engine: Engine):
+    """Handle CLI command to insert base data."""
+    base_data_populate(engine)
     console.print("[green bold]Inserted PizzaApp base data.[/green bold]")
 
 
-def delete_tables():
-    """Delete all projects tables.
+def cmd_delete_tables(metadata: MetaData):
+    """Handle CLI command to delete all projects tables.
 
     See the create_table function how these tables are located.
     """
     really_delete = Confirm.ask("[red bold]Delete all existing PizzaApp tables?[/red bold]")
 
     if really_delete:
-        metadata.drop_all(checkfirst=True)
+        delete_tables(metadata)
         console.print("[green bold]All PizzaApp tables were deleted.[/green bold]")
     else:
         console.print("[green bold]No PizzaApp tables were deleted.[/green bold]")
@@ -84,11 +81,11 @@ def main():
     if args.show_db_path:
         console.print(f"[bold blue]Database path:[/bold blue] {config.db.path}")
     elif args.create is True:
-        create_tables()
+        cmd_create_tables(metadata)
     elif args.insert is True:
-        insert_base_data()
+        cmd_insert_base_data(engine)
     elif args.delete is True:
-        delete_tables()
+        cmd_delete_tables(metadata)
     else:
         console.print("[yellow]Run with -h or --help for usage information.[yellow]")
 

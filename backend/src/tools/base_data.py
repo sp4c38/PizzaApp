@@ -5,9 +5,10 @@ import csv
 from pathlib import Path
 
 from box import Box
+from sqlalchemy.engine import Engine
 from sqlalchemy.orm import Session
 
-from src.pizzaapp import Base, engine
+from src.pizzaapp import Base
 from src.pizzaapp.defaults import NAMES_OF_TABLES
 from src.pizzaapp.tables import Category, Item, ItemPrice, ItemSpeciality
 
@@ -47,7 +48,7 @@ def transform_row(row: Box) -> Box:
     return row
 
 
-def load_base_data(files: [Path]) -> Box:
+def load_base_data(files: list[Path]) -> Box:
     """Load the base data CSV files.
 
     Also runs the row transformation function on each row.
@@ -66,12 +67,15 @@ def load_base_data(files: [Path]) -> Box:
     return base_data
 
 
-def _create_table_records(Table: Base, rows: list[dict]) -> list:
-    """Create table objects base on multiple rows of the CSV files.
+def _create_table_records(Table: Base, rows: list[dict]) -> list[Base]:
+    """Convert rows of a certain table type to table objects.
 
-    For each row create a certain single table object (like Category or Item).
-    The type of the table object is parsed to the function.
-    Returned are all table objects.
+    Table objects are the ORM objects representing tables. For example Category or Item.
+
+    :param Table: The table object to which to convert to.
+    :param rows: A list of rows with each row represented by a dictionary. The dictionary
+        keys (column names) must match the names of the attributes on the table object.
+    :return: A list with table objects.
     """
     table_records = []
     for row in rows:
@@ -113,7 +117,7 @@ def map_base_data(data: dict):
     return base_data
 
 
-def insert_mapped_base_data(data: list):
+def insert_mapped_base_data(engine: Engine, data: list):
     """Insert a set of rows containing one or multiple different table object row types."""
     with Session(engine, future=True) as session:
         for item in data:
@@ -121,9 +125,9 @@ def insert_mapped_base_data(data: list):
         session.commit()
 
 
-def base_data_populate():
+def base_data_populate(engine: Engine):
     """Insert base data into database by reading CSV files."""
     file_paths = get_files()
     base_data = load_base_data(file_paths)
     mapped_base_data = map_base_data(base_data)
-    insert_mapped_base_data(mapped_base_data)
+    insert_mapped_base_data(engine, mapped_base_data)

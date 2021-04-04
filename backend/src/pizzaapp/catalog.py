@@ -46,15 +46,19 @@ class Catalog:
                 parsed_item.ingredient_description = item.ingredient_description
                 parsed_item.prices = [row.price for row in item.prices]
 
-                parsed_item.speciality = Box()
-                parsed_item.speciality.vegetarian = item.speciality.vegetarian
-                parsed_item.speciality.vegan = item.speciality.vegan
-                parsed_item.speciality.spicy = item.speciality.spicy
+                # A speciality for an item is optional. If no speciality exists a
+                # default speciality will be used - to have a consistent JSON structure.
+                default_speciality = Box(vegetarian=False, vegan=False, spicy=False)
+                parsed_item.speciality = default_speciality
+                if item.speciality is not None:
+                    parsed_item.speciality.vegetarian = item.speciality.vegetarian
+                    parsed_item.speciality.vegan = item.speciality.vegan
+                    parsed_item.speciality.spicy = item.speciality.spicy
 
                 parsed_category.all_items.append(parsed_item)
 
             category_name = category.name.lower()
             parsed_data.categories[category_name] = parsed_category
 
-        self._parsed_json = parsed_data.to_json()
+        self._parsed_json = parsed_data.to_dict()
         return self._parsed_json
