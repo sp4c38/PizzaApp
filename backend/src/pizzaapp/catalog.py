@@ -36,6 +36,7 @@ class Catalog:
 
         for category in self.categories:
             parsed_category = Box()
+            parsed_category.category_id = category.category_id
             parsed_category.all_items = []
 
             for item in category.items:
