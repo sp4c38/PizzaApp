@@ -18,12 +18,14 @@ def get_catalog():
     catalog_json = catalog.to_json()
     return jsonify(catalog_json)
 
+
 @app.route("/order/make/", methods=["POST"])
 def make_order():
     """Verify and save a new order."""
     order_json = request.get_json(silent=True, cache=False)
     order_valid = verify_order(order_json)
     return ""
+
 
 # if __name__ == "__main__":
 #     app.run()
