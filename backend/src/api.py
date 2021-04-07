@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import abort, Flask, jsonify, request
 
 from src.pizzaapp import engine
 from src.pizzaapp.catalog import Catalog
@@ -10,6 +10,12 @@ confirm_required_tables_exist()
 catalog = Catalog(engine)
 
 app = Flask("PizzaApp")
+
+
+@app.errorhandler(400)
+def bad_request(error):
+    error_return = {"error": {"name": error.name, "description": error.description}}, error.code
+    return error_return
 
 
 @app.route("/catalog/get/")
@@ -24,6 +30,8 @@ def make_order():
     """Verify and save a new order."""
     order_json = request.get_json(silent=True, cache=False)
     order_valid = verify_order(order_json)
+    if not order_valid:
+        return abort(400)
     return ""
 
 

@@ -5,6 +5,7 @@ from box import Box
 # Named tuple used when verifying that a field has a certain type.
 Field = namedtuple("Field", ["name", "type_"])
 
+
 def save_order():
     """Save new order to the database."""
     pass
@@ -31,7 +32,7 @@ def verify_order(order_json: dict) -> bool:
     :param order_json: The order as a dictionary.
     """
     SUCCESSFUL = True
-    UNSUCCESSFULL = False
+    UNSUCCESSFUL = False
 
     if order_json is None:
         return False
@@ -69,4 +70,4 @@ def verify_order(order_json: dict) -> bool:
             return UNSUCCESSFUL
 
     print("Order valid.")
-    return SUCCESFULL
+    return SUCCESSFUL
