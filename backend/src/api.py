@@ -1,4 +1,5 @@
 import signal
+import sys
 import threading
 import uuid
 
@@ -10,11 +11,11 @@ from werkzeug.exceptions import default_exceptions
 
 from src.pizzaapp import engine
 from src.pizzaapp.catalog import Catalog
-from src.pizzaapp.order import store_orders, verify_order
+from src.pizzaapp.order import run_store_orders, verify_order
 from src.pizzaapp.tables import confirm_required_tables_exist
 
 catalog = Catalog(engine)
-kill_event = threading.Event() # Kill event for threads to listen on.
+kill_event = threading.Event()  # Kill event for threads to listen on.
 store_orders_queue = Queue()
 
 app = Flask("PizzaApp")
@@ -83,7 +84,9 @@ def make_order():
 
 
 def _kill_event_handler(signum, frame):
+    """Set the threading kill event flag to true."""
     kill_event.set()
+    sys.exit(0)
 
 
 def main():
@@ -91,16 +94,20 @@ def main():
 
     This will perform some necessary operations before starting the actual Flask backend.
     """
+    print("Starting PizzaApp backend.")
     confirm_required_tables_exist()
 
+    # Threads should check the kill event periodically to check
+    # if the program should exit.
     signal.signal(signal.SIGINT, _kill_event_handler)
+
     store_orders_thread = threading.Thread(
-        name="store_orders", target=store_orders, args=(store_orders_queue,)
+        name="store_orders", target=run_store_orders, args=(store_orders_queue, kill_event)
     )
     store_orders_thread.start()
 
-    app.run()
 
+main()
 
 if __name__ == "__main__":
-    main()
+    app.run()
