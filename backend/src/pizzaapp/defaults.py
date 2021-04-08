@@ -15,7 +15,7 @@ NAMES_OF_TABLES = {
     "item_table": "item",
     "item_price_table": "item_price",
     "item_speciality_table": "item_speciality",
-    "order_table": "order",
+    "order_table": "order_details",
     "order_item_table": "order_item",
     "delivery_user_table": "delivery_user",
 }

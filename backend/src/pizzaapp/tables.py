@@ -31,7 +31,7 @@ class Item(Base):
     name = Column(String)
     image_name = Column(String)
     ingredient_description = Column(String)
-    category_id = Column(ForeignKey("category.category_id"))
+    category_id = Column(ForeignKey(Category.category_id))
 
     category = relationship("Category", back_populates="items", lazy="selectin")
     prices = relationship("ItemPrice", back_populates="item", lazy="selectin")
@@ -45,7 +45,7 @@ class ItemPrice(Base):
 
     __tablename__ = NAMES_OF_TABLES["item_price_table"]
 
-    item_id = Column(ForeignKey("item.item_id"), primary_key=True)
+    item_id = Column(ForeignKey(Item.item_id), primary_key=True)
     price_id = Column(Integer, primary_key=True)
     price = Column(price_type)
 
@@ -57,7 +57,7 @@ class ItemSpeciality(Base):
 
     __tablename__ = NAMES_OF_TABLES["item_speciality_table"]
 
-    item_id = Column(ForeignKey("item.item_id"), primary_key=True)
+    item_id = Column(ForeignKey(Item.item_id), primary_key=True)
     vegetarian = Column(Boolean)
     vegan = Column(Boolean)
     spicy = Column(Boolean)
@@ -69,7 +69,7 @@ class ItemSpeciality(Base):
 class Order(Base):
     """An Order holds contact and address information for a placed order.
 
-    PizzaApp doesn't use a user table approche because it doesn't support accounts.
+    PizzaApp doesn't use a user table approach because it doesn't support accounts.
     That's why all contact and address information of the person placing the order
     are stored together with the order.
     """
@@ -80,7 +80,6 @@ class Order(Base):
     first_name = Column(String)
     last_name = Column(String)
     street = Column(String)
-    street_number = Column(String)
     city = Column(String)
     postal_code = Column(String)
 
@@ -94,8 +93,8 @@ class OrderItem(Base):
 
     __tablename__ = NAMES_OF_TABLES["order_item_table"]
 
-    order_id = Column(ForeignKey("order.order_id"), primary_key=True)
-    item_id = Column(ForeignKey("item.item_id"), primary_key=True)
+    order_id = Column(ForeignKey(Order.order_id), primary_key=True)
+    item_id = Column(ForeignKey(Item.item_id), primary_key=True)
     unit_price = Column(price_type)
     quantity = Column(Integer)
 
