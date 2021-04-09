@@ -29,15 +29,16 @@ def _check_fields(dict_: Box, fields: list[Field]) -> bool:
     return True
 
 
-def verify_order(order: Box) -> bool:
-    """Verify if the order has the valid format.
+def verify_make_order(order: Box) -> bool:
+    """Verify the content of the request has the correct format to make an order.
 
-    :param order_json: The order as a dictionary.
+    :param order: The request body.
     """
     SUCCESSFUL = True
     UNSUCCESSFUL = False
 
     if order is None:
+        print("No valid order was sent when requesting to store a new order.")
         return False
 
     # Prefix o stands for order and is used to avoid name collisions
