@@ -1,3 +1,7 @@
+from binascii import Error as BasciiError
+from base64 import b64decode
+from typing import Optional
+
 from box import Box
 from flask import make_response, request
 from werkzeug.exceptions import default_exceptions
@@ -42,3 +46,24 @@ def get_request_body_json() -> Box:
     if body_json is not None:
         body_box = Box(body_json)
     return body_box
+
+
+def decode_base64(b64_encoded_string: str) -> Optional[str]:
+    """Decode a base64 string and catch multiple possible exceptions."""
+    try:
+        # Base64 string should always be encodable using ASCII characters.
+        b64_encoded_bytes = b64_encoded_string.encode("ascii")
+    except UnicodeEncodeError:
+        return None
+
+    try:
+        b64_decoded_bytes = b64decode(b64_encoded_bytes, validate=True)
+    except BasciiError:
+        return None
+
+    try:
+        b64_decoded_string = b64_decoded_bytes.decode("utf-8")
+    except UnicodeDecodeError:
+        return None
+
+    return b64_decoded_string

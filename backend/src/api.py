@@ -1,15 +1,13 @@
 import signal
 import sys
 import threading
-import uuid
 
 from queue import Full as QueueFullError, Queue
 
-from box import Box
-from flask import abort, Flask, request
+from flask import Flask, request
 
 from src.pizzaapp import engine
-from src.pizzaapp.auth import get_auth_info
+from src.pizzaapp.auth import check_user_valid, get_auth_info
 from src.pizzaapp.catalog import Catalog
 from src.pizzaapp.order import run_store_orders, verify_make_order
 from src.pizzaapp.tables import confirm_required_tables_exist
@@ -22,16 +20,16 @@ store_orders_queue = Queue()
 app = Flask("PizzaApp")
 
 
-@app.route("/catalog/get/")
+@app.route("/get/catalog/")
 def get_catalog():
     """Get the product catalog as JSON."""
     catalog_json = catalog.to_json()
     return successful_response(catalog_json)
 
 
-@app.route("/order/make/", methods=["POST"])
+@app.route("/make/order/", methods=["POST"])
 def make_order():
-    """Verify the order request and save it to a order store queue.
+    """Hand in a new order.
 
     The order won't be stored here, but added to a queue which is
     observed by another thread, which then stores the order in the background.
@@ -49,15 +47,27 @@ def make_order():
     return successful_response()
 
 
-@app.route("/token/access/", methods=["POST"])
-def 
-
-@app.route("/token/refresh/", methods=["POST"])
+@app.route("/get/auth/refresh_token/", methods=["POST"])
 def acquire_refresh_token():
-    """Aquire a token for a specific user."""
+    """Request a refresh token.
+
+    Username and password need to be sent to the server.
+    If this information is correct a refresh token is generated and
+    sent back, if not an appropriate response code will be returned.
+    """
     headers = request.headers
     auth_info = get_auth_info(headers)
-    check_
+    if auth_info is None:
+        return error_response(400)
+    user_valid = check_user_valid(auth_info)
+    if user_valid is False:
+        return error_response(401)
+    else:
+        return "Valid!"
+
+@app.route("/get/auth/session_token/", methods=["POST"])
+def acquire_session_token():
+    """Request a session token by using a refresh token."""
 
 
 def _kill_event_handler(signum, frame):
