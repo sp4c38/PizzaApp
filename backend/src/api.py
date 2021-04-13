@@ -5,9 +5,10 @@ import threading
 from queue import Full as QueueFullError, Queue
 
 from flask import Flask, request
+from sqlalchemy.orm import Session
 
 from src.pizzaapp import engine
-from src.pizzaapp.auth import check_user_valid, get_auth_info
+from src.pizzaapp.auth import get_auth_info, get_delivery_user, get_refresh_token, get_uacid
 from src.pizzaapp.catalog import Catalog
 from src.pizzaapp.order import run_store_orders, verify_make_order
 from src.pizzaapp.tables import confirm_required_tables_exist
@@ -55,15 +56,22 @@ def acquire_refresh_token():
     If this information is correct a refresh token is generated and
     sent back, if not an appropriate response code will be returned.
     """
-    headers = request.headers
-    auth_info = get_auth_info(headers)
+    authorization_header = request.authorization
+    auth_info = get_auth_info(authorization_header)
     if auth_info is None:
         return error_response(400)
-    user_valid = check_user_valid(auth_info)
-    if user_valid is False:
-        return error_response(401)
-    else:
-        return "Valid!"
+
+    uacid = get_uacid(request.headers)
+    if uacid is None:
+        return error_response(400)
+
+    with Session(engine) as session:
+        delivery_user = get_delivery_user(session, auth_info)
+        if delivery_user is None:
+            return error_response(401)
+        refresh_token = get_refresh_token(session, delivery_user)
+        return refresh_token
+
 
 @app.route("/get/auth/session_token/", methods=["POST"])
 def acquire_session_token():
