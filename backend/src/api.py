@@ -16,13 +16,14 @@ from src.pizzaapp.auth import (
     register_refresh_token,
 )
 from src.pizzaapp.catalog import Catalog
-from src.pizzaapp.order import run_store_orders, verify_make_order
+from src.pizzaapp.order import store_order, verify_make_order
+from src.pizzaapp.store import run_store_to_database, StoreOperation
 from src.pizzaapp.tables import confirm_required_tables_exist
-from src.pizzaapp.utils import successful_response, error_response, get_request_body_json
+from src.pizzaapp.utils import successful_response, error_response, get_json_request_body_box
 
 catalog = Catalog(engine)
 kill_event = threading.Event()  # Kill event for threads to listen on.
-store_orders_queue = Queue()
+store_queue = Queue()
 
 app = Flask("PizzaApp")
 
@@ -41,13 +42,14 @@ def make_order():
     The order won't be stored here, but added to a queue which is
     observed by another thread, which then stores the order in the background.
     """
-    body = get_request_body_json()
+    body = get_json_request_body_box(request)
     request_valid = verify_make_order(body)
     if not request_valid:
         return error_response(400)
 
+    store_operation = StoreOperation(store_order, (body,))
     try:
-        store_orders_queue.put(body, block=True, timeout=2)
+        store_queue.put(store_operation, block=True, timeout=2)
     except QueueFullError:
         return error_response(500)
 
@@ -105,10 +107,10 @@ def main():
     # if the program should exit.
     signal.signal(signal.SIGINT, _kill_event_handler)
 
-    store_orders_thread = threading.Thread(
-        name="store_orders", target=run_store_orders, args=(store_orders_queue, kill_event)
+    store_thread = threading.Thread(
+        name="store_orders", target=run_store_to_database, args=(store_queue, kill_event)
     )
-    store_orders_thread.start()
+    store_thread.start()
 
 
 main()

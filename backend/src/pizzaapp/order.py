@@ -1,13 +1,9 @@
-import threading
-
 from collections import namedtuple
-from queue import Empty as QueueEmptyError, Queue
 
 from box import Box
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from src.pizzaapp import engine
 from src.pizzaapp.tables import Item, Order, OrderItem
 
 # Named tuple used when verifying that a field has a certain type.
@@ -22,9 +18,11 @@ def _check_fields(dict_: Box, fields: list[Field]) -> bool:
 
     for field in fields:
         if field[0] not in dict_:
+            print(f"Field {field[0]} not contained in {dict_}.")
             return False
         field_value = dict_[field.name]
         if not isinstance(field_value, field.type_):
+            print(f"Type of field {field[0]} in {dict_} is not required type {field[1]}.")
             return False
     return True
 
@@ -120,36 +118,7 @@ def store_order(session: Session, order: Box):
             quantity=item.quantity,
         )
         session.add(new_item)
-    session.flush()
 
+    session.flush()
     session.commit()
     print("Added new order to the database.")
-
-
-def run_store_orders(queue: Queue, kill_event: threading.Event, refresh_interval=0.5):
-    """Runs tasks to store new orders.
-
-    :param queue: Queue which will be observed for new orders and from which the
-        orders will be retrieved.
-    :param kill_event: A event which will be set when this function/thread should
-        be exited.
-    :param refresh_interval: Optional interval in which to check if there are items
-        in the queue after it was found to be empty.
-    """
-    session = Session(engine)
-    while True:
-        while not queue.empty():
-            try:
-                new_order = queue.get(block=False)
-            except QueueEmptyError:
-                break
-
-            store_order(session, new_order)
-
-        kill_thread = kill_event.wait(refresh_interval)
-        if kill_thread is True:
-            break
-
-    thread = threading.current_thread()
-    print(f'Shutting down "{thread.name}" child thread (TID: {thread.native_id}).')
-    session.close()

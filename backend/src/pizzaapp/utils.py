@@ -3,7 +3,7 @@ from base64 import b64decode
 from typing import Optional
 
 from box import Box
-from flask import make_response, request
+from flask import make_response, Request
 from werkzeug.exceptions import default_exceptions
 
 
@@ -40,7 +40,7 @@ def error_response(error_code: int) -> dict:
     return response
 
 
-def get_request_body_json() -> Box:
+def get_json_request_body_box(request: Request) -> Box:
     body_json = request.get_json(silent=True, cache=False)
     body_box = None
     if body_json is not None:
