@@ -18,4 +18,6 @@ NAMES_OF_TABLES = {
     "order_table": "order_details",
     "order_item_table": "order_item",
     "delivery_user_table": "delivery_user",
+    "refresh_token_table": "refresh_token",
+    "access_token_table": "access_token",
 }

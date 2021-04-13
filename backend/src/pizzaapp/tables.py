@@ -114,7 +114,30 @@ class DeliveryUser(Base):
     user_id = Column(Integer, primary_key=True)
     username = Column(String, unique=True)
     pw_hash = Column(String(60))  # Includes hash and salt.
-    date_created = Column(Date)
+    date_created = Column(Integer)  # Stored as timestamp.
+
+
+class RefreshToken(Base):
+    """Table to store refresh tokens."""
+
+    __tablename__ = NAMES_OF_TABLES["refresh_token_table"]
+
+    refresh_token_id = Column(Integer, primary_key=True)
+    user_id = Column(ForeignKey(DeliveryUser.user_id), nullable=False)
+    refresh_token = Column(String, nullable=False)
+    uacid = Column(String, nullable=False, unique=True)
+
+
+class AccessToken(Base):
+    """Table to store access tokens."""
+
+    __tablename__ = NAMES_OF_TABLES["access_token_table"]
+
+    access_token_id = Column(Integer, primary_key=True)
+    # Refresh token with which the access token was created.
+    refresh_token_id = Column(ForeignKey(RefreshToken.refresh_token_id), nullable=False)
+    access_token = Column(String, nullable=False)
+    expiration_time = Column(Integer)  # Stored as timestamp.
 
 
 # skipcq: PTC-W0049
