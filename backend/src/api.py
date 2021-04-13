@@ -8,7 +8,13 @@ from flask import Flask, request
 from sqlalchemy.orm import Session
 
 from src.pizzaapp import engine
-from src.pizzaapp.auth import get_auth_info, get_delivery_user, get_refresh_token, get_uacid
+from src.pizzaapp.auth import (
+    check_refresh_token,
+    get_auth_info,
+    get_delivery_user,
+    get_uacid,
+    register_refresh_token,
+)
 from src.pizzaapp.catalog import Catalog
 from src.pizzaapp.order import run_store_orders, verify_make_order
 from src.pizzaapp.tables import confirm_required_tables_exist
@@ -69,8 +75,11 @@ def acquire_refresh_token():
         delivery_user = get_delivery_user(session, auth_info)
         if delivery_user is None:
             return error_response(401)
-        refresh_token = get_refresh_token(session, delivery_user)
-        return refresh_token
+        make_new_refresh_token = check_refresh_token(session, delivery_user, uacid)
+        if not make_new_refresh_token:
+            return error_response(409)
+        refresh_token = register_refresh_token(session, uacid, delivery_user)
+    return refresh_token
 
 
 @app.route("/get/auth/session_token/", methods=["POST"])

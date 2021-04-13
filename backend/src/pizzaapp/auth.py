@@ -1,17 +1,20 @@
+import secrets
+
 from collections import namedtuple
 from typing import Optional
 
 from passlib.hash import bcrypt
-from sqlalchemy import select
+from sqlalchemy import and_, func, select
 from sqlalchemy.orm import Session
+from werkzeug.datastructures import Authorization as AuthorizationHeader
 
-from src.pizzaapp.tables import DeliveryUser
+from src.pizzaapp.tables import DeliveryUser, RefreshToken
 from src.pizzaapp.utils import decode_base64
 
 AuthentificationInfo = namedtuple("AuthentificationInfo", ["username", "pw_hash"])
 
 
-def get_auth_info(authorization) -> Optional[AuthentificationInfo]:
+def get_auth_info(authorization: AuthorizationHeader) -> Optional[AuthentificationInfo]:
     """Get authentication information from a request.
 
     :param authorization: The authorization header from the request.
@@ -51,10 +54,7 @@ def get_delivery_user(session: Session, auth_info: AuthentificationInfo) -> Opti
     :returns: The DeliveryUser if the auth info is valid, None if
         the auth info is invalid (e.g. wrong password).
     """
-    stmt = (
-        select(DeliveryUser)
-        .where(DeliveryUser.username == auth_info.username)
-    )
+    stmt = select(DeliveryUser).where(DeliveryUser.username == auth_info.username)
     delivery_user = session.execute(stmt).scalar_one_or_none()
     if delivery_user is None:
         return None
@@ -65,6 +65,42 @@ def get_delivery_user(session: Session, auth_info: AuthentificationInfo) -> Opti
 
     return delivery_user
 
-def get_refresh_token(session: Session, uacid: str, elivery_user: DeliveryUser) -> str:
-    print("Created new refresh token for user {delivery_user.username}.")
-    return "YourRefreshToken"
+
+def check_refresh_token(session: Session, delivery_user: DeliveryUser, uacid: str) -> bool:
+    """Check if a refresh token should be issued for a certain uacid and delivery user.
+
+    :returns: True if a new refresh token with the given UACID for the given delivery user
+        can be issued, false if not.
+    """
+    # fmt: off
+    stmt = (
+        select(func.count(RefreshToken.refresh_token_id))
+        .where(
+            and_(RefreshToken.user_id == DeliveryUser.user_id, RefreshToken.uacid == uacid)
+        )
+    )
+    # fmt: on
+    number_matching_refresh_token = session.execute(stmt).scalar_one()
+    if number_matching_refresh_token == 0:
+        return True
+    elif number_matching_refresh_token >= 1:
+        print("Won't issue new refresh token as one already exists for a UACID.")
+        return False
+
+
+def register_refresh_token(session: Session, uacid: str, delivery_user: DeliveryUser) -> str:
+    """Generate and write new refresh token to database.
+
+    :returns: Generated refresh token.
+    """
+    print(f"Created new refresh token for user {delivery_user.username}.")
+    refresh_token = secrets.token_hex(32)
+
+    table_entry = RefreshToken(
+        user_id=delivery_user.user_id, refresh_token=refresh_token, uacid=uacid
+    )
+    session.add(table_entry)
+    session.flush()
+    session.commit()
+
+    return refresh_token
