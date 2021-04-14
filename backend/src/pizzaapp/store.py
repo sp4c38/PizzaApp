@@ -50,11 +50,13 @@ def run_store_to_database(queue: Queue, kill_event: threading.Event, refresh_int
     while True:
         while not queue.empty():
             try:
-                new = queue.get(block=False)
+                task = queue.get(block=False)
             except QueueEmptyError:
                 break
 
-            new.func(session, *new.args, **new.kwargs)
+            task_args = task.args if task.args is not None else ()
+            task_kwargs = task.kwargs if task.kwargs is not None else {}
+            task.func(session, *task_args, **task_kwargs)
 
         kill_thread = kill_event.wait(refresh_interval)
         if kill_thread is True:

@@ -1,4 +1,3 @@
-import secrets
 import signal
 import sys
 import threading
@@ -10,13 +9,15 @@ from sqlalchemy.orm import Session
 
 from src.pizzaapp import engine
 from src.pizzaapp.auth import (
+    TokenInfo,
     check_refresh_token,
+    generate_refresh_token,
+    generate_access_token,
     get_auth_info,
     get_delivery_user,
-    parse_bearer_token,
-    store_refresh_token,
     get_refresh_token,
-    generate_access_token_info,
+    parse_bearer_token,
+    store_token_info,
 )
 from src.pizzaapp.catalog import Catalog
 from src.pizzaapp.order import store_order, verify_make_order
@@ -56,14 +57,9 @@ def make_order():
     return successful_response()
 
 
-@app.route("/auth/get/refresh_token/", methods=["POST"])
+@app.route("/auth/login/", methods=["POST"])
 def acquire_refresh_token():
-    """Request a refresh token.
-
-    Username and password need to be sent to the server.
-    If this information is correct a refresh token is generated and
-    sent back, if not an appropriate response code will be returned.
-    """
+    """Return a refresh and session token if the user credentials are valid."""
     authorization_header = request.authorization
     auth_info = get_auth_info(authorization_header)
     if auth_info is None:
@@ -78,37 +74,39 @@ def acquire_refresh_token():
         if not make_new_refresh_token:
             return error_response(409)
 
-        refresh_token = secrets.token_hex(32)
+        # Contains new access and refresh token.
+        refresh_token = generate_refresh_token()
+        access_token = generate_access_token()
+        token_info = TokenInfo(refresh_token, access_token)
 
+        # fmt: off
         store_operation = StoreOperation(
-            store_refresh_token,
-            (
-                refresh_token,
-                delivery_user,
-            ),
+            store_token_info, (token_info, delivery_user,)
         )
-        if not add_to_store_queue(store_operation):
+        # fmt: on
+        if not add_to_store_queue(store_queue, store_operation):
             return error_response(500)
 
-    return successful_response(refresh_token)
+    print(f"Issued new refresh and access token for delivery user {delivery_user.username}.1")
+    return successful_response(token_info.response_json())
 
 
-@app.route("/auth/get/access_token/", methods=["POST"])
-def acquire_access_token():
-    """Request a session token by using a refresh token."""
-    bearer_token = parse_bearer_token(request.headers.get("Authorization"))
-    with Session(engine) as session:
-        refresh_token = get_refresh_token(session, bearer_token)
-        if refresh_token is None:
-            error_response(401)
+# @app.route("/auth/refresh/", methods=["POST"])
+# def acquire_access_token():
+#     """Request a session token by using a refresh token."""
+#     bearer_token = parse_bearer_token(request.headers.get("Authorization"))
+#     with Session(engine) as session:
+#         refresh_token = get_refresh_token(session, bearer_token)
+#         if refresh_token is None:
+#             error_response(401)
 
-        access_token_info = generate_access_token_info()
+#         access_token_info = generate_access_token_info()
 
-        store_operation = StoreOperation(store_access_token, (access_token, refresh_token))
-        if not add_to_store_queue(store_operation):
-            return error_response(500)
+#         store_operation = StoreOperation(store_access_token, (access_token, refresh_token))
+#         if not add_to_store_queue(store_operation):
+#             return error_response(500)
 
-    return successful_response(access_token_info)
+#     return successful_response(access_token_info)
 
 
 def _kill_event_handler(signum, frame):

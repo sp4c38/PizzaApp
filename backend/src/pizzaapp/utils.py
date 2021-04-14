@@ -6,7 +6,6 @@ from box import Box
 from flask import make_response, Request
 from werkzeug.exceptions import default_exceptions
 
-
 def successful_response(raw_response=None):
     """Wrap a response if the request is successful.
 

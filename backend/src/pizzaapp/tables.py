@@ -123,6 +123,7 @@ class RefreshToken(Base):
     refresh_token_id = Column(Integer, primary_key=True)
     user_id = Column(ForeignKey(DeliveryUser.user_id), nullable=False)
     refresh_token = Column(String, nullable=False, unique=True)
+    valid = Column(Boolean, nullable=False)
     # A description for the user to roughly see which devices have access to his account.
     # Example: "iPhone X"
     device_description = Column(String, nullable=True)

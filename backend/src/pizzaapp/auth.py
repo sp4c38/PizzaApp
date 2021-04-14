@@ -18,6 +18,12 @@ from src.pizzaapp.utils import decode_base64
 AuthentificationInfo = namedtuple("AuthentificationInfo", ["username", "pw_hash"])
 
 
+def generate_token() -> str:
+    """Generate a new refresh or access token."""
+    token = secrets.token_hex(32)
+    return token
+
+
 def get_auth_info(authorization: AuthorizationHeader) -> Optional[AuthentificationInfo]:
     """Get authentication information from a request.
 
@@ -106,40 +112,83 @@ class AccessTokenInfo:
     token: str
     expiration_time: int
 
-    def as_json(self):
-        return {"access_token": self.token, "expiration_time": self.expiration_time}
+    def response_json(self):
+        """Generate a json to send back when responding to a client.
+
+        This does not have to include all attributes, as some may not be exposed.
+        """
+        jsoned = {"token": self.token, "expiration_time": self.expiration_time}
+        return jsoned
 
 
-def generate_access_token_info() -> AccessTokenInfo:
-    access_token = secrets.token_hex(32)
-    issue_time = arrow.now()
-    expiration_time = issue_time.shift(seconds=ACCESS_TOKEN_VALID_TIME)
-    expiration_timestamp = expiration_time.timestamp
-    access_token_info = AccessTokenInfo(access_token, expiration_timestamp)
+@dataclass
+class RefreshTokenInfo:
+    token: str
+    valid: bool
+    issuing_time: int
+
+    def response_json(self):
+        """Generate a json to send back when responding to a client.
+
+        This does not have to include all attributes, as some may not be exposed.
+        """
+        jsoned = {"token": self.token}
+        return jsoned
+
+
+@dataclass
+class TokenInfo:
+    refresh_token: RefreshTokenInfo
+    access_token: AccessTokenInfo
+
+    def response_json(self):
+        """Generate a json to send back when responding to a client."""
+        return {
+            "refresh_token": self.refresh_token.response_json(),
+            "access_token": self.access_token.response_json(),
+        }
+
+
+def generate_refresh_token() -> RefreshTokenInfo:
+    refresh_token = generate_token()
+    refresh_token_valid = True
+    issue_time = arrow.now().int_timestamp
+
+    refresh_token_info = RefreshTokenInfo(refresh_token, refresh_token_valid, issue_time)
+    return refresh_token_info
+
+
+def generate_access_token() -> AccessTokenInfo:
+    access_token = generate_token()
+    expiration_time = arrow.now().shift(seconds=ACCESS_TOKEN_VALID_TIME).int_timestamp
+
+    access_token_info = AccessTokenInfo(access_token, expiration_time)
     return access_token_info
 
 
-def store_refresh_token(session: Session, refresh_token: str, delivery_user: DeliveryUser):
-    """Store a refresh token to the database."""
-    table_entry = RefreshToken(user_id=delivery_user.user_id, refresh_token=refresh_token)
-    session.add(table_entry)
-    session.commit()
-    print(f"Issued new refresh token.")
+def store_token_info(session: Session, token_info: TokenInfo, delivery_user: DeliveryUser):
+    """Store new refresh and access token to the database.
 
-
-def store_access_token(
-    session: Session, access_token_info: AccessTokenInfo, refresh_token: RefreshToken
-):
-    """Store a access token to the database.
-
-    :param access_token_info: A AccessTokenInfo object describing the access token.
-    :param refresh_token: The refresh token provided to get the access token.
+    :param token_info: TokenInfo object including information about both token types.
+    :param delivery_user: The user for which the tokens were issued.
     """
-    table_entry = AccessToken(
-        refresh_token_id=refresh_token.refresh_token_id,
-        access_token=access_token_info.token,
+    refresh_token = token_info.refresh_token
+    access_token = token_info.access_token
+    refresh_token_entry = RefreshToken(
+        user_id=delivery_user.user_id,
+        refresh_token=refresh_token.token,
+        valid=refresh_token.valid,
+        issuing_time=refresh_token.issuing_time
+    )
+    session.add(refresh_token_entry)
+    session.flush()
+    access_token_entry = AccessToken(
+        refresh_token_id=refresh_token_entry.refresh_token_id,
+        access_token=access_token.token,
         expiration_time=access_token.expiration_time,
     )
-    session.add(table_entry)
+    session.add(access_token_entry)
+    import IPython;IPython.embed()
     session.commit()
-    print("Issued a new access token.")
+    print(f"Stored new refresh and access token for delivery user {delivery_user.username}.")
+
