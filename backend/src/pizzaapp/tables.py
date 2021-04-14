@@ -85,10 +85,11 @@ class Order(Base):
 
 
 class OrderItem(Base):
-    """An OrderItem is a single item ordered by beeing coupled to an order.
+    """Entry to store information about a single item which was ordered.
 
-    The OrderItem object contains the quantity and price at sell time of the product.
-    The at-sell price is stored extra because the actual product price could change.
+    A ordered item is always linked to an order.
+    The unit price at which the product is sold is stored extra, as the price of a product
+    could change in the future.
     """
 
     __tablename__ = NAMES_OF_TABLES["order_item_table"]
@@ -104,10 +105,7 @@ class OrderItem(Base):
 
 # User tables
 class DeliveryUser(Base):
-    """DeliveryUser stores information about users able to deliver products.
-
-    A delivery user is able to authenticate in the delivery app.
-    """
+    """Entry to store information about a delivery user."""
 
     __tablename__ = NAMES_OF_TABLES["delivery_user_table"]
 
@@ -118,25 +116,26 @@ class DeliveryUser(Base):
 
 
 class RefreshToken(Base):
-    """Table to store refresh tokens."""
+    """Entry to store refresh token information."""
 
     __tablename__ = NAMES_OF_TABLES["refresh_token_table"]
 
     refresh_token_id = Column(Integer, primary_key=True)
     user_id = Column(ForeignKey(DeliveryUser.user_id), nullable=False)
-    refresh_token = Column(String, nullable=False)
+    refresh_token = Column(String, nullable=False, unique=True)
     uacid = Column(String, nullable=False, unique=True)
+    issuing_time = Column(Integer, nullable=False)  # Store as timestamp.
 
 
 class AccessToken(Base):
-    """Table to store access tokens."""
+    """Entry to store access token information."""
 
     __tablename__ = NAMES_OF_TABLES["access_token_table"]
 
     access_token_id = Column(Integer, primary_key=True)
     # Refresh token with which the access token was created.
     refresh_token_id = Column(ForeignKey(RefreshToken.refresh_token_id), nullable=False)
-    access_token = Column(String, nullable=False)
+    access_token = Column(String, nullable=False, unique=True)
     expiration_time = Column(Integer)  # Stored as timestamp.
 
 

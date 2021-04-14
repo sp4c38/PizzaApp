@@ -14,7 +14,10 @@ from src.pizzaapp.auth import (
     get_auth_info,
     get_delivery_user,
     get_uacid,
+    parse_bearer_token,
     store_refresh_token,
+    get_refresh_token,
+    generate_access_token_info,
 )
 from src.pizzaapp.catalog import Catalog
 from src.pizzaapp.order import store_order, verify_make_order
@@ -36,7 +39,7 @@ def get_catalog():
     return successful_response(catalog_json)
 
 
-@app.route("/make/order/", methods=["POST"])
+@app.route("/order/make", methods=["POST"])
 def make_order():
     """Hand in a new order.
 
@@ -54,7 +57,7 @@ def make_order():
     return successful_response()
 
 
-@app.route("/get/auth/refresh_token/", methods=["POST"])
+@app.route("/auth/get/refresh_token/", methods=["POST"])
 def acquire_refresh_token():
     """Request a refresh token.
 
@@ -82,16 +85,36 @@ def acquire_refresh_token():
 
         refresh_token = secrets.token_hex(32)
 
-        store_operation = StoreOperation(store_refresh_token, (uacid, delivery_user,))
+        store_operation = StoreOperation(
+            store_refresh_token,
+            (
+                refresh_token,
+                uacid,
+                delivery_user,
+            ),
+        )
         if not add_to_store_queue(store_operation):
             return error_response(500)
 
-    return refresh_token
+    return successful_response(refresh_token)
 
 
-@app.route("/get/auth/session_token/", methods=["POST"])
-def acquire_session_token():
+@app.route("/auth/get/access_token/", methods=["POST"])
+def acquire_access_token():
     """Request a session token by using a refresh token."""
+    bearer_token = parse_bearer_token(request.headers.get("Authorization"))
+    with Session(engine) as session:
+        refresh_token = get_refresh_token(session, bearer_token)
+        if refresh_token is None:
+            error_response(401)
+
+        access_token_info = generate_access_token_info()
+
+        store_operation = StoreOperation(store_access_token, (access_token, refresh_token))
+        if not add_to_store_queue(store_operation):
+            return error_response(500)
+
+    return successful_response(access_token_info)
 
 
 def _kill_event_handler(signum, frame):

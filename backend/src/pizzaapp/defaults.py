@@ -21,3 +21,6 @@ NAMES_OF_TABLES = {
     "refresh_token_table": "refresh_token",
     "access_token_table": "access_token",
 }
+
+# Time in seconds access tokens should be marked as valid when new ones are created.
+ACCESS_TOKEN_VALID_TIME = 600

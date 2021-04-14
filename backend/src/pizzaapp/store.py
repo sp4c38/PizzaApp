@@ -12,6 +12,7 @@ from src.pizzaapp import engine
 @dataclass
 class StoreOperation:
     """Information about a operation to store something to the database."""
+
     func: Callable
     args: Optional[tuple] = None
     kwargs: Optional[dict] = None
