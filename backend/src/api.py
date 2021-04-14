@@ -14,10 +14,11 @@ from src.pizzaapp.auth import (
     generate_refresh_token,
     generate_access_token,
     get_auth_info,
-    get_delivery_user,
+    get_delivery_user_auth_info,
     get_refresh_token,
     parse_bearer_token,
     store_token_info,
+    store_updated_token_info,
 )
 from src.pizzaapp.catalog import Catalog
 from src.pizzaapp.order import store_order, verify_make_order
@@ -40,7 +41,7 @@ def get_catalog():
 
 
 @app.route("/order/make", methods=["POST"])
-def make_order():
+def order_make():
     """Hand in a new order.
 
     The order won't be stored here, but added to a queue which is
@@ -58,15 +59,15 @@ def make_order():
 
 
 @app.route("/auth/login/", methods=["POST"])
-def acquire_refresh_token():
-    """Return a refresh and session token if the user credentials are valid."""
+def auth_login():
+    """Get a refresh and session token if the user credentials are valid."""
     authorization_header = request.authorization
     auth_info = get_auth_info(authorization_header)
     if auth_info is None:
         return error_response(400)
 
     with Session(engine) as session:
-        delivery_user = get_delivery_user(session, auth_info)
+        delivery_user = get_delivery_user_auth_info(session, auth_info)
         if delivery_user is None:
             return error_response(401)
 
@@ -75,9 +76,9 @@ def acquire_refresh_token():
             return error_response(409)
 
         # Contains new access and refresh token.
-        refresh_token = generate_refresh_token()
-        access_token = generate_access_token()
-        token_info = TokenInfo(refresh_token, access_token)
+        new_refresh_token = generate_refresh_token()
+        new_access_token = generate_access_token()
+        token_info = TokenInfo(new_refresh_token, new_access_token)
 
         # fmt: off
         store_operation = StoreOperation(
@@ -91,22 +92,36 @@ def acquire_refresh_token():
     return successful_response(token_info.response_json())
 
 
-# @app.route("/auth/refresh/", methods=["POST"])
-# def acquire_access_token():
-#     """Request a session token by using a refresh token."""
-#     bearer_token = parse_bearer_token(request.headers.get("Authorization"))
-#     with Session(engine) as session:
-#         refresh_token = get_refresh_token(session, bearer_token)
-#         if refresh_token is None:
-#             error_response(401)
+@app.route("/auth/get/access_token/", methods=["POST"])
+def auth_get_access_token():
+    """Get a new access and refresh token.
 
-#         access_token_info = generate_access_token_info()
+    Get a new access token by providing a valid refresh token.
+    Following RFC-6819 5.2.2.3 this will also issue and return a new refresh token.  
+    """
+    bearer_token = parse_bearer_token(request.headers.get("Authorization"))
+    with Session(engine) as session:
+        refresh_token = get_refresh_token(session, bearer_token)
+        if refresh_token is None:
+            return error_response(401)
 
-#         store_operation = StoreOperation(store_access_token, (access_token, refresh_token))
-#         if not add_to_store_queue(store_operation):
-#             return error_response(500)
+        if refresh_token.valid == False:
+            # If the refresh token is invalid this is an indicator therfor that this refresh token
+            # was stolen and the attacker tried to use it. If this happens all refresh and access
+            # tokens of the delivery user need to be invalidated to prevent further harm.
+            return error_response(401)
 
-#     return successful_response(access_token_info)
+        new_refresh_token = generate_refresh_token()
+        new_access_token = generate_access_token()
+        token_info = TokenInfo(new_refresh_token, new_access_token)
+
+        store_operation = StoreOperation(
+            store_updated_token_info, (token_info, refresh_token,)
+        )
+        if not add_to_store_queue(store_queue, store_operation):
+            return error_response(500)
+
+    return successful_response(token_info.response_json())
 
 
 def _kill_event_handler(signum, frame):

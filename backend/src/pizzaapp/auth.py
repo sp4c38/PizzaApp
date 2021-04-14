@@ -42,11 +42,11 @@ def get_auth_info(authorization: AuthorizationHeader) -> Optional[Authentificati
     return auth_info
 
 
-def get_delivery_user(session: Session, auth_info: AuthentificationInfo) -> Optional[DeliveryUser]:
-    """If the auth info is valid this returns the appropiete user.
+def get_delivery_user_auth_info(session: Session, auth_info: AuthentificationInfo) -> Optional[DeliveryUser]:
+    """Check if there is a user for which the authentication information is valid.
 
     :returns: The DeliveryUser if the auth info is valid, None if
-        the auth info is invalid (e.g. wrong password).
+        the auth info is invalid (i.e. wrong username or password).
     """
     stmt = select(DeliveryUser).where(DeliveryUser.username == auth_info.username)
     delivery_user = session.execute(stmt).scalar_one_or_none()
@@ -57,6 +57,14 @@ def get_delivery_user(session: Session, auth_info: AuthentificationInfo) -> Opti
     if not pw_correct:
         return None
 
+    return delivery_user
+
+def get_delivery_user_user_id(session: Session, user_id: int) -> Optional[DeliveryUser]:
+    """Get the delivery user by its user id."""
+    stmt = select(DeliveryUser).where(DeliveryUser.user_id == user_id)
+    delivery_user = session.execute(stmt).scalar_one_or_none()
+    if delivery_user is None:
+        return None
     return delivery_user
 
 
@@ -83,7 +91,7 @@ def check_refresh_token(session: Session, delivery_user: DeliveryUser) -> bool:
 
 
 def parse_bearer_token(authorization: str) -> Optional[str]:
-    auth_parts = authorization.split(" ")  # Note: .split(" ") different than .split()
+    auth_parts = authorization.split(" ")  # Note: .split(" ") is different than .split().
     if len(auth_parts) != 2:
         return None
 
@@ -93,17 +101,22 @@ def parse_bearer_token(authorization: str) -> Optional[str]:
     if not auth_type == "Bearer":
         return None
 
+    if auth_token == "":
+        return None
+
     return auth_token
 
 
 def get_refresh_token(session: Session, token: str) -> Optional[RefreshToken]:
-    """Retrieves the refresh token ORM object.
+    """Get a refresh token ORM object with specified token.
 
     :param token: The refresh token for which to get the ORM object.
-    :returns: ORM refresh token object if an entry was found, none if no entry was found.
+    :returns: refresh token ORM object if an entry was found, none if no entry was found.
     """
     stmt = select(RefreshToken).where(RefreshToken.refresh_token == token)
     refresh_token = session.execute(stmt).scalar_one_or_none()
+    if refresh_token is None:
+        return None
     return refresh_token
 
 
@@ -166,9 +179,10 @@ def generate_access_token() -> AccessTokenInfo:
     return access_token_info
 
 
-def store_token_info(session: Session, token_info: TokenInfo, delivery_user: DeliveryUser):
-    """Store new refresh and access token to the database.
+def add_new_tokens(session: Session, token_info: TokenInfo, delivery_user: DeliveryUser):
+    """Add new refresh and access tokens to the session.
 
+    :param session: Session object to which to add the new ORM token objects.
     :param token_info: TokenInfo object including information about both token types.
     :param delivery_user: The user for which the tokens were issued.
     """
@@ -188,7 +202,44 @@ def store_token_info(session: Session, token_info: TokenInfo, delivery_user: Del
         expiration_time=access_token.expiration_time,
     )
     session.add(access_token_entry)
-    import IPython;IPython.embed()
-    session.commit()
-    print(f"Stored new refresh and access token for delivery user {delivery_user.username}.")
 
+    
+def store_token_info(session: Session, token_info: TokenInfo, delivery_user: DeliveryUser):
+    add_new_tokens(session, token_info, delivery_user)
+    session.commit()
+    print(f"Stored new refresh and access tokens for delivery user {delivery_user.username}.")
+
+
+def store_updated_token_info(session: Session, token_info: TokenInfo, old_refresh_token: RefreshToken):
+    """Store updated refresh and access tokens to the database.
+
+    In addition to storing the tokens this will also mark the old refresh token as invalid.
+
+    :param old_refresh_token: The refresh token with which the client authenticated
+         to create new refresh and access tokens.   
+    """
+
+    # Due to multithreading we can't be completely go sure that the valid flag on the old 
+    # refresh token is really still set to true. Thats why retrieve it again.
+    real_refresh_token = get_refresh_token(session, old_refresh_token.refresh_token)
+    if real_refresh_token is None:
+        return
+    if real_refresh_token.valid is False:
+        # Since responding to the request and executing those lines of code the valid flag was
+        # toggled. Return to not create two refresh tokens when only one should be created.
+        return
+
+    delivery_user = get_delivery_user_user_id(session, real_refresh_token.user_id)
+    if delivery_user is None:
+        return
+
+    real_refresh_token.valid = False
+    for access_token in real_refresh_token.access_tokens:
+        session.delete(access_token)
+    add_new_tokens(session, token_info, delivery_user)
+
+    session.commit()
+    print(
+        "Invalidated old refresh token and stored new refresh and access tokens "
+        f"for delivery user {delivery_user.username}."
+    )

@@ -129,6 +129,8 @@ class RefreshToken(Base):
     device_description = Column(String, nullable=True)
     issuing_time = Column(Integer, nullable=False)  # Store as timestamp.
 
+    access_tokens = relationship("AccessToken", back_populates="refresh_token")
+
 
 class AccessToken(Base):
     """Entry to store access token information."""
@@ -140,6 +142,8 @@ class AccessToken(Base):
     refresh_token_id = Column(ForeignKey(RefreshToken.refresh_token_id), nullable=False)
     access_token = Column(String, nullable=False, unique=True)
     expiration_time = Column(Integer)  # Stored as timestamp.
+
+    refresh_token = relationship(RefreshToken, back_populates="access_tokens")
 
 
 # skipcq: PTC-W0049
