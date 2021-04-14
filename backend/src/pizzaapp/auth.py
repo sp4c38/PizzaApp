@@ -42,7 +42,9 @@ def get_auth_info(authorization: AuthorizationHeader) -> Optional[Authentificati
     return auth_info
 
 
-def get_delivery_user_auth_info(session: Session, auth_info: AuthentificationInfo) -> Optional[DeliveryUser]:
+def get_delivery_user_auth_info(
+    session: Session, auth_info: AuthentificationInfo
+) -> Optional[DeliveryUser]:
     """Check if there is a user for which the authentication information is valid.
 
     :returns: The DeliveryUser if the auth info is valid, None if
@@ -58,6 +60,7 @@ def get_delivery_user_auth_info(session: Session, auth_info: AuthentificationInf
         return None
 
     return delivery_user
+
 
 def get_delivery_user_user_id(session: Session, user_id: int) -> Optional[DeliveryUser]:
     """Get the delivery user by its user id."""
@@ -121,38 +124,9 @@ def get_refresh_token(session: Session, token: str) -> Optional[RefreshToken]:
 
 
 @dataclass
-class AccessTokenInfo:
-    token: str
-    expiration_time: int
-
-    def response_json(self):
-        """Generate a json to send back when responding to a client.
-
-        This does not have to include all attributes, as some may not be exposed.
-        """
-        jsoned = {"token": self.token, "expiration_time": self.expiration_time}
-        return jsoned
-
-
-@dataclass
-class RefreshTokenInfo:
-    token: str
-    valid: bool
-    issuing_time: int
-
-    def response_json(self):
-        """Generate a json to send back when responding to a client.
-
-        This does not have to include all attributes, as some may not be exposed.
-        """
-        jsoned = {"token": self.token}
-        return jsoned
-
-
-@dataclass
 class TokenInfo:
-    refresh_token: RefreshTokenInfo
-    access_token: AccessTokenInfo
+    refresh_token: RefreshToken
+    access_token: AccessToken
 
     def response_json(self):
         """Generate a json to send back when responding to a client."""
@@ -162,64 +136,70 @@ class TokenInfo:
         }
 
 
-def generate_refresh_token() -> RefreshTokenInfo:
-    refresh_token = generate_token()
-    refresh_token_valid = True
+def generate_refresh_token(user_id: int) -> RefreshToken:
+    """Generate a new refresh token object.
+
+    :param user_id: The user id for which the refresh token is issued.
+    """
+    token = generate_token()
+    token_valid = True
+    device_description = None
     issue_time = arrow.now().int_timestamp
 
-    refresh_token_info = RefreshTokenInfo(refresh_token, refresh_token_valid, issue_time)
-    return refresh_token_info
+    refresh_token = RefreshToken(
+        user_id=user_id,
+        refresh_token=token,
+        valid=token_valid,
+        device_description=device_description,
+        issuing_time=issue_time,
+    )
+    return refresh_token
 
 
-def generate_access_token() -> AccessTokenInfo:
-    access_token = generate_token()
+def generate_access_token() -> AccessToken:
+    token = generate_token()
     expiration_time = arrow.now().shift(seconds=ACCESS_TOKEN_VALID_TIME).int_timestamp
 
-    access_token_info = AccessTokenInfo(access_token, expiration_time)
-    return access_token_info
+    access_token = AccessToken(
+        # Refresh token id can't be known at this point because no refresh token was inserted yet.
+        refresh_token_id=None,
+        access_token=token,
+        expiration_time=expiration_time,
+    )
+    return access_token
 
 
-def add_new_tokens(session: Session, token_info: TokenInfo, delivery_user: DeliveryUser):
+def add_new_tokens(session: Session, token_info: TokenInfo):
     """Add new refresh and access tokens to the session.
 
     :param session: Session object to which to add the new ORM token objects.
     :param token_info: TokenInfo object including information about both token types.
-    :param delivery_user: The user for which the tokens were issued.
     """
-    refresh_token = token_info.refresh_token
-    access_token = token_info.access_token
-    refresh_token_entry = RefreshToken(
-        user_id=delivery_user.user_id,
-        refresh_token=refresh_token.token,
-        valid=refresh_token.valid,
-        issuing_time=refresh_token.issuing_time
-    )
-    session.add(refresh_token_entry)
+    session.add(token_info.refresh_token)
     session.flush()
-    access_token_entry = AccessToken(
-        refresh_token_id=refresh_token_entry.refresh_token_id,
-        access_token=access_token.token,
-        expiration_time=access_token.expiration_time,
-    )
-    session.add(access_token_entry)
+    refresh_token_id = token_info.refresh_token.refresh_token_id
+    token_info.access_token.refresh_token_id = refresh_token_id
+    session.add(token_info.access_token)
 
-    
+
 def store_token_info(session: Session, token_info: TokenInfo, delivery_user: DeliveryUser):
     add_new_tokens(session, token_info, delivery_user)
     session.commit()
     print(f"Stored new refresh and access tokens for delivery user {delivery_user.username}.")
 
 
-def store_updated_token_info(session: Session, token_info: TokenInfo, old_refresh_token: RefreshToken):
+def store_updated_token_info(
+    session: Session, token_info: TokenInfo, old_refresh_token: RefreshToken
+):
     """Store updated refresh and access tokens to the database.
 
     In addition to storing the tokens this will also mark the old refresh token as invalid.
 
     :param old_refresh_token: The refresh token with which the client authenticated
-         to create new refresh and access tokens.   
+         to create new refresh and access tokens.
     """
 
-    # Due to multithreading we can't be completely go sure that the valid flag on the old 
+    # Due to multithreading we can't be completely go sure that the valid flag on the old
     # refresh token is really still set to true. Thats why retrieve it again.
     real_refresh_token = get_refresh_token(session, old_refresh_token.refresh_token)
     if real_refresh_token is None:
@@ -229,14 +209,14 @@ def store_updated_token_info(session: Session, token_info: TokenInfo, old_refres
         # toggled. Return to not create two refresh tokens when only one should be created.
         return
 
-    delivery_user = get_delivery_user_user_id(session, real_refresh_token.user_id)
+    delivery_user = get_delivery_user_user_id(session, token_info.refresh_token.user_id)
     if delivery_user is None:
         return
 
     real_refresh_token.valid = False
     for access_token in real_refresh_token.access_tokens:
         session.delete(access_token)
-    add_new_tokens(session, token_info, delivery_user)
+    add_new_tokens(session, token_info)
 
     session.commit()
     print(

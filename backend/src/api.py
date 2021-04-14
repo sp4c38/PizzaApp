@@ -76,14 +76,12 @@ def auth_login():
             return error_response(409)
 
         # Contains new access and refresh token.
-        new_refresh_token = generate_refresh_token()
+        new_refresh_token = generate_refresh_token(delivery_user.user_id)
         new_access_token = generate_access_token()
         token_info = TokenInfo(new_refresh_token, new_access_token)
 
         # fmt: off
-        store_operation = StoreOperation(
-            store_token_info, (token_info, delivery_user,)
-        )
+        store_operation = StoreOperation(store_token_info, (token_info, delivery_user,))
         # fmt: on
         if not add_to_store_queue(store_queue, store_operation):
             return error_response(500)
@@ -97,7 +95,7 @@ def auth_get_access_token():
     """Get a new access and refresh token.
 
     Get a new access token by providing a valid refresh token.
-    Following RFC-6819 5.2.2.3 this will also issue and return a new refresh token.  
+    Following RFC-6819 5.2.2.3 this will also issue and return a new refresh token.
     """
     bearer_token = parse_bearer_token(request.headers.get("Authorization"))
     with Session(engine) as session:
@@ -111,13 +109,13 @@ def auth_get_access_token():
             # tokens of the delivery user need to be invalidated to prevent further harm.
             return error_response(401)
 
-        new_refresh_token = generate_refresh_token()
+        new_refresh_token = generate_refresh_token(refresh_token.user_id)
         new_access_token = generate_access_token()
         token_info = TokenInfo(new_refresh_token, new_access_token)
 
-        store_operation = StoreOperation(
-            store_updated_token_info, (token_info, refresh_token,)
-        )
+        # fmt: off
+        store_operation = StoreOperation(store_updated_token_info, (token_info, refresh_token,))
+        # fmt: on
         if not add_to_store_queue(store_queue, store_operation):
             return error_response(500)
 

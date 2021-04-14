@@ -131,6 +131,12 @@ class RefreshToken(Base):
 
     access_tokens = relationship("AccessToken", back_populates="refresh_token")
 
+    def response_json(self):
+        """Generate json for providing information about a refresh token in a response."""
+        # Beaware of which information to leak to the client.
+        jsoned = {"token": self.refresh_token}
+        return jsoned
+
 
 class AccessToken(Base):
     """Entry to store access token information."""
@@ -144,6 +150,12 @@ class AccessToken(Base):
     expiration_time = Column(Integer)  # Stored as timestamp.
 
     refresh_token = relationship(RefreshToken, back_populates="access_tokens")
+
+    def response_json(self):
+        """Generate json for providing information about a access token in a response."""
+        # Beaware of which information to leak to the client.
+        jsoned = {"token": self.access_token, "expiration_time": self.expiration_time}
+        return jsoned
 
 
 # skipcq: PTC-W0049
