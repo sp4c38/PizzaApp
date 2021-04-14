@@ -13,7 +13,6 @@ from src.pizzaapp.auth import (
     check_refresh_token,
     get_auth_info,
     get_delivery_user,
-    get_uacid,
     parse_bearer_token,
     store_refresh_token,
     get_refresh_token,
@@ -70,16 +69,12 @@ def acquire_refresh_token():
     if auth_info is None:
         return error_response(400)
 
-    uacid = get_uacid(request.headers)
-    if uacid is None:
-        return error_response(400)
-
     with Session(engine) as session:
         delivery_user = get_delivery_user(session, auth_info)
         if delivery_user is None:
             return error_response(401)
 
-        make_new_refresh_token = check_refresh_token(session, delivery_user, uacid)
+        make_new_refresh_token = check_refresh_token(session, delivery_user)
         if not make_new_refresh_token:
             return error_response(409)
 
@@ -89,7 +84,6 @@ def acquire_refresh_token():
             store_refresh_token,
             (
                 refresh_token,
-                uacid,
                 delivery_user,
             ),
         )

@@ -22,5 +22,7 @@ NAMES_OF_TABLES = {
     "access_token_table": "access_token",
 }
 
+# The maximal amount of refresh tokens a user can have.
+MAX_REFRESH_TOKENS = 10
 # Time in seconds access tokens should be marked as valid when new ones are created.
 ACCESS_TOKEN_VALID_TIME = 600

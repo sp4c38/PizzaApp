@@ -11,7 +11,7 @@ from sqlalchemy import and_, func, select
 from sqlalchemy.orm import Session
 from werkzeug.datastructures import Authorization as AuthorizationHeader
 
-from src.pizzaapp.defaults import ACCESS_TOKEN_VALID_TIME
+from src.pizzaapp.defaults import ACCESS_TOKEN_VALID_TIME, MAX_REFRESH_TOKENS
 from src.pizzaapp.tables import AccessToken, DeliveryUser, RefreshToken
 from src.pizzaapp.utils import decode_base64
 
@@ -36,22 +36,6 @@ def get_auth_info(authorization: AuthorizationHeader) -> Optional[Authentificati
     return auth_info
 
 
-def get_uacid(headers) -> Optional[str]:
-    """Retrieve and validate the Unique Application Context ID.
-
-    The UACID is a id generated on-device each time the user logs in.
-    It allows the backend to map refresh tokens to the user *and* the device.
-    Thus a single user is able to login on multiple devices.
-
-    :param headers: Headers of the request.
-    """
-    # Value in the UACID header should be a UUID1 in hex format.
-    uacid = headers["UACID"]
-    if len(uacid) != 32:
-        return None
-    return uacid
-
-
 def get_delivery_user(session: Session, auth_info: AuthentificationInfo) -> Optional[DeliveryUser]:
     """If the auth info is valid this returns the appropiete user.
 
@@ -70,25 +54,25 @@ def get_delivery_user(session: Session, auth_info: AuthentificationInfo) -> Opti
     return delivery_user
 
 
-def check_refresh_token(session: Session, delivery_user: DeliveryUser, uacid: str) -> bool:
-    """Check if a refresh token should be issued for a certain uacid and delivery user.
+def check_refresh_token(session: Session, delivery_user: DeliveryUser) -> bool:
+    """Check if a refresh token can be issued for a delivery user.
 
-    :returns: True if a new refresh token with the given UACID for the given delivery user
-        can be issued, false if not.
+    :returns: True if a new refresh token for the given delivery user can be issued, false if not.
     """
     # fmt: off
     stmt = (
         select(func.count(RefreshToken.refresh_token_id))
-        .where(
-            and_(RefreshToken.user_id == DeliveryUser.user_id, RefreshToken.uacid == uacid)
-        )
+        .where(and_(RefreshToken.user_id == delivery_user.user_id))
     )
     # fmt: on
-    number_matching_refresh_token = session.execute(stmt).scalar_one()
-    if number_matching_refresh_token == 0:
+    amount_refresh_tokens = session.execute(stmt).scalar_one()
+    if amount_refresh_tokens <= MAX_REFRESH_TOKENS:
         return True
-    elif number_matching_refresh_token >= 1:
-        print("Won't issue new refresh token as one already exists for specified UACID.")
+    else:
+        print(
+            f"Max amount of refresh tokens ({MAX_REFRESH_TOKENS}) "
+            "reached for {delivery_user.username}."
+        )
         return False
 
 
@@ -135,13 +119,9 @@ def generate_access_token_info() -> AccessTokenInfo:
     return access_token_info
 
 
-def store_refresh_token(
-    session: Session, refresh_token: str, uacid: str, delivery_user: DeliveryUser
-):
+def store_refresh_token(session: Session, refresh_token: str, delivery_user: DeliveryUser):
     """Store a refresh token to the database."""
-    table_entry = RefreshToken(
-        user_id=delivery_user.user_id, refresh_token=refresh_token, uacid=uacid
-    )
+    table_entry = RefreshToken(user_id=delivery_user.user_id, refresh_token=refresh_token)
     session.add(table_entry)
     session.commit()
     print(f"Issued new refresh token.")
