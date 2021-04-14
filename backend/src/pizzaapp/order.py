@@ -119,6 +119,5 @@ def store_order(session: Session, order: Box):
         )
         session.add(new_item)
 
-    session.flush()
     session.commit()
     print("Added new order to the database.")

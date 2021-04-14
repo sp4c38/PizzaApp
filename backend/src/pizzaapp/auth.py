@@ -1,5 +1,3 @@
-import secrets
-
 from collections import namedtuple
 from typing import Optional
 
@@ -84,23 +82,19 @@ def check_refresh_token(session: Session, delivery_user: DeliveryUser, uacid: st
     if number_matching_refresh_token == 0:
         return True
     elif number_matching_refresh_token >= 1:
-        print("Won't issue new refresh token as one already exists for a UACID.")
+        print("Won't issue new refresh token as one already exists for specified UACID.")
         return False
 
 
-def register_refresh_token(session: Session, uacid: str, delivery_user: DeliveryUser) -> str:
-    """Generate and write new refresh token to database.
-
-    :returns: Generated refresh token.
-    """
+def store_refresh_token(session: Session, uacid: str, delivery_user: DeliveryUser):
+    """Store a refresh token to the database."""
     print(f"Created new refresh token for user {delivery_user.username}.")
-    refresh_token = secrets.token_hex(32)
 
     table_entry = RefreshToken(
         user_id=delivery_user.user_id, refresh_token=refresh_token, uacid=uacid
     )
     session.add(table_entry)
-    session.flush()
     session.commit()
+    print(f"Issued new refresh token for user {delivery_user.username}.")
 
     return refresh_token

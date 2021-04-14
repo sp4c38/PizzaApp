@@ -1,7 +1,8 @@
 import threading
 
 from dataclasses import dataclass
-from queue import Empty as QueueEmptyError, Queue
+from queue import Empty as QueueEmptyError, Full as QueueFullError, Queue
+
 from typing import Callable, Optional
 from sqlalchemy.orm import Session
 
@@ -14,6 +15,24 @@ class StoreOperation:
     func: Callable
     args: Optional[tuple] = None
     kwargs: Optional[dict] = None
+
+
+def add_to_store_queue(queue: Queue, store_operation: StoreOperation) -> bool:
+    """Try to add a new store operation to the store queue.
+
+    :returns: True if store operation was added successfully, false if
+        an error occurred (queue blocked).
+    """
+    timeout_sec = 2
+    try:
+        queue.put(store_operation, block=True, timeout=timeout_sec)
+    except QueueFullError:
+        print(
+            "Tried to put new store operation in store queue, "
+            f"but timed out after {timeout_sec} sec."
+        )
+        return False
+    return True
 
 
 def run_store_to_database(queue: Queue, kill_event: threading.Event, refresh_interval=0.5):
@@ -34,7 +53,7 @@ def run_store_to_database(queue: Queue, kill_event: threading.Event, refresh_int
             except QueueEmptyError:
                 break
 
-            new.func(session, *new.args)
+            new.func(session, *new.args, **new.kwargs)
 
         kill_thread = kill_event.wait(refresh_interval)
         if kill_thread is True:

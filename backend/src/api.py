@@ -1,8 +1,9 @@
+import secrets
 import signal
 import sys
 import threading
 
-from queue import Full as QueueFullError, Queue
+from queue import Queue
 
 from flask import Flask, request
 from sqlalchemy.orm import Session
@@ -13,11 +14,11 @@ from src.pizzaapp.auth import (
     get_auth_info,
     get_delivery_user,
     get_uacid,
-    register_refresh_token,
+    store_refresh_token,
 )
 from src.pizzaapp.catalog import Catalog
 from src.pizzaapp.order import store_order, verify_make_order
-from src.pizzaapp.store import run_store_to_database, StoreOperation
+from src.pizzaapp.store import add_to_store_queue, run_store_to_database, StoreOperation
 from src.pizzaapp.tables import confirm_required_tables_exist
 from src.pizzaapp.utils import successful_response, error_response, get_json_request_body_box
 
@@ -47,10 +48,7 @@ def make_order():
     if not request_valid:
         return error_response(400)
 
-    store_operation = StoreOperation(store_order, (body,))
-    try:
-        store_queue.put(store_operation, block=True, timeout=2)
-    except QueueFullError:
+    if not add_to_store_queue(StoreOperation(store_order, (body,))):
         return error_response(500)
 
     return successful_response()
@@ -77,10 +75,17 @@ def acquire_refresh_token():
         delivery_user = get_delivery_user(session, auth_info)
         if delivery_user is None:
             return error_response(401)
+
         make_new_refresh_token = check_refresh_token(session, delivery_user, uacid)
         if not make_new_refresh_token:
             return error_response(409)
-        refresh_token = register_refresh_token(session, uacid, delivery_user)
+
+        refresh_token = secrets.token_hex(32)
+
+        store_operation = StoreOperation(store_refresh_token, (uacid, delivery_user,))
+        if not add_to_store_queue(store_operation):
+            return error_response(500)
+
     return refresh_token
 
 
