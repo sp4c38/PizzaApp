@@ -2,6 +2,7 @@ import secrets
 
 from collections import namedtuple
 from dataclasses import dataclass
+from threading import Lock
 from typing import Optional
 
 import arrow
@@ -23,6 +24,28 @@ def generate_token() -> str:
     """Generate a new refresh or access token."""
     token = secrets.token_hex(32)
     return token
+
+
+def get_delivery_user_lock(all_locks: dict, user_id: int) -> bool:
+    """Try to acquire the lock for a certain delivery user.
+
+    If no lock was created yet for the user id this will create a new lock 
+    and add it to all_locks. 
+
+    :param all_locks: A dictionary containing created delivery user locks.
+    :param user_id: The delivery user id for which to acquire the lock.
+    :returns: Appropriate lock if it could be acquired, None if it coulnd't
+    """
+    lock = all_locks.get(user_id)
+    if lock is None:
+        lock = Lock()
+        all_locks[user_id] = lock
+
+    lock_acquired = lock.acquire(blocking=False)
+
+    if lock_acquired is False:
+        return None
+    return lock
 
 
 def get_auth_info(authorization: AuthorizationHeader) -> Optional[AuthentificationInfo]:
@@ -183,9 +206,11 @@ def add_new_tokens(session: Session, token_info: TokenInfo):
     session.add(token_info.access_token)
 
 
-def store_token_info(session: Session, token_info: TokenInfo):
+def store_token_info(session: Session, token_info: TokenInfo, lock: Lock):
     add_new_tokens(session, token_info)
+    
     session.commit()
+    lock.release()
 
 
 def store_updated_token_info(

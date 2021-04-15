@@ -7,19 +7,8 @@ from queue import Queue
 from flask import Flask, request
 from sqlalchemy.orm import Session
 
+from src.pizzaapp import auth
 from src.pizzaapp import engine
-from src.pizzaapp.auth import (
-    TokenInfo,
-    check_refresh_token,
-    generate_refresh_token,
-    generate_access_token,
-    get_auth_info,
-    get_delivery_user_auth_info,
-    get_refresh_token,
-    parse_bearer_token,
-    store_token_info,
-    store_updated_token_info,
-)
 from src.pizzaapp.catalog import Catalog
 from src.pizzaapp.order import store_order, verify_make_order
 from src.pizzaapp.store import add_to_store_queue, run_store_to_database, StoreOperation
@@ -27,10 +16,14 @@ from src.pizzaapp.tables import confirm_required_tables_exist
 from src.pizzaapp.utils import successful_response, error_response, get_json_request_body_box
 
 catalog = Catalog(engine)
-kill_event = threading.Event()  # Kill event for threads to listen on.
+
 store_queue = Queue()
+# Store a lock for each user to solve race conditions which could happen if too many requests
+# are sent for the same user in a very short time when running certain operations.
+delivery_user_locks = {}
 
 app = Flask("PizzaApp")
+kill_event = threading.Event()  # Kill event for threads to listen on.
 
 
 @app.route("/get/catalog/")
@@ -62,31 +55,40 @@ def order_make():
 def auth_login():
     """Get a refresh and session token if the user credentials are valid."""
     authorization_header = request.authorization
-    auth_info = get_auth_info(authorization_header)
+    auth_info = auth.get_auth_info(authorization_header)
     if auth_info is None:
         return error_response(400)
 
     with Session(engine) as session:
-        delivery_user = get_delivery_user_auth_info(session, auth_info)
+        delivery_user = auth.get_delivery_user_auth_info(session, auth_info)
         if delivery_user is None:
             return error_response(401)
 
-        make_new_refresh_token = check_refresh_token(session, delivery_user)
+        lock = auth.get_delivery_user_lock(delivery_user_locks, delivery_user.user_id)
+        if lock is None:
+            print(
+                "Too many requests: Lock couldn't be acquired "
+                f"for delivery user {delivery_user.username}"
+            )
+            return error_response(429)
+
+        make_new_refresh_token = auth.check_refresh_token(session, delivery_user)
         if not make_new_refresh_token:
+            lock.release()
             return error_response(409)
 
         # Contains new access and refresh token.
-        new_refresh_token = generate_refresh_token(delivery_user.user_id)
-        new_access_token = generate_access_token()
-        token_info = TokenInfo(new_refresh_token, new_access_token)
+        new_refresh_token = auth.generate_refresh_token(delivery_user.user_id)
+        new_access_token = auth.generate_access_token()
+        token_info = auth.TokenInfo(new_refresh_token, new_access_token)
 
         # fmt: off
-        store_operation = StoreOperation(store_token_info, (token_info,))
+        store_operation = StoreOperation(auth.store_token_info, (token_info, lock,))
         # fmt: on
         if not add_to_store_queue(store_queue, store_operation):
             return error_response(500)
 
-    print(f"Issued new refresh and access token for delivery user {delivery_user.username}.1")
+    print(f"Issued new refresh and access token for delivery user {delivery_user.username}.")
     return successful_response(token_info.response_json())
 
 
@@ -97,9 +99,9 @@ def auth_get_access_token():
     Get a new access token by providing a valid refresh token.
     Following RFC-6819 5.2.2.3 this will also issue and return a new refresh token.
     """
-    bearer_token = parse_bearer_token(request.headers.get("Authorization"))
+    bearer_token = auth.parse_bearer_token(request.headers.get("Authorization"))
     with Session(engine) as session:
-        refresh_token = get_refresh_token(session, bearer_token)
+        refresh_token = auth.get_refresh_token(session, bearer_token)
         if refresh_token is None:
             return error_response(401)
 
@@ -109,12 +111,12 @@ def auth_get_access_token():
             # tokens of the delivery user need to be invalidated to prevent further harm.
             return error_response(401)
 
-        new_refresh_token = generate_refresh_token(refresh_token.user_id)
-        new_access_token = generate_access_token()
-        token_info = TokenInfo(new_refresh_token, new_access_token)
+        new_refresh_token = auth.generate_refresh_token(refresh_token.user_id)
+        new_access_token = auth.generate_access_token()
+        token_info = auth.TokenInfo(new_refresh_token, new_access_token)
 
         # fmt: off
-        store_operation = StoreOperation(store_updated_token_info, (token_info, refresh_token,))
+        store_operation = StoreOperation(auth.store_updated_token_info, (token_info, refresh_token,))
         # fmt: on
         if not add_to_store_queue(store_queue, store_operation):
             return error_response(500)
