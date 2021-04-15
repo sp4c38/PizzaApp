@@ -79,7 +79,7 @@ def auth_login():
             return error_response(403)
 
         # fmt: off
-        store_operation = StoreOperation(auth.store_token_info, (token_info, lock,))
+        store_operation = StoreOperation(auth.store_token_info, (lock, token_info,))
         # fmt: on
         if not add_to_store_queue(store_queue, store_operation):
             return error_response(500)
@@ -126,7 +126,7 @@ def auth_refresh():
             return error_response(403)        
 
         # fmt: off
-        store_operation = StoreOperation(auth.store_updated_token_info, (token_info, refresh_token,))
+        store_operation = StoreOperation(auth.store_refreshed_token_info, (lock, token_info, origi_refresh_token,))
         # fmt: on
         if not add_to_store_queue(store_queue, store_operation):
             return error_response(500)

@@ -58,15 +58,6 @@ def get_delivery_user_auth_info(
     return delivery_user
 
 
-def get_delivery_user_user_id(session: Session, user_id: int) -> Optional[DeliveryUser]:
-    """Get the delivery user by its user id."""
-    stmt = select(DeliveryUser).where(DeliveryUser.user_id == user_id)
-    delivery_user = session.execute(stmt).scalar_one_or_none()
-    if delivery_user is None:
-        return None
-    return delivery_user
-
-
 def parse_bearer_token(authorization: str) -> Optional[str]:
     auth_parts = authorization.split(" ")  # Note: .split(" ") is different than .split().
     if len(auth_parts) != 2:
@@ -204,16 +195,20 @@ def check_auth_refresh_token_issue(session: Session, token_info: TokenInfo, orig
         return False
 
     access_tokens = origi_refresh_token.access_tokens
-    max_access_token_expiration = None
-    for token in access_tokens:
-        if max_access_token_expiration is not None:
-            if token.expiration_time < max_access_token_expiration:
-                continue
-        max_access_token = token.expiration_time
+    if access_tokens:
+        max_access_token_expiration = None
+        for token in access_tokens:
+            if max_access_token_expiration is not None:
+                if token.expiration_time < max_access_token_expiration:
+                    continue
+            max_access_token_expiration = token.expiration_time
 
-    now = arrow.get()
-    if max_access_token_expiration - now > 20:
-        return False
+        now = arrow.get()
+        # Difference in time to the max access token expiration time relative from now.
+        now_difference_expiration = max_access_token_expiration - now.int_timestamp
+        if now_difference_expiration > 20:
+            print("Client requesting access token update too early.")
+            return False
 
     return True
 
@@ -231,41 +226,31 @@ def add_new_tokens(session: Session, token_info: TokenInfo):
     session.add(token_info.access_token)
 
 
-def store_token_info(session: Session, token_info: TokenInfo, lock: Lock):
+def store_token_info(session: Session, lock: Lock, token_info: TokenInfo):
+    """Store new refresh and access token to the database."""
     add_new_tokens(session, token_info)
     
     session.commit()
     lock.release()
 
 
-def store_updated_token_info(
-    session: Session, token_info: TokenInfo, old_refresh_token: RefreshToken
+def store_refreshed_token_info(
+    session: Session, lock: Lock, token_info: TokenInfo, origi_refresh_token: RefreshToken
 ):
-    """Store updated refresh and access tokens to the database.
+    """Store refreshed token info (tokens retrieved with a refresh token).
 
     In addition to storing the tokens this will also mark the old refresh token as invalid.
 
-    :param old_refresh_token: The refresh token with which the client authenticated
-         to create new refresh and access tokens.
+    :param origi_refresh_token: The original refresh token with which was used to authenticate. 
     """
 
-    # Due to multithreading we can't be completely go sure that the valid flag on the old
-    # refresh token is really still set to true. Thats why retrieve it again.
-    real_refresh_token = get_refresh_token(session, old_refresh_token.refresh_token)
-    if real_refresh_token is None:
-        return
-    if real_refresh_token.valid is False:
-        # Since responding to the request and executing those lines of code the valid flag was
-        # toggled. Return to not create two refresh tokens when only one should be created.
-        return
+    session.add(origi_refresh_token)
+    origi_refresh_token.valid = False
 
-    delivery_user = get_delivery_user_user_id(session, token_info.refresh_token.user_id)
-    if delivery_user is None:
-        return
-
-    real_refresh_token.valid = False
-    for access_token in real_refresh_token.access_tokens:
+    for access_token in origi_refresh_token.access_tokens:
         session.delete(access_token)
+
     add_new_tokens(session, token_info)
 
     session.commit()
+    lock.release()
