@@ -81,7 +81,7 @@ def auth_login():
         token_info = TokenInfo(new_refresh_token, new_access_token)
 
         # fmt: off
-        store_operation = StoreOperation(store_token_info, (token_info, delivery_user,))
+        store_operation = StoreOperation(store_token_info, (token_info,))
         # fmt: on
         if not add_to_store_queue(store_queue, store_operation):
             return error_response(500)

@@ -15,6 +15,7 @@ from src.pizzaapp.defaults import ACCESS_TOKEN_VALID_TIME, MAX_REFRESH_TOKENS
 from src.pizzaapp.tables import AccessToken, DeliveryUser, RefreshToken
 from src.pizzaapp.utils import decode_base64
 
+
 AuthentificationInfo = namedtuple("AuthentificationInfo", ["username", "pw_hash"])
 
 
@@ -32,7 +33,7 @@ def get_auth_info(authorization: AuthorizationHeader) -> Optional[Authentificati
     if authorization is None:
         return None
 
-    if not authorization.type == "basic":
+    if not authorization.type.lower() == "basic":
         return None
 
     username = authorization.username
@@ -83,7 +84,7 @@ def check_refresh_token(session: Session, delivery_user: DeliveryUser) -> bool:
     )
     # fmt: on
     amount_refresh_tokens = session.execute(stmt).scalar_one()
-    if amount_refresh_tokens <= MAX_REFRESH_TOKENS:
+    if amount_refresh_tokens < MAX_REFRESH_TOKENS:
         return True
     else:
         print(
@@ -182,10 +183,9 @@ def add_new_tokens(session: Session, token_info: TokenInfo):
     session.add(token_info.access_token)
 
 
-def store_token_info(session: Session, token_info: TokenInfo, delivery_user: DeliveryUser):
-    add_new_tokens(session, token_info, delivery_user)
+def store_token_info(session: Session, token_info: TokenInfo):
+    add_new_tokens(session, token_info)
     session.commit()
-    print(f"Stored new refresh and access tokens for delivery user {delivery_user.username}.")
 
 
 def store_updated_token_info(
@@ -219,7 +219,3 @@ def store_updated_token_info(
     add_new_tokens(session, token_info)
 
     session.commit()
-    print(
-        "Invalidated old refresh token and stored new refresh and access tokens "
-        f"for delivery user {delivery_user.username}."
-    )

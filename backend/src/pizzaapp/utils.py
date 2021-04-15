@@ -23,7 +23,7 @@ def successful_response(raw_response=None):
     if isinstance(raw_response, dict):
         raw_response["status"] = "successful"
     response = make_response(raw_response)
-    return response
+    return response, 200
 
 
 def error_response(error_code: int) -> dict:
@@ -37,7 +37,7 @@ def error_response(error_code: int) -> dict:
         "error": {"name": error.name, "description": error.description},
     }
     response = make_response(raw_response)
-    return response
+    return response, error_code
 
 
 def get_json_request_body_box(request: Request) -> Box:
