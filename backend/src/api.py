@@ -66,21 +66,17 @@ def auth_login():
 
         lock = auth.get_delivery_user_lock(delivery_user_locks, delivery_user.user_id)
         if lock is None:
-            print(
-                "Too many requests: Lock couldn't be acquired "
-                f"for delivery user {delivery_user.username}"
-            )
             return error_response(429)
-
-        make_new_refresh_token = auth.check_refresh_token(session, delivery_user)
-        if not make_new_refresh_token:
-            lock.release()
-            return error_response(409)
 
         # Contains new access and refresh token.
         new_refresh_token = auth.generate_refresh_token(delivery_user.user_id)
         new_access_token = auth.generate_access_token()
         token_info = auth.TokenInfo(new_refresh_token, new_access_token)
+
+        allow_token_issue = auth.check_auth_login_token_issue(session, token_info)
+        if not allow_token_issue:
+            lock.release()
+            return error_response(403)
 
         # fmt: off
         store_operation = StoreOperation(auth.store_token_info, (token_info, lock,))
@@ -92,8 +88,8 @@ def auth_login():
     return successful_response(token_info.response_json())
 
 
-@app.route("/auth/get/access_token/", methods=["POST"])
-def auth_get_access_token():
+@app.route("/auth/refresh/", methods=["POST"])
+def auth_refresh():
     """Get a new access and refresh token.
 
     Get a new access token by providing a valid refresh token.
@@ -101,19 +97,33 @@ def auth_get_access_token():
     """
     bearer_token = auth.parse_bearer_token(request.headers.get("Authorization"))
     with Session(engine) as session:
-        refresh_token = auth.get_refresh_token(session, bearer_token)
-        if refresh_token is None:
+        # Get original refresh token which will be invalidated on successful request.
+        origi_refresh_token = auth.get_refresh_token(session, bearer_token)
+        if origi_refresh_token is None:
             return error_response(401)
 
-        if refresh_token.valid == False:
-            # If the refresh token is invalid this is an indicator therfor that this refresh token
-            # was stolen and the attacker tried to use it. If this happens all refresh and access
-            # tokens of the delivery user need to be invalidated to prevent further harm.
-            return error_response(401)
+        lock = auth.get_delivery_user_lock(delivery_user_locks, origi_refresh_token.user_id)
+        if lock is None:
+            return error_response(429)
 
-        new_refresh_token = auth.generate_refresh_token(refresh_token.user_id)
+        # Refresh the refresh token as we can't be sure that it didn't change because
+        # we didn't have the user lock acquired when getting it the first time.
+        session.refresh(origi_refresh_token)
+
+        if origi_refresh_token.valid is False:
+            # A invalid refresh token was used. This most probably means that the refresh token
+            # was hijacked as the client wouldn't use invalid refresh tokens.
+            lock.release()
+            return error_response(403)
+
+        new_refresh_token = auth.generate_refresh_token(origi_refresh_token.user_id)
         new_access_token = auth.generate_access_token()
         token_info = auth.TokenInfo(new_refresh_token, new_access_token)
+
+        allow_token_issue = auth.check_auth_refresh_token_issue(session, token_info, origi_refresh_token)
+        if not allow_token_issue:
+            lock.release()
+            return error_response(403)        
 
         # fmt: off
         store_operation = StoreOperation(auth.store_updated_token_info, (token_info, refresh_token,))

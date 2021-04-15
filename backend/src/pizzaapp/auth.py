@@ -20,34 +20,6 @@ from src.pizzaapp.utils import decode_base64
 AuthentificationInfo = namedtuple("AuthentificationInfo", ["username", "pw_hash"])
 
 
-def generate_token() -> str:
-    """Generate a new refresh or access token."""
-    token = secrets.token_hex(32)
-    return token
-
-
-def get_delivery_user_lock(all_locks: dict, user_id: int) -> bool:
-    """Try to acquire the lock for a certain delivery user.
-
-    If no lock was created yet for the user id this will create a new lock 
-    and add it to all_locks. 
-
-    :param all_locks: A dictionary containing created delivery user locks.
-    :param user_id: The delivery user id for which to acquire the lock.
-    :returns: Appropriate lock if it could be acquired, None if it coulnd't
-    """
-    lock = all_locks.get(user_id)
-    if lock is None:
-        lock = Lock()
-        all_locks[user_id] = lock
-
-    lock_acquired = lock.acquire(blocking=False)
-
-    if lock_acquired is False:
-        return None
-    return lock
-
-
 def get_auth_info(authorization: AuthorizationHeader) -> Optional[AuthentificationInfo]:
     """Get authentication information from a request.
 
@@ -95,28 +67,6 @@ def get_delivery_user_user_id(session: Session, user_id: int) -> Optional[Delive
     return delivery_user
 
 
-def check_refresh_token(session: Session, delivery_user: DeliveryUser) -> bool:
-    """Check if a refresh token can be issued for a delivery user.
-
-    :returns: True if a new refresh token for the given delivery user can be issued, false if not.
-    """
-    # fmt: off
-    stmt = (
-        select(func.count(RefreshToken.refresh_token_id))
-        .where(and_(RefreshToken.user_id == delivery_user.user_id))
-    )
-    # fmt: on
-    amount_refresh_tokens = session.execute(stmt).scalar_one()
-    if amount_refresh_tokens < MAX_REFRESH_TOKENS:
-        return True
-    else:
-        print(
-            f"Max amount of refresh tokens ({MAX_REFRESH_TOKENS}) "
-            "reached for {delivery_user.username}."
-        )
-        return False
-
-
 def parse_bearer_token(authorization: str) -> Optional[str]:
     auth_parts = authorization.split(" ")  # Note: .split(" ") is different than .split().
     if len(auth_parts) != 2:
@@ -147,8 +97,40 @@ def get_refresh_token(session: Session, token: str) -> Optional[RefreshToken]:
     return refresh_token
 
 
+def generate_token() -> str:
+    """Generate a new refresh or access token."""
+    token = secrets.token_hex(32)
+    return token
+
+
+def get_delivery_user_lock(all_locks: dict, user_id: int) -> bool:
+    """Try to acquire the lock for a certain delivery user.
+
+    If no lock was created yet for the user id this will create a new lock 
+    and add it to all_locks. 
+
+    :param all_locks: A dictionary containing created delivery user locks.
+    :param user_id: The delivery user id for which to acquire the lock.
+    :returns: Appropriate lock if it could be acquired, None if it coulnd't
+    """
+    lock = all_locks.get(user_id)
+    if lock is None:
+        lock = Lock()
+        all_locks[user_id] = lock
+
+    lock_acquired = lock.acquire(blocking=False)
+
+    if lock_acquired is False:
+        return None
+    return lock
+
+
 @dataclass
 class TokenInfo:
+    """Hold information about one refresh token and one access token.
+
+    As refresh tokens and access tokens are always issued together this class groups them.
+    """
     refresh_token: RefreshToken
     access_token: AccessToken
 
@@ -166,21 +148,20 @@ def generate_refresh_token(user_id: int) -> RefreshToken:
     :param user_id: The user id for which the refresh token is issued.
     """
     token = generate_token()
-    token_valid = True
-    device_description = None
-    issue_time = arrow.now().int_timestamp
 
+    now = arrow.now()
     refresh_token = RefreshToken(
         user_id=user_id,
         refresh_token=token,
-        valid=token_valid,
-        device_description=device_description,
-        issuing_time=issue_time,
+        valid=True,
+        device_description=None,
+        issuing_time=now.int_timestamp,
     )
     return refresh_token
 
 
 def generate_access_token() -> AccessToken:
+    """Generate a new access token object."""
     token = generate_token()
     expiration_time = arrow.now().shift(seconds=ACCESS_TOKEN_VALID_TIME).int_timestamp
 
@@ -191,6 +172,50 @@ def generate_access_token() -> AccessToken:
         expiration_time=expiration_time,
     )
     return access_token
+
+
+def check_auth_login_token_issue(session: Session, token_info: TokenInfo) -> bool:
+    """Check if token issuing is valid at auth login."""
+    if token_info.refresh_token.valid is False:
+        return False
+
+    # fmt: off
+    refresh_token_amount_stmt = (
+        select(func.count(RefreshToken.refresh_token_id))
+        .where(RefreshToken.user_id == token_info.refresh_token.user_id)
+    )
+    # fmt: on
+
+    # Add one to count new refresh token.
+    amount_refresh_tokens = session.execute(refresh_token_amount_stmt).scalar_one() + 1
+    if amount_refresh_tokens > MAX_REFRESH_TOKENS:
+        return False
+
+    return True
+
+
+def check_auth_refresh_token_issue(session: Session, token_info: TokenInfo, origi_refresh_token: RefreshToken) -> bool:
+    """Check if token issuing is valid at auth refresh.
+    
+    :param origi_refresh_token: The original refresh token which was used to request the 
+        refresh (invalidate old refresh token and issue new refresh and access token).
+    """
+    if token_info.refresh_token.valid is False:
+        return False
+
+    access_tokens = origi_refresh_token.access_tokens
+    max_access_token_expiration = None
+    for token in access_tokens:
+        if max_access_token_expiration is not None:
+            if token.expiration_time < max_access_token_expiration:
+                continue
+        max_access_token = token.expiration_time
+
+    now = arrow.get()
+    if max_access_token_expiration - now > 20:
+        return False
+
+    return True
 
 
 def add_new_tokens(session: Session, token_info: TokenInfo):
