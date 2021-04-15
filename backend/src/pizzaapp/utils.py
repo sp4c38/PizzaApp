@@ -40,11 +40,16 @@ def error_response(error_code: int) -> dict:
     return response, error_code
 
 
-def get_json_request_body_box(request: Request) -> Box:
+def get_body_box(request: Request) -> Optional[Box]:
+    """Get the request body as a Box object if the body is valid JSON,
+
+    :returns: Box object containing the request body if the body is valid JSON,
+        none if it's not.
+    """
     body_json = request.get_json(silent=True, cache=False)
-    body_box = None
-    if body_json is not None:
-        body_box = Box(body_json)
+    if body_json is None:
+        return None
+    body_box = Box(body_json)
     return body_box
 
 

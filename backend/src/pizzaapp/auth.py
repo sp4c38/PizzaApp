@@ -13,7 +13,7 @@ from sqlalchemy.orm import Session
 from werkzeug.datastructures import Authorization as AuthorizationHeader
 
 from src.pizzaapp.defaults import ACCESS_TOKEN_VALID_TIME, MAX_REFRESH_TOKENS
-from src.pizzaapp.tables import AccessToken, DeliveryUser, RefreshToken
+from src.pizzaapp.tables import AccessToken, DeliveryUser, RefreshToken, RefreshTokenDescription
 from src.pizzaapp.utils import decode_base64
 
 
@@ -88,7 +88,7 @@ def get_refresh_token(session: Session, token: str) -> Optional[RefreshToken]:
     return refresh_token
 
 
-def generate_token() -> str:
+def gen_token() -> str:
     """Generate a new refresh or access token."""
     token = secrets.token_hex(32)
     return token
@@ -133,27 +133,32 @@ class TokenInfo:
         }
 
 
-def generate_refresh_token(user_id: int) -> RefreshToken:
+def gen_refresh_token(user_id: int, device_description=None) -> RefreshToken:
     """Generate a new refresh token object.
 
     :param user_id: The user id for which the refresh token is issued.
     """
-    token = generate_token()
+    token_description = None
+    if device_description is not None:
+        token_description = RefreshTokenDescription(
+            device_description=device_description
+        )
 
+    token = gen_token()
     now = arrow.now()
     refresh_token = RefreshToken(
         user_id=user_id,
         refresh_token=token,
         valid=True,
-        device_description=None,
         issuing_time=now.int_timestamp,
+        description=token_description
     )
     return refresh_token
 
 
-def generate_access_token() -> AccessToken:
+def gen_access_token() -> AccessToken:
     """Generate a new access token object."""
-    token = generate_token()
+    token = gen_token()
     expiration_time = arrow.now().shift(seconds=ACCESS_TOKEN_VALID_TIME).int_timestamp
 
     access_token = AccessToken(
@@ -250,6 +255,9 @@ def store_refreshed_token_info(
     for access_token in origi_refresh_token.access_tokens:
         session.delete(access_token)
 
+    refresh_token_description = origi_refresh_token.description
+    refresh_token_description.user_id = None
+    token_info.refresh_token.description = refresh_token_description
     add_new_tokens(session, token_info)
 
     session.commit()

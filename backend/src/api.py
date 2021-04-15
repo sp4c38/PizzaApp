@@ -13,7 +13,7 @@ from src.pizzaapp.catalog import Catalog
 from src.pizzaapp.order import store_order, verify_make_order
 from src.pizzaapp.store import add_to_store_queue, run_store_to_database, StoreOperation
 from src.pizzaapp.tables import confirm_required_tables_exist
-from src.pizzaapp.utils import successful_response, error_response, get_json_request_body_box
+from src.pizzaapp.utils import error_response, get_body_box, successful_response
 
 catalog = Catalog(engine)
 
@@ -40,7 +40,7 @@ def order_make():
     The order won't be stored here, but added to a queue which is
     observed by another thread, which then stores the order in the background.
     """
-    body = get_json_request_body_box(request)
+    body = get_body_box(request)
     request_valid = verify_make_order(body)
     if not request_valid:
         return error_response(400)
@@ -59,6 +59,9 @@ def auth_login():
     if auth_info is None:
         return error_response(400)
 
+    body = get_body_box(request)
+    device_description = body.device_description
+
     with Session(engine) as session:
         delivery_user = auth.get_delivery_user_auth_info(session, auth_info)
         if delivery_user is None:
@@ -69,8 +72,8 @@ def auth_login():
             return error_response(429)
 
         # Contains new access and refresh token.
-        new_refresh_token = auth.generate_refresh_token(delivery_user.user_id)
-        new_access_token = auth.generate_access_token()
+        new_refresh_token = auth.gen_refresh_token(delivery_user.user_id, device_description)
+        new_access_token = auth.gen_access_token()
         token_info = auth.TokenInfo(new_refresh_token, new_access_token)
 
         allow_token_issue = auth.check_auth_login_token_issue(session, token_info)
@@ -116,8 +119,8 @@ def auth_refresh():
             lock.release()
             return error_response(403)
 
-        new_refresh_token = auth.generate_refresh_token(origi_refresh_token.user_id)
-        new_access_token = auth.generate_access_token()
+        new_refresh_token = auth.gen_refresh_token(origi_refresh_token.user_id)
+        new_access_token = auth.gen_access_token()
         token_info = auth.TokenInfo(new_refresh_token, new_access_token)
 
         allow_token_issue = auth.check_auth_refresh_token_issue(session, token_info, origi_refresh_token)

@@ -126,16 +126,31 @@ class RefreshToken(Base):
     valid = Column(Boolean, nullable=False)
     # A description for the user to roughly see which devices have access to his account.
     # Example: "iPhone X"
-    device_description = Column(String, nullable=True)
     issuing_time = Column(Integer, nullable=False)  # Store as timestamp.
 
     access_tokens = relationship("AccessToken", back_populates="refresh_token")
+    description = relationship("RefreshTokenDescription", uselist=False, back_populates="refresh_token")
 
     def response_json(self):
         """Generate json for providing information about a refresh token in a response."""
         # Beaware of which information to leak to the client.
         jsoned = {"token": self.refresh_token}
         return jsoned
+
+
+class RefreshTokenDescription(Base):
+    """Store extra information for a refresh token.
+
+    Refresh tokens are often created and invalidated. To prevent storing refresh 
+    token description multiple times (always same data) this description 
+    table mapps description to refresh token entries.
+    """
+    __tablename__ = NAMES_OF_TABLES["refresh_token_description_table"]
+
+    refresh_token_id = Column(ForeignKey(RefreshToken.refresh_token_id), primary_key=True)
+    device_description = Column(String)
+
+    refresh_token = relationship("RefreshToken", back_populates="description")
 
 
 class AccessToken(Base):
@@ -149,7 +164,7 @@ class AccessToken(Base):
     access_token = Column(String, nullable=False, unique=True)
     expiration_time = Column(Integer)  # Stored as timestamp.
 
-    refresh_token = relationship(RefreshToken, back_populates="access_tokens")
+    refresh_token = relationship("RefreshToken", back_populates="access_tokens")
 
     def response_json(self):
         """Generate json for providing information about a access token in a response."""
