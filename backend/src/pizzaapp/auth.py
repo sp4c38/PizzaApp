@@ -12,7 +12,7 @@ from sqlalchemy import and_, func, select
 from sqlalchemy.orm import Session
 from werkzeug.datastructures import Authorization as AuthorizationHeader
 
-from src.pizzaapp.defaults import ACCESS_TOKEN_VALID_TIME, MAX_REFRESH_TOKENS
+from src.pizzaapp.defaults import ACCESS_TOKEN_TRANSITION_TIME, ACCESS_TOKEN_VALID_TIME, MAX_REFRESH_TOKENS
 from src.pizzaapp.tables import AccessToken, DeliveryUser, RefreshToken, RefreshTokenDescription
 from src.pizzaapp.utils import decode_base64
 
@@ -97,8 +97,8 @@ def gen_token() -> str:
 def get_delivery_user_lock(all_locks: dict, user_id: int) -> bool:
     """Try to acquire the lock for a certain delivery user.
 
-    If no lock was created yet for the user id this will create a new lock 
-    and add it to all_locks. 
+    If no lock was created yet for the user id this will create a new lock
+    and add it to all_locks.
 
     :param all_locks: A dictionary containing created delivery user locks.
     :param user_id: The delivery user id for which to acquire the lock.
@@ -122,15 +122,28 @@ class TokenInfo:
 
     As refresh tokens and access tokens are always issued together this class groups them.
     """
-    refresh_token: RefreshToken
-    access_token: AccessToken
+
+    refresh_token: Optional[RefreshToken]
+    access_token: Optional[AccessToken]
 
     def response_json(self):
         """Generate a json to send back when responding to a client."""
-        return {
-            "refresh_token": self.refresh_token.response_json(),
-            "access_token": self.access_token.response_json(),
-        }
+        jsoned = {}
+        if self.refresh_token is not None:
+            jsoned["refresh_token"] = self.refresh_token.response_json()
+        if self.access_token is not None:
+            jsoned["access_token"] = self.access_token.response_json()
+        return jsoned
+
+    @property
+    def all_included(self) -> bool:
+        """Check if both refresh and access tokens are not set to None."""
+        if any([
+            refresh_token is None,
+            access_token is None
+        ]):
+            return False
+        return True
 
 
 def gen_refresh_token(user_id: int, device_description=None) -> RefreshToken:
@@ -140,9 +153,7 @@ def gen_refresh_token(user_id: int, device_description=None) -> RefreshToken:
     """
     token_description = None
     if device_description is not None:
-        token_description = RefreshTokenDescription(
-            device_description=device_description
-        )
+        token_description = RefreshTokenDescription(device_description=device_description)
 
     token = gen_token()
     now = arrow.now()
@@ -151,7 +162,7 @@ def gen_refresh_token(user_id: int, device_description=None) -> RefreshToken:
         refresh_token=token,
         valid=True,
         issuing_time=now.int_timestamp,
-        description=token_description
+        description=token_description,
     )
     return refresh_token
 
@@ -170,11 +181,8 @@ def gen_access_token() -> AccessToken:
     return access_token
 
 
-def check_auth_login_token_issue(session: Session, token_info: TokenInfo) -> bool:
-    """Check if token issuing is valid at auth login."""
-    if token_info.refresh_token.valid is False:
-        return False
-
+def reached_refresh_token_limit(session: Session, user_id: int) -> bool:
+    """Check if the refresh token limit was reached for a certain user."""
     # fmt: off
     refresh_token_amount_stmt = (
         select(func.count(RefreshToken.refresh_token_id))
@@ -185,34 +193,35 @@ def check_auth_login_token_issue(session: Session, token_info: TokenInfo) -> boo
     # Add one to count new refresh token.
     amount_refresh_tokens = session.execute(refresh_token_amount_stmt).scalar_one() + 1
     if amount_refresh_tokens > MAX_REFRESH_TOKENS:
-        return False
+        return True
 
-    return True
+    return False
 
 
-def check_auth_refresh_token_issue(session: Session, token_info: TokenInfo, origi_refresh_token: RefreshToken) -> bool:
-    """Check if token issuing is valid at auth refresh.
+def in_access_token_transition_time(
+    session: Session, refresh_token: RefreshToken
+) -> bool:
+    """Check if at least one access token bound to the parsed refresh token is in transition time.
     
-    :param origi_refresh_token: The original refresh token which was used to request the 
-        refresh (invalidate old refresh token and issue new refresh and access token).
-    """
-    if token_info.refresh_token.valid is False:
-        return False
+    See ACCESS_TOKEN_TRANSITION_TIME in defaults for an explanation of the transition time.
 
+    :param origi_refresh_token: The original refresh token which was used to request the
+        refresh.
+    """
     access_tokens = origi_refresh_token.access_tokens
     if access_tokens:
         max_access_token_expiration = None
         for token in access_tokens:
             if max_access_token_expiration is not None:
-                if token.expiration_time < max_access_token_expiration:
+                if token.expiration_time <= max_access_token_expiration:
                     continue
             max_access_token_expiration = token.expiration_time
 
         now = arrow.get()
         # Difference in time to the max access token expiration time relative from now.
         now_difference_expiration = max_access_token_expiration - now.int_timestamp
-        if now_difference_expiration > 20:
-            print("Client requesting access token update too early.")
+        if now_difference_expiration > ACCESS_TOKEN_TRANSITION_TIME:
+            print("Client is requesting access token update too early.")
             return False
 
     return True
@@ -234,7 +243,7 @@ def add_new_tokens(session: Session, token_info: TokenInfo):
 def store_token_info(session: Session, lock: Lock, token_info: TokenInfo):
     """Store new refresh and access token to the database."""
     add_new_tokens(session, token_info)
-    
+
     session.commit()
     lock.release()
 
@@ -246,7 +255,7 @@ def store_refreshed_token_info(
 
     In addition to storing the tokens this will also mark the old refresh token as invalid.
 
-    :param origi_refresh_token: The original refresh token with which was used to authenticate. 
+    :param origi_refresh_token: The original refresh token with which was used to authenticate.
     """
 
     session.add(origi_refresh_token)

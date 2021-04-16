@@ -27,3 +27,9 @@ NAMES_OF_TABLES = {
 MAX_REFRESH_TOKENS = 10
 # Time in seconds access tokens should be marked as valid when new ones are created.
 ACCESS_TOKEN_VALID_TIME = 600
+# A new access token can be acquired if the expiration time of the old access token relative
+# from the current time in seconds is equal or smaller than the set value.
+# This allows for a smooth access token transition on the client-side.
+# Example (value set to 20 seconds): If the currently active access token expires in 20 seconds
+# or less from current time the client can already request a new access token.
+ACCESS_TOKEN_TRANSITION_TIME = 20

@@ -53,34 +53,38 @@ def order_make():
 
 @app.route("/auth/login/", methods=["POST"])
 def auth_login():
-    """Get a refresh and session token if the user credentials are valid."""
+    """Get a refresh and access token credentials are valid."""
     authorization_header = request.authorization
     auth_info = auth.get_auth_info(authorization_header)
     if auth_info is None:
         return error_response(400)
 
     body = get_body_box(request)
+    if body is None:
+        return error_response(400)
+    if not "device_description" in body:
+        return error_response(400)
+
     device_description = body.device_description
 
     with Session(engine) as session:
         delivery_user = auth.get_delivery_user_auth_info(session, auth_info)
         if delivery_user is None:
             return error_response(401)
-
         lock = auth.get_delivery_user_lock(delivery_user_locks, delivery_user.user_id)
         if lock is None:
             return error_response(429)
+        session.refresh(delivery_user)
 
-        # Contains new access and refresh token.
-        new_refresh_token = auth.gen_refresh_token(delivery_user.user_id, device_description)
-        new_access_token = auth.gen_access_token()
-        token_info = auth.TokenInfo(new_refresh_token, new_access_token)
-
-        allow_token_issue = auth.check_auth_login_token_issue(session, token_info)
-        if not allow_token_issue:
+        if auth.reached_refresh_token_limit(session, delivery_user.user_id):
             lock.release()
             return error_response(403)
 
+        new_refresh_token = auth.gen_refresh_token(delivery_user.user_id, device_description)
+        new_access_token = auth.gen_access_token()
+        token_info = auth.TokenInfo(new_refresh_token, new_access_token)
+        if token_info.all_included is False:
+            return error_response(500)
         # fmt: off
         store_operation = StoreOperation(auth.store_token_info, (lock, token_info,))
         # fmt: on
@@ -93,7 +97,7 @@ def auth_login():
 
 @app.route("/auth/refresh/", methods=["POST"])
 def auth_refresh():
-    """Get a new access and refresh token.
+    """Get new access and refresh token.
 
     Get a new access token by providing a valid refresh token.
     Following RFC-6819 5.2.2.3 this will also issue and return a new refresh token.
@@ -104,30 +108,22 @@ def auth_refresh():
         origi_refresh_token = auth.get_refresh_token(session, bearer_token)
         if origi_refresh_token is None:
             return error_response(401)
-
         lock = auth.get_delivery_user_lock(delivery_user_locks, origi_refresh_token.user_id)
         if lock is None:
             return error_response(429)
-
-        # Refresh the refresh token as we can't be sure that it didn't change because
-        # we didn't have the user lock acquired when getting it the first time.
         session.refresh(origi_refresh_token)
 
         if origi_refresh_token.valid is False:
-            # A invalid refresh token was used. This most probably means that the refresh token
-            # was hijacked as the client wouldn't use invalid refresh tokens.
             lock.release()
             return error_response(403)
+        if auth.in_access_token_transition_time() is False:
+            return error_response(409)
 
         new_refresh_token = auth.gen_refresh_token(origi_refresh_token.user_id)
         new_access_token = auth.gen_access_token()
         token_info = auth.TokenInfo(new_refresh_token, new_access_token)
-
-        allow_token_issue = auth.check_auth_refresh_token_issue(session, token_info, origi_refresh_token)
-        if not allow_token_issue:
-            lock.release()
-            return error_response(403)        
-
+        if token_info.all_included is False:
+            return error_response(500)
         # fmt: off
         store_operation = StoreOperation(auth.store_refreshed_token_info, (lock, token_info, origi_refresh_token,))
         # fmt: on

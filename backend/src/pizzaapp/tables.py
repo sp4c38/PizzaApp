@@ -129,7 +129,9 @@ class RefreshToken(Base):
     issuing_time = Column(Integer, nullable=False)  # Store as timestamp.
 
     access_tokens = relationship("AccessToken", back_populates="refresh_token")
-    description = relationship("RefreshTokenDescription", uselist=False, back_populates="refresh_token")
+    description = relationship(
+        "RefreshTokenDescription", uselist=False, back_populates="refresh_token"
+    )
 
     def response_json(self):
         """Generate json for providing information about a refresh token in a response."""
@@ -141,10 +143,11 @@ class RefreshToken(Base):
 class RefreshTokenDescription(Base):
     """Store extra information for a refresh token.
 
-    Refresh tokens are often created and invalidated. To prevent storing refresh 
-    token description multiple times (always same data) this description 
+    Refresh tokens are often created and invalidated. To prevent storing refresh
+    token description multiple times (always same data) this description
     table mapps description to refresh token entries.
     """
+
     __tablename__ = NAMES_OF_TABLES["refresh_token_description_table"]
 
     refresh_token_id = Column(ForeignKey(RefreshToken.refresh_token_id), primary_key=True)
