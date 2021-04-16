@@ -12,13 +12,8 @@ from sqlalchemy import and_, func, select
 from sqlalchemy.orm import Session
 from werkzeug.datastructures import Authorization as AuthorizationHeader
 
-from src.pizzaapp.defaults import (
-    ACCESS_TOKEN_TRANSITION_TIME,
-    ACCESS_TOKEN_VALID_TIME,
-    MAX_REFRESH_TOKENS,
-)
+from src.pizzaapp import defaults
 from src.pizzaapp.tables import AccessToken, DeliveryUser, RefreshToken, RefreshTokenDescription
-from src.pizzaapp.utils import decode_base64
 
 
 AuthentificationInfo = namedtuple("AuthentificationInfo", ["username", "pw_hash"])
@@ -42,13 +37,11 @@ def get_auth_info(authorization: AuthorizationHeader) -> Optional[Authentificati
     return auth_info
 
 
-def get_delivery_user_auth_info(
-    session: Session, auth_info: AuthentificationInfo
-) -> Optional[DeliveryUser]:
-    """Check if there is a user for which the authentication information is valid.
+def get_delivery_user(session: Session, auth_info: AuthentificationInfo) -> Optional[DeliveryUser]:
+    """Check if there is a delivery user for which the authentication information is valid.
 
-    :returns: The DeliveryUser if the auth info is valid, None if
-        the auth info is invalid (i.e. wrong username or password).
+    :returns: The DeliveryUser if the auth info is valid, none if
+        the auth info is invalid (i.e. wrong username or password hash).
     """
     stmt = select(DeliveryUser).where(DeliveryUser.username == auth_info.username)
     delivery_user = session.execute(stmt).scalar_one_or_none()
@@ -98,28 +91,6 @@ def gen_token() -> str:
     return token
 
 
-def get_delivery_user_lock(all_locks: dict, user_id: int) -> bool:
-    """Try to acquire the lock for a certain delivery user.
-
-    If no lock was created yet for the user id this will create a new lock
-    and add it to all_locks.
-
-    :param all_locks: A dictionary containing created delivery user locks.
-    :param user_id: The delivery user id for which to acquire the lock.
-    :returns: Appropriate lock if it could be acquired, None if it coulnd't
-    """
-    lock = all_locks.get(user_id)
-    if lock is None:
-        lock = Lock()
-        all_locks[user_id] = lock
-
-    lock_acquired = lock.acquire(blocking=False)
-
-    if lock_acquired is False:
-        return None
-    return lock
-
-
 @dataclass
 class TokenInfo:
     """Hold information about one refresh token and one access token.
@@ -164,7 +135,8 @@ def gen_refresh_token(user_id: int, device_description=None) -> RefreshToken:
 def gen_access_token() -> AccessToken:
     """Generate a new access token object."""
     token = gen_token()
-    expiration_time = arrow.now().shift(seconds=ACCESS_TOKEN_VALID_TIME).int_timestamp
+    now = arrow.now()
+    expiration_time = now.shift(seconds=defaults.ACCESS_TOKEN_VALID_TIME).int_timestamp
 
     access_token = AccessToken(
         # Refresh token id can't be known at this point because no refresh token was inserted yet.
@@ -175,7 +147,7 @@ def gen_access_token() -> AccessToken:
     return access_token
 
 
-def reached_refresh_token_limit(session: Session, user_id: int) -> bool:
+def check_reached_refresh_token_limit(session: Session, user_id: int) -> bool:
     """Check if the refresh token limit was reached for a certain user."""
     # fmt: off
     refresh_token_amount_stmt = (
@@ -186,35 +158,36 @@ def reached_refresh_token_limit(session: Session, user_id: int) -> bool:
 
     # Add one to count new refresh token.
     amount_refresh_tokens = session.execute(refresh_token_amount_stmt).scalar_one() + 1
-    if amount_refresh_tokens > MAX_REFRESH_TOKENS:
+    if amount_refresh_tokens > defaults.MAX_REFRESH_TOKENS:
         return True
 
     return False
 
 
-def in_access_token_transition_time(session: Session, refresh_token: RefreshToken) -> bool:
-    """Check if at least one access token bound to the parsed refresh token is in transition time.
+def check_expiration_times_valid(session: Session, access_tokens: list[AccessToken]) -> bool:
+    """Check if expiration times of the access tokens are valid to issue a new access token.
+
+    First gets the access token with the latest expiration time, then checks if this
+    access token expired or is in transition time.
 
     See ACCESS_TOKEN_TRANSITION_TIME in defaults for an explanation of the transition time.
 
-    :param origi_refresh_token: The original refresh token which was used to request the
-        refresh.
+    :param access_tokens: A list of access tokens to check.
+    :returns: True if a new access token can be issued, false if not.
     """
-    access_tokens = origi_refresh_token.access_tokens
-    if access_tokens:
-        max_access_token_expiration = None
-        for token in access_tokens:
-            if max_access_token_expiration is not None:
-                if token.expiration_time <= max_access_token_expiration:
-                    continue
-            max_access_token_expiration = token.expiration_time
+    max_access_token_expiration = None
+    for token in access_tokens:
+        if max_access_token_expiration is not None:
+            if token.expiration_time <= max_access_token_expiration:
+                continue
+        max_access_token_expiration = token.expiration_time
 
-        now = arrow.get()
-        # Difference in time to the max access token expiration time relative from now.
-        now_difference_expiration = max_access_token_expiration - now.int_timestamp
-        if now_difference_expiration > ACCESS_TOKEN_TRANSITION_TIME:
-            print("Client is requesting access token update too early.")
-            return False
+    now = arrow.get()
+    # Difference in time to the max access token expiration time relative from now.
+    now_difference_expiration = max_access_token_expiration - now.int_timestamp
+    if now_difference_expiration > defaults.ACCESS_TOKEN_TRANSITION_TIME:
+        print("Client is requesting access token update too early.")
+        return False
 
     return True
 
@@ -252,9 +225,6 @@ def store_refreshed_token_info(
 
     session.add(origi_refresh_token)
     origi_refresh_token.valid = False
-
-    for access_token in origi_refresh_token.access_tokens:
-        session.delete(access_token)
 
     refresh_token_description = origi_refresh_token.description
     refresh_token_description.user_id = None

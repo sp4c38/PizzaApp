@@ -23,13 +23,11 @@ NAMES_OF_TABLES = {
     "access_token_table": "access_token",
 }
 
-# The maximal amount of refresh tokens a user can have.
+# The maximal amount of valid refresh tokens a user can have at the same time.
 MAX_REFRESH_TOKENS = 10
-# Time in seconds access tokens should be marked as valid when new ones are created.
-ACCESS_TOKEN_VALID_TIME = 600
-# A new access token can be acquired if the expiration time of the old access token relative
-# from the current time in seconds is equal or smaller than the set value.
-# This allows for a smooth access token transition on the client-side.
-# Example (value set to 20 seconds): If the currently active access token expires in 20 seconds
-# or less from current time the client can already request a new access token.
-ACCESS_TOKEN_TRANSITION_TIME = 20
+# Time access tokens should be marked as valid when they are created.
+ACCESS_TOKEN_VALID_TIME = 600  # Value in seconds.
+# The transition time is the time a new access token can be already issued when
+# the previouse access token is still valid for equal or less the time specified.
+# This allows for a smoother and faster access token transition.
+ACCESS_TOKEN_TRANSITION_TIME = 20  # Value in seconds.

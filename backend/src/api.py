@@ -18,8 +18,6 @@ from src.pizzaapp.utils import error_response, get_body_box, successful_response
 catalog = Catalog(engine)
 
 store_queue = Queue()
-# Store a lock for each user to solve race conditions which could happen if too many requests
-# are sent for the same user in a very short time when running certain operations.
 delivery_user_locks = {}
 
 app = Flask("PizzaApp")
@@ -68,7 +66,7 @@ def auth_login():
     device_description = body.device_description
 
     with Session(engine) as session:
-        delivery_user = auth.get_delivery_user_auth_info(session, auth_info)
+        delivery_user = auth.get_delivery_user(session, auth_info)
         if delivery_user is None:
             return error_response(401)  # No valid credentials.
         lock = auth.get_delivery_user_lock(delivery_user_locks, delivery_user.user_id)
@@ -76,7 +74,7 @@ def auth_login():
             return error_response(429)
         session.refresh(delivery_user)
 
-        if auth.reached_refresh_token_limit(session, delivery_user.user_id):
+        if auth.check_reached_refresh_token_limit(session, delivery_user.user_id):
             lock.release()
             return error_response(403)  # Refresh token limit reached.
 
@@ -114,9 +112,13 @@ def auth_refresh():
         if origi_refresh_token.valid is False:
             lock.release()
             return error_response(403)
-        if auth.in_access_token_transition_time() is False:
-            # Access token didn't expire yet and isn't in transition time.
-            return error_response(409)
+
+        origi_access_tokens = origi_refresh_token.access_tokens
+        if len(origi_access_tokens) > 0:
+            if auth.check_access_token_time(origi_refresh_token.access_tokens) is False:
+                # Access token didn't expire yet and isn't in transition time.
+                lock.release()
+                return error_response(409)
 
         new_refresh_token = auth.gen_refresh_token(origi_refresh_token.user_id)
         new_access_token = auth.gen_access_token()

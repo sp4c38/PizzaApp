@@ -60,22 +60,23 @@ def get_body_box(request: Request) -> Optional[Box]:
     return body_box
 
 
-def decode_base64(b64_encoded_string: str) -> Optional[str]:
-    """Decode a base64 string and catch multiple possible exceptions."""
-    try:
-        # Base64 string should always be encodable using ASCII characters.
-        b64_encoded_bytes = b64_encoded_string.encode("ascii")
-    except UnicodeEncodeError:
-        return None
+def get_delivery_user_lock(all_locks: dict, user_id: int) -> bool:
+    """Try to acquire the lock for a certain delivery user id.
 
-    try:
-        b64_decoded_bytes = b64decode(b64_encoded_bytes, validate=True)
-    except BasciiError:
-        return None
+    If no lock was created yet for the user id this will create a new lock
+    and add it to all_locks.
 
-    try:
-        b64_decoded_string = b64_decoded_bytes.decode("utf-8")
-    except UnicodeDecodeError:
-        return None
+    :param all_locks: A dictionary containing created delivery user locks.
+    :param user_id: The delivery user id for which to acquire the lock.
+    :returns: Appropriate lock if it could be acquired, None if it coulnd't
+    """
+    lock = all_locks.get(user_id)
+    if lock is None:
+        lock = Lock()
+        all_locks[user_id] = lock
 
-    return b64_decoded_string
+    lock_acquired = lock.acquire(blocking=False)
+
+    if lock_acquired is False:
+        return None
+    return lock
