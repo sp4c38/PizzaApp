@@ -12,7 +12,11 @@ from sqlalchemy import and_, func, select
 from sqlalchemy.orm import Session
 from werkzeug.datastructures import Authorization as AuthorizationHeader
 
-from src.pizzaapp.defaults import ACCESS_TOKEN_TRANSITION_TIME, ACCESS_TOKEN_VALID_TIME, MAX_REFRESH_TOKENS
+from src.pizzaapp.defaults import (
+    ACCESS_TOKEN_TRANSITION_TIME,
+    ACCESS_TOKEN_VALID_TIME,
+    MAX_REFRESH_TOKENS,
+)
 from src.pizzaapp.tables import AccessToken, DeliveryUser, RefreshToken, RefreshTokenDescription
 from src.pizzaapp.utils import decode_base64
 
@@ -135,16 +139,6 @@ class TokenInfo:
             jsoned["access_token"] = self.access_token.response_json()
         return jsoned
 
-    @property
-    def all_included(self) -> bool:
-        """Check if both refresh and access tokens are not set to None."""
-        if any([
-            refresh_token is None,
-            access_token is None
-        ]):
-            return False
-        return True
-
 
 def gen_refresh_token(user_id: int, device_description=None) -> RefreshToken:
     """Generate a new refresh token object.
@@ -198,11 +192,9 @@ def reached_refresh_token_limit(session: Session, user_id: int) -> bool:
     return False
 
 
-def in_access_token_transition_time(
-    session: Session, refresh_token: RefreshToken
-) -> bool:
+def in_access_token_transition_time(session: Session, refresh_token: RefreshToken) -> bool:
     """Check if at least one access token bound to the parsed refresh token is in transition time.
-    
+
     See ACCESS_TOKEN_TRANSITION_TIME in defaults for an explanation of the transition time.
 
     :param origi_refresh_token: The original refresh token which was used to request the

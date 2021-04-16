@@ -1,42 +1,49 @@
 from binascii import Error as BasciiError
 from base64 import b64decode
-from typing import Optional
+from typing import Generic, Optional, TypeVar
 
 from box import Box
 from flask import make_response, Request
 from werkzeug.exceptions import default_exceptions
 
 
-def successful_response(raw_response=None):
+def successful_response(response_body=None):
     """Wrap a response if the request is successful.
 
-    If the response is a dictionary this function will set the
+    If the response body is a dictionary this function will set the
     key "status" to "successful" (beaware, this function overwrites
     any existing value).
+
     Only run this function if a Flask request context exists.
 
-    :param raw_response: Object to return. This object may be of any type.
-        If response is None a JSON response with the status key will be returned.
+    :param response_body: The body of the response.
     """
-    if raw_response is None:
-        raw_response = Box()
-    if isinstance(raw_response, dict):
-        raw_response["status"] = "successful"
-    response = make_response(raw_response)
+    if response_body is None:
+        response_body = Box()
+    if isinstance(response_body, dict):
+        response_body.status = "successful"
+
+    response = make_response(response_body)
     return response, 200
 
 
-def error_response(error_code: int) -> dict:
+def error_response(error_code: int, description: Optional[str] = None) -> dict:
     """Generates an JSON error response a certain error code.
 
     Only run this function if a Flask request context exists.
     """
     error = default_exceptions[error_code]()
-    raw_response = {
-        "status": "unsuccessful",
-        "error": {"name": error.name, "description": error.description},
-    }
-    response = make_response(raw_response)
+
+    response_body = Box()
+    response_body.status = "unsuccessful"
+    response_body.error = Box()
+    response_body.error.name = error.name
+    if description is not None:
+        response_body.error.description = description
+    else:
+        response_body.error.description = error.description
+
+    response = make_response(response_body)
     return response, error_code
 
 
