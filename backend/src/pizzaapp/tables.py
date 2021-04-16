@@ -128,9 +128,15 @@ class RefreshToken(Base):
     # Example: "iPhone X"
     issuing_time = Column(Integer, nullable=False)  # Store as timestamp.
 
-    access_tokens = relationship("AccessToken", back_populates="refresh_token")
+    access_tokens = relationship(
+        "AccessToken", back_populates="refresh_token", cascade="all, delete", passive_deletes=True
+    )
     description = relationship(
-        "RefreshTokenDescription", uselist=False, back_populates="refresh_token"
+        "RefreshTokenDescription",
+        uselist=False,
+        back_populates="refresh_token",
+        cascade="all, delete",
+        passive_deletes=True,
     )
 
     def response_json(self):
@@ -150,7 +156,9 @@ class RefreshTokenDescription(Base):
 
     __tablename__ = NAMES_OF_TABLES["refresh_token_description_table"]
 
-    refresh_token_id = Column(ForeignKey(RefreshToken.refresh_token_id), primary_key=True)
+    refresh_token_id = Column(
+        ForeignKey(RefreshToken.refresh_token_id, ondelete="CASCADE"), primary_key=True
+    )
     device_description = Column(String)
 
     refresh_token = relationship("RefreshToken", back_populates="description")
@@ -163,7 +171,9 @@ class AccessToken(Base):
 
     access_token_id = Column(Integer, primary_key=True)
     # Refresh token with which the access token was created.
-    refresh_token_id = Column(ForeignKey(RefreshToken.refresh_token_id), nullable=False)
+    refresh_token_id = Column(
+        ForeignKey(RefreshToken.refresh_token_id, ondelete="CASCADE"), nullable=False
+    )
     access_token = Column(String, nullable=False, unique=True)
     expiration_time = Column(Integer)  # Stored as timestamp.
 

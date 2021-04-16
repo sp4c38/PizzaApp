@@ -3,7 +3,7 @@ import sys
 from decimal import Decimal
 from pathlib import Path
 
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, event
 from sqlalchemy.engine import Engine
 from sqlalchemy.types import Integer, TypeDecorator
 
@@ -40,6 +40,13 @@ class SQLiteDecimal(TypeDecorator):
         if value is not None:
             converted_value = value / self.multiplier
         return converted_value
+
+
+@event.listens_for(Engine, "connect")
+def set_sqlite_pragma(dbapi_connection, connection_record):
+    cursor = dbapi_connection.cursor()
+    cursor.execute("PRAGMA foreign_keys=ON")
+    cursor.close()
 
 
 def connect(location: str, debug: bool) -> Engine:

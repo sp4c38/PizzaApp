@@ -58,6 +58,8 @@ def run_store_to_database(queue: Queue, kill_event: threading.Event, refresh_int
             task_kwargs = task.kwargs if task.kwargs is not None else {}
             task.func(session, *task_args, **task_kwargs)
 
+            session.expunge_all()
+
         kill_thread = kill_event.wait(refresh_interval)
         if kill_thread is True:
             break
