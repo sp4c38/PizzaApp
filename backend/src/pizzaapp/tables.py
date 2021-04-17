@@ -111,8 +111,24 @@ class DeliveryUser(Base):
 
     user_id = Column(Integer, primary_key=True)
     username = Column(String, unique=True)
-    pw_hash = Column(String(60))  # Includes hash and salt.
-    date_created = Column(Integer)  # Stored as timestamp.
+    pw_hash = Column(String(60), nullable=False)  # Includes hash and salt.
+    date_created = Column(Integer, nullable=False)  # Stored as timestamp.
+
+
+class RefreshTokenDescription(Base):
+    """Store extra information for a refresh token.
+
+    Refresh tokens are frequently created. To prevent storing refresh
+    token descriptions each time anew, refresh tokens instead refer to
+    their description by setting a foreign key contraint to this table.
+    """
+
+    __tablename__ = NAMES_OF_TABLES["refresh_token_description_table"]
+
+    description_id = Column(Integer, primary_key=True)
+    device_description = Column(String, nullable=True)
+
+    refresh_token = relationship("RefreshToken", uselist=False, back_populates="description")
 
 
 class RefreshToken(Base):
@@ -124,9 +140,10 @@ class RefreshToken(Base):
     user_id = Column(ForeignKey(DeliveryUser.user_id), nullable=False)
     refresh_token = Column(String, nullable=False, unique=True)
     valid = Column(Boolean, nullable=False)
-    # A description for the user to roughly see which devices have access to his account.
-    # Example: "iPhone X"
     issuing_time = Column(Integer, nullable=False)  # Store as timestamp.
+    description_id = Column(
+        ForeignKey(RefreshTokenDescription.description_id, ondelete="SET NULL"), nullable=True
+    )
 
     access_tokens = relationship(
         "AccessToken", back_populates="refresh_token", cascade="all, delete", passive_deletes=True
@@ -136,7 +153,6 @@ class RefreshToken(Base):
         uselist=False,
         back_populates="refresh_token",
         cascade="all, delete",
-        passive_deletes=True,
     )
 
     def response_json(self):
@@ -144,24 +160,6 @@ class RefreshToken(Base):
         # Beaware of which information to leak to the client.
         jsoned = {"token": self.refresh_token}
         return jsoned
-
-
-class RefreshTokenDescription(Base):
-    """Store extra information for a refresh token.
-
-    Refresh tokens are often created and invalidated. To prevent storing refresh
-    token description multiple times (always same data) this description
-    table mapps description to refresh token entries.
-    """
-
-    __tablename__ = NAMES_OF_TABLES["refresh_token_description_table"]
-
-    refresh_token_id = Column(
-        ForeignKey(RefreshToken.refresh_token_id, ondelete="CASCADE"), primary_key=True
-    )
-    device_description = Column(String)
-
-    refresh_token = relationship("RefreshToken", back_populates="description")
 
 
 class AccessToken(Base):
@@ -175,7 +173,7 @@ class AccessToken(Base):
         ForeignKey(RefreshToken.refresh_token_id, ondelete="CASCADE"), nullable=False
     )
     access_token = Column(String, nullable=False, unique=True)
-    expiration_time = Column(Integer)  # Stored as timestamp.
+    expiration_time = Column(Integer, nullable=False)  # Stored as timestamp.
 
     refresh_token = relationship("RefreshToken", back_populates="access_tokens")
 
