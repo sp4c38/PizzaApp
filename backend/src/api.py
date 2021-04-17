@@ -76,11 +76,13 @@ def auth_login():
             return error_response(429, APP_ERROR_CODES["requesting_too_fast"])
         session.refresh(delivery_user)
 
-        if auth.check_reached_refresh_token_limit(session, delivery_user.user_id):
+        if auth.refresh_token_limit_not_reached(session, delivery_user.user_id) is False:
             lock.release()
             return error_response(403, APP_ERROR_CODES["reached_refresh_token_limit"])
 
-        new_refresh_token = auth.gen_refresh_token(delivery_user.user_id, device_description)
+        new_refresh_token = auth.gen_refresh_token(
+            user_id=delivery_user.user_id, device_description=device_description
+        )
         new_access_token = auth.gen_access_token()
         token_info = auth.TokenInfo(new_refresh_token, new_access_token)
         store_operation = StoreOperation(
@@ -107,11 +109,13 @@ def auth_refresh():
         origi_refresh_token = auth.get_refresh_token(session, bearer_token)
         if origi_refresh_token is None:
             return error_response(401, APP_ERROR_CODES["invalid_refresh_token"])
+        origi_description = origi_refresh_token.description
 
-        lock = utils.get_delivery_user_lock(delivery_user_locks, origi_refresh_token.user_id)
+        lock = utils.get_delivery_user_lock(delivery_user_locks, origi_description.user_id)
         if lock is None:
             return error_response(429, APP_ERROR_CODES["requesting_too_fast"])
         session.refresh(origi_refresh_token)
+        session.refresh(origi_description)
 
         if origi_refresh_token.valid is False:
             lock.release()
@@ -119,12 +123,15 @@ def auth_refresh():
 
         origi_access_tokens = origi_refresh_token.access_tokens
         if len(origi_access_tokens) > 0:
-            if auth.check_access_token_time(origi_refresh_token.access_tokens) is False:
+            if auth.check_expiration_times_valid(origi_access_tokens) is False:
                 # Access token didn't expire yet and isn't in transition time.
                 lock.release()
-                return error_response(409)
+                return error_response(409, APP_ERROR_CODES["access_token_not_expired"])
 
-        new_refresh_token = auth.gen_refresh_token(origi_refresh_token.user_id)
+        new_refresh_token = auth.gen_refresh_token(
+            originated_from=origi_refresh_token.refresh_token_id,
+            refers_description=origi_description.description_id,
+        )
         new_access_token = auth.gen_access_token()
         token_info = auth.TokenInfo(new_refresh_token, new_access_token)
         store_operation = StoreOperation(

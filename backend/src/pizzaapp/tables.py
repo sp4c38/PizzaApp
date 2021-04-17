@@ -1,6 +1,6 @@
-from sqlalchemy.types import Boolean, Date, Integer, String
+from sqlalchemy.types import Boolean, Integer, String
 from sqlalchemy.schema import Column, ForeignKey
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import backref, relationship
 
 from src.pizzaapp import Base, config, inspector
 from src.pizzaapp.database import SQLiteDecimal
@@ -28,10 +28,10 @@ class Item(Base):
     __tablename__ = NAMES_OF_TABLES["item_table"]
 
     item_id = Column(Integer, primary_key=True)
+    category_id = Column(ForeignKey(Category.category_id))
     name = Column(String)
     image_name = Column(String)
     ingredient_description = Column(String)
-    category_id = Column(ForeignKey(Category.category_id))
 
     category = relationship("Category", back_populates="items", lazy="selectin")
     prices = relationship("ItemPrice", back_populates="item", lazy="selectin")
@@ -118,17 +118,23 @@ class DeliveryUser(Base):
 class RefreshTokenDescription(Base):
     """Store extra information for a refresh token.
 
-    Refresh tokens are frequently created. To prevent storing refresh
-    token descriptions each time anew, refresh tokens instead refer to
-    their description by setting a foreign key contraint to this table.
+    A refresh token chain is created quite rapidly. To prevent storing data which can
+    be considered the same for each item in the chain, a entry in this table is created
+    and referred to by the items of the chain.
     """
 
     __tablename__ = NAMES_OF_TABLES["refresh_token_description_table"]
 
     description_id = Column(Integer, primary_key=True)
+    user_id = Column(ForeignKey(DeliveryUser.user_id), nullable=False)
     device_description = Column(String, nullable=True)
 
-    refresh_token = relationship("RefreshToken", uselist=False, back_populates="description")
+    refresh_token = relationship(
+        "RefreshToken",
+        uselist=False,
+        back_populates="description",
+        cascade="all, delete, delete-orphan",
+    )
 
 
 class RefreshToken(Base):
@@ -137,12 +143,17 @@ class RefreshToken(Base):
     __tablename__ = NAMES_OF_TABLES["refresh_token_table"]
 
     refresh_token_id = Column(Integer, primary_key=True)
-    user_id = Column(ForeignKey(DeliveryUser.user_id), nullable=False)
+    originated_from = Column(
+        ForeignKey(
+            f"{NAMES_OF_TABLES['refresh_token_table']}.refresh_token_id", ondelete="SET NULL"
+        ),
+        nullable=True,
+    )
     refresh_token = Column(String, nullable=False, unique=True)
     valid = Column(Boolean, nullable=False)
     issuing_time = Column(Integer, nullable=False)  # Store as timestamp.
     description_id = Column(
-        ForeignKey(RefreshTokenDescription.description_id, ondelete="SET NULL"), nullable=True
+        ForeignKey(RefreshTokenDescription.description_id, ondelete="CASCADE"), nullable=False
     )
 
     access_tokens = relationship(
@@ -152,7 +163,12 @@ class RefreshToken(Base):
         "RefreshTokenDescription",
         uselist=False,
         back_populates="refresh_token",
-        cascade="all, delete",
+    )
+    originator = relationship(
+        "RefreshToken",
+        remote_side=refresh_token_id,
+        uselist=False,
+        backref=backref("successor", uselist=False),
     )
 
     def response_json(self):

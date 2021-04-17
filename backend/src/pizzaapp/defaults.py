@@ -48,4 +48,7 @@ APP_ERROR_CODES = {
     "requesting_too_fast": 702,
     "reached_refresh_token_limit": 703,
     "invalid_refresh_token": 704,
+    # Returned if the access token for the refresh token, which was used for
+    # authentication, did not yet expire and isn't in transition time.
+    "access_token_not_expired": 705,
 }

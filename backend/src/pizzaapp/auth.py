@@ -8,7 +8,7 @@ from typing import Optional
 import arrow
 
 from passlib.hash import bcrypt
-from sqlalchemy import func, select
+from sqlalchemy import and_, func, select
 from sqlalchemy.orm import Session
 from werkzeug.datastructures import Authorization as AuthorizationHeader
 
@@ -80,8 +80,6 @@ def get_refresh_token(session: Session, token: str) -> Optional[RefreshToken]:
     """
     stmt = select(RefreshToken).where(RefreshToken.refresh_token == token)
     refresh_token = session.execute(stmt).scalar_one_or_none()
-    if refresh_token is None:
-        return None
     return refresh_token
 
 
@@ -111,23 +109,40 @@ class TokenInfo:
         return jsoned
 
 
-def gen_refresh_token(user_id: int, device_description=None) -> RefreshToken:
+def gen_refresh_token(
+    originated_from: Optional[int] = None,
+    refers_description: Optional[int] = None,
+    user_id: Optional[int] = None,
+    device_description: Optional[str] = None,
+) -> RefreshToken:
     """Generate a new refresh token object.
 
-    :param user_id: The user id for which the refresh token is issued.
+    :param originated_from: If set this will identify the new refresh token as a successor
+        of the originator id provided.
+    :param refers_description: If set doesn't generate a new refresh token description
+        but instead uses the parsed description id.
+    :param user_id: The user id for which the refresh token is issued. If refers_description
+        is set this argument will be ignored.
+    :param device_description: A device description added to the refresh token description. If
+        refers_description is set this argument will be ignored.
     """
-    token_description = None
-    if device_description is not None:
-        token_description = RefreshTokenDescription(device_description=device_description)
+    optional_args = {}
+    if refers_description is None:
+        description = RefreshTokenDescription(
+            user_id=user_id,
+            device_description=device_description,
+        )
+        optional_args["description"] = description
+    else:
+        optional_args["description_id"] = refers_description
 
     token = gen_token()
-    now = arrow.now()
     refresh_token = RefreshToken(
-        user_id=user_id,
+        originated_from=originated_from,
         refresh_token=token,
         valid=True,
-        issuing_time=now.int_timestamp,
-        description=token_description,
+        issuing_time=arrow.now().int_timestamp,
+        **optional_args,
     )
     return refresh_token
 
@@ -147,24 +162,31 @@ def gen_access_token() -> AccessToken:
     return access_token
 
 
-def check_reached_refresh_token_limit(session: Session, user_id: int) -> bool:
-    """Check if the refresh token limit was reached for a certain user."""
+def refresh_token_limit_not_reached(session: Session, user_id: int) -> bool:
+    """Check if the refresh token limit for a certain user was not reached."""
     # fmt: off
-    refresh_token_amount_stmt = (
+    stmt = (
         select(func.count(RefreshToken.refresh_token_id))
-        .where(RefreshToken.user_id == user_id)
+        .select_from(RefreshTokenDescription)
+        .join(RefreshToken)
+        .where(
+            and_(
+                RefreshTokenDescription.user_id == user_id,
+                RefreshToken.valid == True 
+            )
+        )
     )
     # fmt: on
 
     # Add one to count new refresh token.
-    amount_refresh_tokens = session.execute(refresh_token_amount_stmt).scalar_one() + 1
+    amount_refresh_tokens = session.execute(stmt).scalar_one() + 1
     if amount_refresh_tokens > defaults.MAX_REFRESH_TOKENS:
-        return True
+        return False
 
-    return False
+    return True
 
 
-def check_expiration_times_valid(session: Session, access_tokens: list[AccessToken]) -> bool:
+def check_expiration_times_valid(access_tokens: list[AccessToken]) -> bool:
     """Check if expiration times of the access tokens are valid to issue a new access token.
 
     First gets the access token with the latest expiration time, then checks if this
@@ -214,7 +236,10 @@ def store_token_info(session: Session, lock: Lock, token_info: TokenInfo):
 
 
 def store_refreshed_token_info(
-    session: Session, lock: Lock, token_info: TokenInfo, origi_refresh_token: RefreshToken
+    session: Session,
+    lock: Lock,
+    token_info: TokenInfo,
+    origi_refresh_token: RefreshTokenDescription,
 ):
     """Store refreshed token info (tokens retrieved with a refresh token).
 
@@ -226,8 +251,6 @@ def store_refreshed_token_info(
     session.add(origi_refresh_token)
     origi_refresh_token.valid = False
 
-    description_id = origi_refresh_token.description.description_id
-    token_info.refresh_token.description_id = description_id
     add_new_tokens(session, token_info)
 
     session.commit()
