@@ -25,9 +25,27 @@ NAMES_OF_TABLES = {
 
 # The maximal amount of valid refresh tokens a user can have at the same time.
 MAX_REFRESH_TOKENS = 10
+
 # Time access tokens should be marked as valid when they are created.
 ACCESS_TOKEN_VALID_TIME = 600  # Value in seconds.
+
 # The transition time is the time a new access token can be already issued when
 # the previouse access token is still valid for equal or less the time specified.
 # This allows for a smoother and faster access token transition.
 ACCESS_TOKEN_TRANSITION_TIME = 20  # Value in seconds.
+
+# A code parsed in the body which allow the app to exactly identify the error.
+# For example a code of 701 could signal that the authentication details are invalid.
+# This is better and more exact then interpreting a general error code like 401.
+# HTTP error codes should be used when responding, but not for error identification.
+APP_ERROR_CODES = {
+    # Used if the error wasn't mapped to a specific app error code.
+    "no_error_mapping": 0,
+    # Username or password is invalid.
+    "credentials_invalid": 701,
+    # The server is still processing a previouse request. This needs to finish before
+    # allowing new requests for the user.
+    "requesting_too_fast": 702,
+    "reached_refresh_token_limit": 703,
+    "invalid_refresh_token": 704,
+}

@@ -8,7 +8,7 @@ from typing import Optional
 import arrow
 
 from passlib.hash import bcrypt
-from sqlalchemy import and_, func, select
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 from werkzeug.datastructures import Authorization as AuthorizationHeader
 
@@ -152,7 +152,7 @@ def check_reached_refresh_token_limit(session: Session, user_id: int) -> bool:
     # fmt: off
     refresh_token_amount_stmt = (
         select(func.count(RefreshToken.refresh_token_id))
-        .where(RefreshToken.user_id == token_info.refresh_token.user_id)
+        .where(RefreshToken.user_id == user_id)
     )
     # fmt: on
 
@@ -226,9 +226,8 @@ def store_refreshed_token_info(
     session.add(origi_refresh_token)
     origi_refresh_token.valid = False
 
-    refresh_token_description = origi_refresh_token.description
-    refresh_token_description.user_id = None
-    token_info.refresh_token.description = refresh_token_description
+    description_id = origi_refresh_token.description.description_id
+    token_info.refresh_token.description_id = description_id
     add_new_tokens(session, token_info)
 
     session.commit()

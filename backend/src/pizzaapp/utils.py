@@ -1,10 +1,11 @@
-from binascii import Error as BasciiError
-from base64 import b64decode
-from typing import Generic, Optional, TypeVar
+from threading import Lock
+from typing import Optional
 
 from box import Box
 from flask import make_response, Request
 from werkzeug.exceptions import default_exceptions
+
+from src.pizzaapp.defaults import APP_ERROR_CODES
 
 
 def successful_response(response_body=None):
@@ -21,16 +22,20 @@ def successful_response(response_body=None):
     if response_body is None:
         response_body = Box()
     if isinstance(response_body, dict):
-        response_body.status = "successful"
+        response_body["status"] = "successful"
 
     response = make_response(response_body)
     return response, 200
 
 
-def error_response(error_code: int, description: Optional[str] = None) -> dict:
+def error_response(error_code: int, app_error_code: Optional[int] = None) -> dict:
     """Generates an JSON error response a certain error code.
 
     Only run this function if a Flask request context exists.
+
+    :param error_code: HTTP error code.
+    :param app_error_code: An optional application specific error code. See defaults.py
+        file for explanation.
     """
     error = default_exceptions[error_code]()
 
@@ -38,10 +43,12 @@ def error_response(error_code: int, description: Optional[str] = None) -> dict:
     response_body.status = "unsuccessful"
     response_body.error = Box()
     response_body.error.name = error.name
-    if description is not None:
-        response_body.error.description = description
+    response_body.error.description = error.description
+    if app_error_code is not None:
+        response_body.error.app_error_code = app_error_code
     else:
-        response_body.error.description = error.description
+        default_app_error_code = APP_ERROR_CODES["no_error_mapping"]
+        response_body.error.app_error_code = default_app_error_code
 
     response = make_response(response_body)
     return response, error_code
@@ -68,7 +75,7 @@ def get_delivery_user_lock(all_locks: dict, user_id: int) -> bool:
 
     :param all_locks: A dictionary containing created delivery user locks.
     :param user_id: The delivery user id for which to acquire the lock.
-    :returns: Appropriate lock if it could be acquired, None if it coulnd't
+    :returns: Lock for the user if it could be acquired, None if it could not.
     """
     lock = all_locks.get(user_id)
     if lock is None:

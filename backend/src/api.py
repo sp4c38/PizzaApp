@@ -9,11 +9,13 @@ from sqlalchemy.orm import Session
 
 from src.pizzaapp import auth
 from src.pizzaapp import engine
+from src.pizzaapp import utils
 from src.pizzaapp.catalog import Catalog
+from src.pizzaapp.defaults import APP_ERROR_CODES
 from src.pizzaapp.order import store_order, verify_make_order
 from src.pizzaapp.store import add_to_store_queue, run_store_to_database, StoreOperation
 from src.pizzaapp.tables import confirm_required_tables_exist
-from src.pizzaapp.utils import error_response, get_body_box, successful_response
+from src.pizzaapp.utils import error_response, successful_response
 
 catalog = Catalog(engine)
 
@@ -38,7 +40,7 @@ def order_make():
     The order won't be stored here, but added to a queue which is
     observed by another thread, which then stores the order in the background.
     """
-    body = get_body_box(request)
+    body = utils.get_body_box(request)
     request_valid = verify_make_order(body)
     if not request_valid:
         return error_response(400)
@@ -57,33 +59,34 @@ def auth_login():
     if auth_info is None:
         return error_response(400, "Authorization header not given or in wrong format.")
 
-    body = get_body_box(request)
+    body = utils.get_body_box(request)
     if body is None:
         return error_response(400)  # No valid JSON body found.
     if not "device_description" in body:
         return error_response(400)  # No "device_description" key set in the body.
-
     device_description = body.device_description
 
     with Session(engine) as session:
         delivery_user = auth.get_delivery_user(session, auth_info)
         if delivery_user is None:
-            return error_response(401)  # No valid credentials.
-        lock = auth.get_delivery_user_lock(delivery_user_locks, delivery_user.user_id)
+            return error_response(401, APP_ERROR_CODES["credentials_invalid"])
+
+        lock = utils.get_delivery_user_lock(delivery_user_locks, delivery_user.user_id)
         if lock is None:
-            return error_response(429)
+            return error_response(429, APP_ERROR_CODES["requesting_too_fast"])
         session.refresh(delivery_user)
 
         if auth.check_reached_refresh_token_limit(session, delivery_user.user_id):
             lock.release()
-            return error_response(403)  # Refresh token limit reached.
+            return error_response(403, APP_ERROR_CODES["reached_refresh_token_limit"])
 
         new_refresh_token = auth.gen_refresh_token(delivery_user.user_id, device_description)
         new_access_token = auth.gen_access_token()
         token_info = auth.TokenInfo(new_refresh_token, new_access_token)
-        # fmt: off
-        store_operation = StoreOperation(auth.store_token_info, (lock, token_info,))
-        # fmt: on
+        store_operation = StoreOperation(
+            auth.store_token_info,
+            (lock, token_info),
+        )
         if not add_to_store_queue(store_queue, store_operation):
             return error_response(500)
 
@@ -103,10 +106,11 @@ def auth_refresh():
         # Get original refresh token which will be invalidated on successful request.
         origi_refresh_token = auth.get_refresh_token(session, bearer_token)
         if origi_refresh_token is None:
-            return error_response(401)  # Provided refresh token is invalid.
-        lock = auth.get_delivery_user_lock(delivery_user_locks, origi_refresh_token.user_id)
+            return error_response(401, APP_ERROR_CODES["invalid_refresh_token"])
+
+        lock = utils.get_delivery_user_lock(delivery_user_locks, origi_refresh_token.user_id)
         if lock is None:
-            return error_response(429)
+            return error_response(429, APP_ERROR_CODES["requesting_too_fast"])
         session.refresh(origi_refresh_token)
 
         if origi_refresh_token.valid is False:
@@ -123,9 +127,10 @@ def auth_refresh():
         new_refresh_token = auth.gen_refresh_token(origi_refresh_token.user_id)
         new_access_token = auth.gen_access_token()
         token_info = auth.TokenInfo(new_refresh_token, new_access_token)
-        # fmt: off
-        store_operation = StoreOperation(auth.store_refreshed_token_info, (lock, token_info, origi_refresh_token,))
-        # fmt: on
+        store_operation = StoreOperation(
+            auth.store_refreshed_token_info,
+            (lock, token_info, origi_refresh_token),
+        )
         if not add_to_store_queue(store_queue, store_operation):
             return error_response(500)
 

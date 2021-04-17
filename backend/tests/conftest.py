@@ -6,6 +6,7 @@ from src.pizzaapp.database import connect
 from src.pizzaapp.config import read_config
 from src.tools.base_data import base_data_populate
 
+
 @pytest.fixture(scope="session")
 def get_config() -> Box:
     config = read_config()
