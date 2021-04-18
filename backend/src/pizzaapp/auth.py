@@ -34,15 +34,16 @@ class BasicToken:
     def _hash_token(cls, token_bytes: bytes) -> str:
         """Hash the token hex with sha256."""
 
-        previouse_token_bytes = None
+        token_bytes_holder = None
         for _ in range(5000):
             sha = hashlib.sha256()
-            if previouse_token_bytes is None:
+            if token_bytes_holder is None:
                 sha.update(token_bytes)
             else:
-                sha.update(previouse_token_bytes)
+                sha.update(token_bytes_holder)
+            token_bytes_holder = sha.digest()
 
-        token_hash = previouse_token_bytes.hex()
+        token_hash = token_bytes_holder.hex()
 
         return token_hash
 
@@ -62,72 +63,6 @@ class BasicToken:
         token_hex = token.hex()
         token_hash = cls._hash_token(token)
         return cls(token_hex, token_hash)
-
-
-def get_auth_info(authorization: AuthorizationHeader) -> Optional[AuthentificationInfo]:
-    """Get authentication information from a request.
-
-    :param authorization: The authorization header from the request.
-    """
-    if authorization is None:
-        return None
-
-    if not authorization.type.lower() == "basic":
-        return None
-
-    username = authorization.username
-    pw_hash = authorization.password
-    auth_info = AuthentificationInfo(username, pw_hash)
-
-    return auth_info
-
-
-def get_delivery_user(session: Session, auth_info: AuthentificationInfo) -> Optional[DeliveryUser]:
-    """Check if there is a delivery user for which the authentication information is valid.
-
-    :returns: The DeliveryUser if the auth info is valid, none if
-        the auth info is invalid (i.e. wrong username or password hash).
-    """
-    stmt = select(DeliveryUser).where(DeliveryUser.username == auth_info.username)
-    delivery_user = session.execute(stmt).scalar_one_or_none()
-    if delivery_user is None:
-        return None
-
-    pw_correct = bcrypt.verify(auth_info.pw_hash, delivery_user.pw_hash)
-    if not pw_correct:
-        return None
-
-    return delivery_user
-
-
-def parse_bearer_token(authorization: str) -> Optional[str]:
-    auth_parts = authorization.split(" ")  # Note: .split(" ") is different than .split().
-    if len(auth_parts) != 2:
-        return None
-
-    auth_type = auth_parts[0]
-    auth_token = auth_parts[1]
-
-    if not auth_type.lower() == "bearer":
-        return None
-
-    if auth_token == "":
-        return None
-
-    return auth_token
-
-
-def get_refresh_token(session: Session, token_hex: str) -> Optional[RefreshToken]:
-    """Get the refresh token record associated with the token hex.
-
-    :param token_hex: The token as hex. The function will compute this hex to find the
-        associated refresh token record.
-    :returns: Refresh token ORM object if an entry was found, none if no entry was found.
-    """
-    basic_token = BasicToken.from_hex(token_hex)
-    stmt = select(RefreshToken).where(RefreshToken.refresh_token_hash == basic_token.token_hash)
-    refresh_token = session.execute(stmt).scalar_one_or_none()
-    return refresh_token
 
 
 @dataclass
@@ -204,6 +139,51 @@ def gen_access_token() -> AccessToken:
     return access_token
 
 
+def get_delivery_user(session: Session, user_id: int) -> Optional[DeliveryUser]:
+    """Get a delivery user for a specific user id."""
+    stmt = select(DeliveryUser).where(DeliveryUser.user_id == user_id)
+    delivery_user = session.execute(stmt).scalar_one_or_none()
+    return delivery_user
+
+
+def get_auth_info(authorization: AuthorizationHeader) -> Optional[AuthentificationInfo]:
+    """Get authentication information from a request.
+
+    :param authorization: The authorization header from the request.
+    """
+    if authorization is None:
+        return None
+
+    if not authorization.type.lower() == "basic":
+        return None
+
+    username = authorization.username
+    pw_hash = authorization.password
+    auth_info = AuthentificationInfo(username, pw_hash)
+
+    return auth_info
+
+
+def find_delivery_user(session: Session, auth_info: AuthentificationInfo) -> Optional[DeliveryUser]:
+    """Try to find a delivery user for which the provided auth into is valid.
+
+    This will check the username and the password hash which is provided in auth_info.
+
+    :returns: The DeliveryUser if the auth info is valid, none if
+        the auth info is invalid (i.e. wrong username or password hash).
+    """
+    stmt = select(DeliveryUser).where(DeliveryUser.username == auth_info.username)
+    delivery_user = session.execute(stmt).scalar_one_or_none()
+    if delivery_user is None:
+        return None
+
+    pw_correct = bcrypt.verify(auth_info.pw_hash, delivery_user.pw_hash)
+    if not pw_correct:
+        return None
+
+    return delivery_user
+
+
 def refresh_token_limit_not_reached(session: Session, user_id: int) -> bool:
     """Check if the refresh token limit for a certain user was not reached."""
     # fmt: off
@@ -226,6 +206,36 @@ def refresh_token_limit_not_reached(session: Session, user_id: int) -> bool:
         return False
 
     return True
+
+
+def parse_bearer_token(authorization: str) -> Optional[str]:
+    auth_parts = authorization.split(" ")  # Note: .split(" ") is different than .split().
+    if len(auth_parts) != 2:
+        return None
+
+    auth_type = auth_parts[0]
+    auth_token = auth_parts[1]
+
+    if not auth_type.lower() == "bearer":
+        return None
+
+    if auth_token == "":
+        return None
+
+    return auth_token
+
+
+def get_refresh_token(session: Session, token_hex: str) -> Optional[RefreshToken]:
+    """Get the refresh token record associated with the token hex.
+
+    :param token_hex: The token as hex. The function will compute this hex to find the
+        associated refresh token record.
+    :returns: Refresh token ORM object if an entry was found, none if no entry was found.
+    """
+    basic_token = BasicToken.from_hex(token_hex)
+    stmt = select(RefreshToken).where(RefreshToken.refresh_token_hash == basic_token.token_hash)
+    refresh_token = session.execute(stmt).scalar_one_or_none()
+    return refresh_token
 
 
 def check_expiration_times_valid(access_tokens: list[AccessToken]) -> bool:
@@ -275,6 +285,19 @@ def store_token_info(session: Session, lock: Lock, token_info: TokenInfo):
 
     session.commit()
     lock.release()
+
+
+def expire_user_access(session: Session, description: RefreshTokenDescription):
+    """Delete all refresh and access tokens for a delivery user."""
+
+    stmt = select(RefreshTokenDescription).where(RefreshTokenDescription.user_id == user_id)
+    descriptions = session.execute(stmt).scalars().all()
+    for des in descriptions:
+        # If RefreshTokenDescription gets deleted all refresh tokens which refer to it will
+        # get deleted automatically. Same behavior is defined for access tokens: If the
+        # refresh token gets deleted all its associated access tokens also get deleted.
+        session.delete(des)
+    session.commit()
 
 
 def store_refreshed_token_info(

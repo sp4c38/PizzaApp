@@ -128,14 +128,11 @@ class RefreshTokenDescription(Base):
     __tablename__ = NAMES_OF_TABLES["refresh_token_description_table"]
 
     description_id = Column(Integer, primary_key=True)
-    user_id = Column(ForeignKey(DeliveryUser.user_id), nullable=False)
+    user_id = Column(ForeignKey(DeliveryUser.user_id, ondelete="CASCADE"), nullable=False)
     device_description = Column(String, nullable=True)
 
-    refresh_token = relationship(
-        "RefreshToken",
-        uselist=False,
-        back_populates="description",
-        cascade="all, delete, delete-orphan",
+    refresh_tokens = relationship(
+        "RefreshToken", back_populates="description", cascade="all, delete, delete-orphan"
     )
 
 
@@ -161,19 +158,15 @@ class RefreshToken(Base):
         ForeignKey(RefreshTokenDescription.description_id, ondelete="CASCADE"), nullable=False
     )
 
-    access_tokens = relationship(
-        "AccessToken", back_populates="refresh_token", cascade="all, delete", passive_deletes=True
-    )
-    description = relationship(
-        "RefreshTokenDescription",
-        uselist=False,
-        back_populates="refresh_token",
-    )
     originator = relationship(
         "RefreshToken",
         remote_side=refresh_token_id,
         uselist=False,
         backref=backref("successor", uselist=False),
+    )
+    description = relationship("RefreshTokenDescription", back_populates="refresh_tokens")
+    access_tokens = relationship(
+        "AccessToken", back_populates="refresh_token", cascade="all, delete, delete-orphan"
     )
 
     def response_json(self):

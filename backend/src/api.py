@@ -67,7 +67,7 @@ def auth_login():
     device_description = body.device_description
 
     with Session(engine) as session:
-        delivery_user = auth.get_delivery_user(session, auth_info)
+        delivery_user = auth.find_delivery_user(session, auth_info)
         if delivery_user is None:
             return error_response(401, APP_ERROR_CODES["credentials_invalid"])
 
@@ -116,10 +116,18 @@ def auth_refresh():
         lock = utils.get_delivery_user_lock(delivery_user_locks, origi_description.user_id)
         if lock is None:
             return error_response(429, APP_ERROR_CODES["requesting_too_fast"])
+
         session.refresh(origi_refresh_token)
         session.refresh(origi_description)
 
         if origi_refresh_token.valid is False:
+            # Following RFC-6819 the usage of an invalidated refresh token means that a
+            # attacker probably stole refresh tokens. To prevent further harm all refresh
+            # and access tokens for a user are deleted. This requires the user to log back in
+            # on all devices.
+            reset_operation = StoreOperation(auth.expire_user_access, (origi_description.user_id,))
+            if not add_to_store_queue(store_queue, reset_operation):
+                return error_response(500)
             lock.release()
             return error_response(403)
 

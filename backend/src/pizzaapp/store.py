@@ -26,7 +26,7 @@ def add_to_store_queue(queue: Queue, store_operation: StoreOperation) -> bool:
     """
     timeout_sec = 2
     try:
-        queue.put(store_operation, block=True, timeout=timeout_sec)
+        queue.put_nowait(store_operation)
     except QueueFullError:
         print(
             "Tried to put new store operation in store queue, "
