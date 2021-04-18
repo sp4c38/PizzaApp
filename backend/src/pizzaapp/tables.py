@@ -1,3 +1,5 @@
+from typing import Optional
+
 from sqlalchemy.types import Boolean, Integer, String
 from sqlalchemy.schema import Column, ForeignKey
 from sqlalchemy.orm import backref, relationship
@@ -149,7 +151,10 @@ class RefreshToken(Base):
         ),
         nullable=True,
     )
-    refresh_token = Column(String, nullable=False, unique=True)
+    # Hashed refresh token which gets stored to the database.
+    refresh_token_hash = Column(String, nullable=False, unique=True)
+    # Non hashed refresh token which gets sent back to the user.
+    refresh_token: Optional[str] = None
     valid = Column(Boolean, nullable=False)
     issuing_time = Column(Integer, nullable=False)  # Store as timestamp.
     description_id = Column(
@@ -188,7 +193,10 @@ class AccessToken(Base):
     refresh_token_id = Column(
         ForeignKey(RefreshToken.refresh_token_id, ondelete="CASCADE"), nullable=False
     )
-    access_token = Column(String, nullable=False, unique=True)
+    # Hashed access token which gets stored to the database.
+    access_token_hash = Column(String, nullable=False, unique=True)
+    # Non hashed access token which gets sent back to the user.
+    access_token: Optional[str] = None
     expiration_time = Column(Integer, nullable=False)  # Stored as timestamp.
 
     refresh_token = relationship("RefreshToken", back_populates="access_tokens")

@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+import hashlib
 import secrets
 
 from collections import namedtuple
@@ -16,7 +19,49 @@ from src.pizzaapp import defaults
 from src.pizzaapp.tables import AccessToken, DeliveryUser, RefreshToken, RefreshTokenDescription
 
 
-AuthentificationInfo = namedtuple("AuthentificationInfo", ["username", "pw_hash"])
+@dataclass
+class AuthentificationInfo:
+    username: str
+    pw_hash: str
+
+
+@dataclass
+class BasicToken:
+    token_hex: str
+    token_hash: str
+
+    @classmethod
+    def _hash_token(cls, token_bytes: bytes) -> str:
+        """Hash the token hex with sha256."""
+
+        previouse_token_bytes = None
+        for _ in range(5000):
+            sha = hashlib.sha256()
+            if previouse_token_bytes is None:
+                sha.update(token_bytes)
+            else:
+                sha.update(previouse_token_bytes)
+
+        token_hash = previouse_token_bytes.hex()
+
+        return token_hash
+
+    @classmethod
+    def from_hex(cls, token_hex: str) -> BasicToken:
+        """Create a BasicToken instance by providing only the token hex.
+
+        The token hash will be automatically generated.
+        """
+        token = bytes.fromhex(token_hex)
+        token_hash = cls._hash_token(token)
+        return cls(token_hex, token_hash)
+
+    @classmethod
+    def generate(cls) -> BasicToken:
+        token = secrets.token_bytes()
+        token_hex = token.hex()
+        token_hash = cls._hash_token(token)
+        return cls(token_hex, token_hash)
 
 
 def get_auth_info(authorization: AuthorizationHeader) -> Optional[AuthentificationInfo]:
@@ -63,7 +108,7 @@ def parse_bearer_token(authorization: str) -> Optional[str]:
     auth_type = auth_parts[0]
     auth_token = auth_parts[1]
 
-    if not auth_type == "Bearer":
+    if not auth_type.lower() == "bearer":
         return None
 
     if auth_token == "":
@@ -72,21 +117,17 @@ def parse_bearer_token(authorization: str) -> Optional[str]:
     return auth_token
 
 
-def get_refresh_token(session: Session, token: str) -> Optional[RefreshToken]:
-    """Get a refresh token ORM object with specified token.
+def get_refresh_token(session: Session, token_hex: str) -> Optional[RefreshToken]:
+    """Get the refresh token record associated with the token hex.
 
-    :param token: The refresh token for which to get the ORM object.
-    :returns: refresh token ORM object if an entry was found, none if no entry was found.
+    :param token_hex: The token as hex. The function will compute this hex to find the
+        associated refresh token record.
+    :returns: Refresh token ORM object if an entry was found, none if no entry was found.
     """
-    stmt = select(RefreshToken).where(RefreshToken.refresh_token == token)
+    basic_token = BasicToken.from_hex(token_hex)
+    stmt = select(RefreshToken).where(RefreshToken.refresh_token_hash == basic_token.token_hash)
     refresh_token = session.execute(stmt).scalar_one_or_none()
     return refresh_token
-
-
-def gen_token() -> str:
-    """Generate a new refresh or access token."""
-    token = secrets.token_hex(32)
-    return token
 
 
 @dataclass
@@ -136,10 +177,11 @@ def gen_refresh_token(
     else:
         optional_args["description_id"] = refers_description
 
-    token = gen_token()
+    token = BasicToken.generate()
     refresh_token = RefreshToken(
         originated_from=originated_from,
-        refresh_token=token,
+        refresh_token_hash=token.token_hash,
+        refresh_token=token.token_hex,
         valid=True,
         issuing_time=arrow.now().int_timestamp,
         **optional_args,
@@ -149,14 +191,14 @@ def gen_refresh_token(
 
 def gen_access_token() -> AccessToken:
     """Generate a new access token object."""
-    token = gen_token()
     now = arrow.now()
     expiration_time = now.shift(seconds=defaults.ACCESS_TOKEN_VALID_TIME).int_timestamp
-
+    token = BasicToken.generate()
     access_token = AccessToken(
         # Refresh token id can't be known at this point because no refresh token was inserted yet.
         refresh_token_id=None,
-        access_token=token,
+        access_token_hash=token.token_hash,
+        access_token=token.token_hex,
         expiration_time=expiration_time,
     )
     return access_token

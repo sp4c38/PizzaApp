@@ -104,6 +104,8 @@ def auth_refresh():
     Following RFC-6819 5.2.2.3 this will also issue and return a new refresh token.
     """
     bearer_token = auth.parse_bearer_token(request.headers.get("Authorization"))
+    if not bearer_token:
+        return error_response(400)
     with Session(engine) as session:
         # Get original refresh token which will be invalidated on successful request.
         origi_refresh_token = auth.get_refresh_token(session, bearer_token)
