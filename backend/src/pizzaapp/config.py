@@ -1,7 +1,10 @@
+import sys
+
 from configparser import ConfigParser
 from pathlib import Path
 
 from box import Box
+from loguru import logger
 
 from src.pizzaapp.exceptions import ConfigValueNotBool
 from src.pizzaapp.defaults import DEFAULT_CONFIG
@@ -63,6 +66,30 @@ def read_config() -> Box:
     config.pizzaapp.debug = _translate_to_bool(
         "debug", config.pizzaapp.debug, config_path.as_posix()
     )
-    config.db.path = Path(config.db.path).expanduser()
+    config.paths.database = Path(config.paths.database).expanduser()
+    config.paths.log = Path(config.paths.log).expanduser()
 
     return config
+
+
+def configure_logging(config: Box):
+    """Configure the python logging module."""
+    log_dir_path = config.paths.log
+    if log_dir_path.exists():
+        if not log_dir_path.is_dir():
+            sys.stderr.write(
+                f"Directory used to store logs {log_dir_path.as_posix()} is a file, not a directory."
+            )
+            sys.exit(1)
+    else:
+        sys.stdout.write(f"Creating log directory at {log_dir_path.as_posix()}.")
+        log_path.mkdir(parents=True)
+
+    log_path = log_dir_path / "pizzaapp.log"
+    logger.add(
+        log_path,
+        colorize=None,
+        backtrace=True,
+        diagnose = True if config.pizzaapp.debug is True else False,
+        rotation="1 week",
+    )

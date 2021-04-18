@@ -5,6 +5,7 @@ import threading
 from queue import Queue
 
 from flask import Flask, request
+from loguru import logger
 from sqlalchemy.orm import Session
 
 from src.pizzaapp import auth
@@ -92,7 +93,7 @@ def auth_login():
         if not add_to_store_queue(store_queue, store_operation):
             return error_response(500)
 
-    print(f"Issued new refresh and access token for delivery user {delivery_user.username}.")
+    logger.info(f"Client logged in. Issued new refresh token and access token.")
     return successful_response(token_info.response_json())
 
 
@@ -151,6 +152,7 @@ def auth_refresh():
         if not add_to_store_queue(store_queue, store_operation):
             return error_response(500)
 
+    logger.info("Client refreshed tokens. Issued new refresh token and access token.")
     return successful_response(token_info.response_json())
 
 
@@ -165,11 +167,11 @@ def main():
 
     This will perform some necessary operations before starting the actual Flask backend.
     """
-    print("Starting PizzaApp backend.")
+    logger.info("Starting PizzaApp backend.")
+
     confirm_required_tables_exist()
 
-    # Threads should check the kill event periodically to check
-    # if the program should exit.
+    # Threads should check the kill event periodically to check if the program should exit.
     signal.signal(signal.SIGINT, _kill_event_handler)
 
     store_thread = threading.Thread(
@@ -177,8 +179,8 @@ def main():
     )
     store_thread.start()
 
+    app.run()
 
-main()
 
 if __name__ == "__main__":
-    app.run()
+    main()
