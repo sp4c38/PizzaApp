@@ -40,7 +40,7 @@ ACCESS_TOKEN_TRANSITION_TIME = 20  # Value in seconds.
 # HTTP error codes should be used when responding, but not for error identification.
 APP_ERROR_CODES = {
     # Used if the error wasn't mapped to a specific app error code.
-    "no_error_mapping": 0,
+    "error_not_mapped": 0,
     # Username or password is invalid.
     "credentials_invalid": 701,
     # The server is still processing a previouse request. This needs to finish before

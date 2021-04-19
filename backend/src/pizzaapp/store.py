@@ -2,8 +2,9 @@ import threading
 
 from dataclasses import dataclass
 from queue import Empty as QueueEmptyError, Full as QueueFullError, Queue
-
 from typing import Callable, Optional
+
+from loguru import logger
 from sqlalchemy.orm import Session
 
 from src.pizzaapp import engine
@@ -16,24 +17,6 @@ class StoreOperation:
     func: Callable
     args: Optional[tuple] = None
     kwargs: Optional[dict] = None
-
-
-def add_to_store_queue(queue: Queue, store_operation: StoreOperation) -> bool:
-    """Try to add a new store operation to the store queue.
-
-    :returns: True if store operation was added successfully, false if
-        an error occurred (queue blocked).
-    """
-    timeout_sec = 2
-    try:
-        queue.put_nowait(store_operation)
-    except QueueFullError:
-        print(
-            "Tried to put new store operation in store queue, "
-            f"but timed out after {timeout_sec} sec."
-        )
-        return False
-    return True
 
 
 def run_store_to_database(queue: Queue, kill_event: threading.Event, refresh_interval=0.5):
@@ -54,6 +37,7 @@ def run_store_to_database(queue: Queue, kill_event: threading.Event, refresh_int
             except QueueEmptyError:
                 break
 
+            logger.debug(f"Running new store operation for function {task.func.__name__}().")
             task_args = task.args if task.args is not None else ()
             task_kwargs = task.kwargs if task.kwargs is not None else {}
             task.func(session, *task_args, **task_kwargs)
@@ -65,5 +49,5 @@ def run_store_to_database(queue: Queue, kill_event: threading.Event, refresh_int
             break
 
     thread = threading.current_thread()
-    print(f'Shutting down "{thread.name}" child thread (TID: {thread.native_id}).')
+    logger.info(f"Shutting down {thread.name} thread (TID: {thread.native_id}).")
     session.close()

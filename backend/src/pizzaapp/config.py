@@ -90,6 +90,6 @@ def configure_logging(config: Box):
         log_path,
         colorize=None,
         backtrace=True,
-        diagnose = True if config.pizzaapp.debug is True else False,
+        diagnose=True if config.pizzaapp.debug is True else False,
         rotation="1 week",
     )

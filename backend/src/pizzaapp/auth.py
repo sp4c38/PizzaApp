@@ -5,6 +5,7 @@ import secrets
 
 from collections import namedtuple
 from dataclasses import dataclass
+from loguru import logger
 from threading import Lock
 from typing import Optional
 
@@ -48,12 +49,17 @@ class BasicToken:
         return token_hash
 
     @classmethod
-    def from_hex(cls, token_hex: str) -> BasicToken:
+    def from_hex(cls, token_hex: str) -> Optional[BasicToken]:
         """Create a BasicToken instance by providing only the token hex.
 
         The token hash will be automatically generated.
+
+        :returns: BasicToken instance if the token hex is valid hex, none if not.
         """
-        token = bytes.fromhex(token_hex)
+        try:
+            token = bytes.fromhex(token_hex)
+        except ValueError:
+            return None
         token_hash = cls._hash_token(token)
         return cls(token_hex, token_hash)
 
@@ -149,12 +155,14 @@ def get_delivery_user(session: Session, user_id: int) -> Optional[DeliveryUser]:
 def get_auth_info(authorization: AuthorizationHeader) -> Optional[AuthentificationInfo]:
     """Get authentication information from a request.
 
-    :param authorization: The authorization header from the request.
+    :param authorization: Authorization header from the request.
     """
     if authorization is None:
+        logger.debug("Autorization header has an invalid format.")
         return None
 
     if not authorization.type.lower() == "basic":
+        logger.debug(f'Authorization type is not "basic": {authorization.type}.')
         return None
 
     username = authorization.username
@@ -175,10 +183,12 @@ def find_delivery_user(session: Session, auth_info: AuthentificationInfo) -> Opt
     stmt = select(DeliveryUser).where(DeliveryUser.username == auth_info.username)
     delivery_user = session.execute(stmt).scalar_one_or_none()
     if delivery_user is None:
+        logger.info(f"No user in database for username {auth_info.username}.")
         return None
 
     pw_correct = bcrypt.verify(auth_info.pw_hash, delivery_user.pw_hash)
     if not pw_correct:
+        logger.info(f"User {auth_info.username} tried to login, but provided wrong credentials.")
         return None
 
     return delivery_user
@@ -203,6 +213,7 @@ def refresh_token_limit_not_reached(session: Session, user_id: int) -> bool:
     # Add one to count new refresh token.
     amount_refresh_tokens = session.execute(stmt).scalar_one() + 1
     if amount_refresh_tokens > defaults.MAX_REFRESH_TOKENS:
+        logger.info(f"Delivery user with user id {user_id} reached the refresh token limit.")
         return False
 
     return True
@@ -211,15 +222,18 @@ def refresh_token_limit_not_reached(session: Session, user_id: int) -> bool:
 def parse_bearer_token(authorization: str) -> Optional[str]:
     auth_parts = authorization.split(" ")  # Note: .split(" ") is different than .split().
     if len(auth_parts) != 2:
+        logger.debug("Authorization header doesn't have 2 by spaces distinguishable parts.")
         return None
 
     auth_type = auth_parts[0]
     auth_token = auth_parts[1]
 
     if not auth_type.lower() == "bearer":
+        logger.debug("Authorization header is not of bearer type.")
         return None
 
     if auth_token == "":
+        logger.debug("Provided authorization token is empty.")
         return None
 
     return auth_token
@@ -233,8 +247,16 @@ def get_refresh_token(session: Session, token_hex: str) -> Optional[RefreshToken
     :returns: Refresh token ORM object if an entry was found, none if no entry was found.
     """
     basic_token = BasicToken.from_hex(token_hex)
+    if basic_token is None:
+        logger.info(
+            f"Can't get refresh token as the token hex is no valid hex: {token_hex}."
+        )
+        return None
     stmt = select(RefreshToken).where(RefreshToken.refresh_token_hash == basic_token.token_hash)
     refresh_token = session.execute(stmt).scalar_one_or_none()
+    if refresh_token is None:
+        logger.info(f"Didn't find refresh token in database: token hex: {token_hex}.")
+        return None
     return refresh_token
 
 
@@ -249,18 +271,21 @@ def check_expiration_times_valid(access_tokens: list[AccessToken]) -> bool:
     :param access_tokens: A list of access tokens to check.
     :returns: True if a new access token can be issued, false if not.
     """
-    max_access_token_expiration = None
+    max_expiration_token = None
     for token in access_tokens:
-        if max_access_token_expiration is not None:
-            if token.expiration_time <= max_access_token_expiration:
+        if max_expiration_token is not None:
+            if token.expiration_time <= max_expiration_token.expiration_time:
                 continue
-        max_access_token_expiration = token.expiration_time
+        max_expiration_token = token
 
     now = arrow.get()
     # Difference in time to the max access token expiration time relative from now.
-    now_difference_expiration = max_access_token_expiration - now.int_timestamp
+    now_difference_expiration = max_expiration_token.expiration_time - now.int_timestamp
     if now_difference_expiration > defaults.ACCESS_TOKEN_TRANSITION_TIME:
-        print("Client is requesting access token update too early.")
+        logger.info(
+            f"Access token {max_expiration_token.access_token_id} isn't in transition "
+            "time and din't expire."
+        )
         return False
 
     return True

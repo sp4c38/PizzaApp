@@ -30,13 +30,9 @@ def _check_fields(dict_: Box, fields: list[Field]) -> bool:
 def verify_make_order(order: Box) -> bool:
     """Verify the content of the request has the correct format to make an order.
 
-    :param order: The request body.
+    :param order: The request body JSON.
     """
-    SUCCESSFUL = True
-    UNSUCCESSFUL = False
-
     if order is None:
-        print("No valid order was sent when requesting to store a new order.")
         return False
 
     # Prefix o stands for order and is used to avoid name collisions
@@ -47,11 +43,11 @@ def verify_make_order(order: Box) -> bool:
     ]
     if not _check_fields(order, sections):
         print("Request has wrong order sections.")
-        return UNSUCCESSFUL
+        return False
 
     items_ordered = len(order.oitems)
     if items_ordered < 1 or items_ordered > 100:
-        return UNSUCCESSFUL
+        return False
 
     detail_fields = [
         Field("first_name", str),
@@ -62,7 +58,7 @@ def verify_make_order(order: Box) -> bool:
     ]
     if not _check_fields(order.odetails, detail_fields):
         print("Request has wrong order detail fields.")
-        return UNSUCCESSFUL
+        return False
 
     item_fields = [
         Field("item_id", int),
@@ -70,13 +66,12 @@ def verify_make_order(order: Box) -> bool:
     ]
     for item in order.oitems:
         if not isinstance(item, dict):
-            return UNSUCCESSFUL
+            return False
         if not _check_fields(item, item_fields):
             print("Request has at least one ordered item which has wrong item fields.")
-            return UNSUCCESSFUL
+            return False
 
-    print("Order valid.")
-    return SUCCESSFUL
+    return True
 
 
 def check_items_valid(session: Session, item_ids: list[int]) -> bool:
