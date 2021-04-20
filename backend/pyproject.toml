@@ -29,7 +29,7 @@ pytest-lazy-fixture = "^0.6.3"
 pylint = "^2.7.4"
 
 [tool.black]
-line-length = 100
+line-length = 110
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

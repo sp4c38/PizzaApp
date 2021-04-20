@@ -21,7 +21,7 @@ class Category(Base):
     category_id = Column(Integer, primary_key=True)
     name = Column(String)
 
-    items = relationship("Item", back_populates="category", lazy="selectin")
+    items = relationship("Item", back_populates="category")#, lazy="selectin")
 
 
 class Item(Base):
@@ -35,11 +35,9 @@ class Item(Base):
     image_name = Column(String)
     ingredient_description = Column(String)
 
-    category = relationship("Category", back_populates="items", lazy="selectin")
-    prices = relationship("ItemPrice", back_populates="item", lazy="selectin")
-    speciality = relationship(
-        "ItemSpeciality", uselist=False, back_populates="item", lazy="selectin"
-    )
+    category = relationship("Category", back_populates="items")
+    prices = relationship("ItemPrice", back_populates="item")
+    speciality = relationship("ItemSpeciality", uselist=False, back_populates="item")
 
 
 class ItemPrice(Base):
@@ -51,7 +49,7 @@ class ItemPrice(Base):
     price_id = Column(Integer, primary_key=True)
     price = Column(price_type)
 
-    item = relationship("Item", back_populates="prices", lazy="selectin")
+    item = relationship("Item", back_populates="prices")
 
 
 class ItemSpeciality(Base):
@@ -64,7 +62,7 @@ class ItemSpeciality(Base):
     vegan = Column(Boolean)
     spicy = Column(Boolean)
 
-    item = relationship("Item", uselist=False, back_populates="speciality", lazy="selectin")
+    item = relationship("Item", uselist=False, back_populates="speciality")
 
 
 # Order tables
@@ -143,9 +141,7 @@ class RefreshToken(Base):
 
     refresh_token_id = Column(Integer, primary_key=True)
     originated_from = Column(
-        ForeignKey(
-            f"{NAMES_OF_TABLES['refresh_token_table']}.refresh_token_id", ondelete="SET NULL"
-        ),
+        ForeignKey(f"{NAMES_OF_TABLES['refresh_token_table']}.refresh_token_id", ondelete="SET NULL"),
         nullable=True,
     )
     # Hashed refresh token which gets stored to the database.
@@ -183,9 +179,7 @@ class AccessToken(Base):
 
     access_token_id = Column(Integer, primary_key=True)
     # Refresh token with which the access token was created.
-    refresh_token_id = Column(
-        ForeignKey(RefreshToken.refresh_token_id, ondelete="CASCADE"), nullable=False
-    )
+    refresh_token_id = Column(ForeignKey(RefreshToken.refresh_token_id, ondelete="CASCADE"), nullable=False)
     # Hashed access token which gets stored to the database.
     access_token_hash = Column(String, nullable=False, unique=True)
     # Non hashed access token which gets sent back to the user.
