@@ -19,17 +19,26 @@ class StoreOperation:
     kwargs: Optional[dict] = None
 
 
-def run_store_to_database(queue: Queue, kill_event: threading.Event, refresh_interval=0.5):
-    """Runs tasks to store new orders.
+def simple_store(session: Session, orm_object):
+    """Store a orm object to the database.
 
-    :param queue: Queue which will be observed for new orders and from which the
-        orders will be retrieved.
-    :param kill_event: A event which will be set when this function/thread should
-        be exited.
+    This function can be called if no extra tasks should be execute in the store thread
+    other than storing a orm object.
+    """
+    session.add(orm_object)
+    session.commit()
+
+
+def run_store_thread(queue: Queue, kill_event: threading.Event, refresh_interval=0.5):
+    """Runs tasks to store new store operations.
+
+    :param queue: Queue to which will be observed for new store operations,.
+    :param kill_event: A event signalizing this thread to terminate.
     :param refresh_interval: Optional interval in which to check if there are items
-        in the queue after it was found to be empty.
+        in the queue after it was found to be empty. Defaults to 0.5 seconds.
     """
     session = Session(engine)
+    store_operation_count = 1
     while True:
         while not queue.empty():
             try:
@@ -37,10 +46,16 @@ def run_store_to_database(queue: Queue, kill_event: threading.Event, refresh_int
             except QueueEmptyError:
                 break
 
-            logger.debug(f"Running new store operation for function {task.func.__name__}().")
             task_args = task.args if task.args is not None else ()
             task_kwargs = task.kwargs if task.kwargs is not None else {}
+            logger.debug(
+                f"Starting store operation {store_operation_count} for function {task.func.__name__}()."
+            )
             task.func(session, *task_args, **task_kwargs)
+            logger.info(
+                f"Store operation {store_operation_count} for function {task.func.__name__}() finished."
+            )
+            store_operation_count += 1
 
             session.expunge_all()
 

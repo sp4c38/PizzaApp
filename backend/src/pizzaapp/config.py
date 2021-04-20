@@ -63,9 +63,7 @@ def read_config() -> Box:
     config_json = {sec: dict(config_parsed.items(sec)) for sec in config_parsed.sections()}
     config = Box(config_json)
 
-    config.pizzaapp.debug = _translate_to_bool(
-        "debug", config.pizzaapp.debug, config_path.as_posix()
-    )
+    config.pizzaapp.debug = _translate_to_bool("debug", config.pizzaapp.debug, config_path.as_posix())
     config.paths.database = Path(config.paths.database).expanduser()
     config.paths.log = Path(config.paths.log).expanduser()
 

@@ -1,7 +1,9 @@
 from box import Box
+from loguru import logger
 from sqlalchemy.engine import Engine
-from sqlalchemy.orm import Session
-from src.pizzaapp.tables import Category
+from sqlalchemy.orm import Session, selectinload
+
+from src.pizzaapp.tables import Category, Item
 
 
 class Catalog:
@@ -12,21 +14,28 @@ class Catalog:
     """
 
     def __init__(self, engine: Engine):
-        self.categories = self._load_categories(engine)
+        with Session(engine) as session:
+            self.categories = self._load_catalog(session)
         self._parsed_json = None
 
-    @staticmethod
-    def _load_categories(engine: Engine) -> list[Category]:
-        """Load all Category objects and their associated objects.
+    def _load_catalog(self, session: Session) -> list[Category]:
+        """Load the catalog.
 
-        Associated objects are table rows associated directly or indirectly with Category objects.
-        For example Category.items or Category.items[index].speciality.
+        The catalog is loaded by quering all categories, items, prices and specialities.
+
+        :returns: A list of all categories. The other catalog objects can be accessed using the appropriate
+            attributes on a category.
         """
-        with Session(engine) as session:
-            categories = session.query(Category).all()
+        categories = (
+            session.query(Category)
+            # Applying selectinload two times will still only load the items once.
+            .options(selectinload(Category.items).selectinload(Item.prices))
+            .options(selectinload(Category.items).selectinload(Item.speciality))
+            .all()
+        )
         return categories
 
-    def to_json(self) -> dict:
+    def as_json(self) -> dict:
         """Convert the catalog to a json representation."""
         if self._parsed_json is not None:
             return self._parsed_json
@@ -63,3 +72,25 @@ class Catalog:
 
         self._parsed_json = parsed_data.to_dict()
         return self._parsed_json
+
+
+def items_valid(catalog: Catalog, items: list[Item]) -> bool:
+    """Check if the parsed items can be created based on the catalog.
+
+    For example check if the item ids of the parsed items exist in the catalog.
+
+    :returns: True if the parsed items are valid, false if not. Will also return false if there
+        are no items in the list.
+    """
+    if not len(items) >= 1:
+        return False
+
+    category_item_ids = []
+    for category in catalog.categories:
+        for item in category.items:
+            category_item_ids.append(item.item_id)
+    for item in items:
+        if not item.item_id in category_item_ids:
+            logger.info(f"Item id {item.item_id} not found in catalog.")
+            return False
+    return True

@@ -71,26 +71,6 @@ class BasicToken:
         return cls(token_hex, token_hash)
 
 
-@dataclass
-class TokenInfo:
-    """Hold information about one refresh token and one access token.
-
-    As refresh tokens and access tokens are always issued together this class groups them.
-    """
-
-    refresh_token: Optional[RefreshToken]
-    access_token: Optional[AccessToken]
-
-    def response_json(self):
-        """Generate a json to send back when responding to a client."""
-        jsoned = {}
-        if self.refresh_token is not None:
-            jsoned["refresh_token"] = self.refresh_token.response_json()
-        if self.access_token is not None:
-            jsoned["access_token"] = self.access_token.response_json()
-        return jsoned
-
-
 def gen_refresh_token(
     originated_from: Optional[int] = None,
     refers_description: Optional[int] = None,
@@ -100,22 +80,32 @@ def gen_refresh_token(
     """Generate a new refresh token object.
 
     :param originated_from: If set this will identify the new refresh token as a successor
-        of the originator id provided.
-    :param refers_description: If set doesn't generate a new refresh token description
-        but instead uses the parsed description id.
+        of the originator id provided. If refers_description is set this argument is required.
+    :param refers_description: If set doesn't generate a new refresh token description but instead
+        uses the parsed description id. If originated_from is set this argument is required.
     :param user_id: The user id for which the refresh token is issued. If refers_description
         is set this argument will be ignored.
     :param device_description: A device description added to the refresh token description. If
         refers_description is set this argument will be ignored.
     """
+    if originated_from is not None and refers_description is None:
+        raise TypeError("If originated_from is parsed refresh_description argument is required.")
+    if refers_description is not None and originated_from is None:
+        raise TypeError("If refers_description is parsed originated_from argument is required.")
+
     optional_args = {}
     if refers_description is None:
+        logger.debug(f"Using a new created description for user {user_id}.")
         description = RefreshTokenDescription(
             user_id=user_id,
             device_description=device_description,
         )
         optional_args["description"] = description
     else:
+        logger.debug(
+            f"Using existing description id {refers_description} and "
+            f"originated from user id {originated_from}."
+        )
         optional_args["description_id"] = refers_description
 
     token = BasicToken.generate()
@@ -143,6 +133,23 @@ def gen_access_token() -> AccessToken:
         expiration_time=expiration_time,
     )
     return access_token
+
+
+@dataclass
+class TokenInfo:
+    """Hold information about one refresh token and one access token."""
+
+    refresh_token: Optional[RefreshToken]
+    access_token: Optional[AccessToken]
+
+    def response_json(self):
+        """Generate a json having important info about the refresh token and access token."""
+        jsoned = {}
+        if self.refresh_token is not None:
+            jsoned["refresh_token"] = self.refresh_token.response_json()
+        if self.access_token is not None:
+            jsoned["access_token"] = self.access_token.response_json()
+        return jsoned
 
 
 def get_delivery_user(session: Session, user_id: int) -> Optional[DeliveryUser]:
@@ -194,8 +201,8 @@ def find_delivery_user(session: Session, auth_info: AuthentificationInfo) -> Opt
     return delivery_user
 
 
-def refresh_token_limit_not_reached(session: Session, user_id: int) -> bool:
-    """Check if the refresh token limit for a certain user was not reached."""
+def refresh_token_limit_reached(session: Session, user_id: int) -> bool:
+    """Check if the refresh token limit for a certain user was reached."""
     # fmt: off
     stmt = (
         select(func.count(RefreshToken.refresh_token_id))
@@ -213,13 +220,22 @@ def refresh_token_limit_not_reached(session: Session, user_id: int) -> bool:
     # Add one to count new refresh token.
     amount_refresh_tokens = session.execute(stmt).scalar_one() + 1
     if amount_refresh_tokens > defaults.MAX_REFRESH_TOKENS:
-        logger.info(f"Delivery user with user id {user_id} reached the refresh token limit.")
-        return False
+        logger.info(f"Delivery user with user id {user_id} reached refresh token limit.")
+        return True
+    return False
 
-    return True
 
+def parse_bearer_token(authorization: Optional[str]) -> Optional[str]:
+    """Parse a bearer type authorization header.
 
-def parse_bearer_token(authorization: str) -> Optional[str]:
+    :param authorization: Authorization header of a request.
+    :returns: Token of the header if its valid, none if it isn't. Will also return none if the
+        header is empty.
+    """
+    if authorization is None:
+        logger.debug("Authorization header doesn't exist.")
+        return None
+
     auth_parts = authorization.split(" ")  # Note: .split(" ") is different than .split().
     if len(auth_parts) != 2:
         logger.debug("Authorization header doesn't have 2 by spaces distinguishable parts.")
@@ -248,14 +264,12 @@ def get_refresh_token(session: Session, token_hex: str) -> Optional[RefreshToken
     """
     basic_token = BasicToken.from_hex(token_hex)
     if basic_token is None:
-        logger.info(
-            f"Can't get refresh token as the token hex is no valid hex: {token_hex}."
-        )
+        logger.info(f"Can't get refresh token as the token hex is no valid hex: {token_hex}.")
         return None
     stmt = select(RefreshToken).where(RefreshToken.refresh_token_hash == basic_token.token_hash)
     refresh_token = session.execute(stmt).scalar_one_or_none()
     if refresh_token is None:
-        logger.info(f"Didn't find refresh token in database: token hex: {token_hex}.")
+        logger.info(f"Didn't find refresh token in database: {token_hex}.")
         return None
     return refresh_token
 
