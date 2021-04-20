@@ -1,3 +1,4 @@
+from collections import namedtuple
 from threading import Lock
 from typing import Optional
 
@@ -40,21 +41,24 @@ def error_response(error_code: int, app_error_key: Optional[int] = None) -> dict
         file for explanation.
     """
     error = default_exceptions[error_code]()
-    body = Box() # Response body
+    body = Box()  # Response body
     body.status = "unsuccessful"
     body.error = Box()
     body.error.name = error.name
     body.error.description = error.description
+    using_default_app_error = False
     if app_error_key is not None:
         body.error.app_error_key = app_error_key
     else:
+        using_default_app_error = True
         body.error.app_error_key = "error_not_mapped"
     body.error.app_error_code = APP_ERROR_CODES[body.error.app_error_key]
 
-    logger.info(
-        f"Sending error {error_code} response to client with application error code "
-        f"{body.error.app_error_key} ({body.error.app_error_code})."
-    )
+    if not using_default_app_error:
+        # Flask will output the HTTP error code, so we just need to log the app error code.
+        logger.info(
+            f"Responding with app error code {body.error.app_error_key} ({body.error.app_error_code})."
+        )
     response = make_response(body)
     return response, error_code
 
@@ -65,7 +69,7 @@ def get_body_box(request: Request) -> Optional[Box]:
     :returns: Box object containing the request body if the body is valid JSON,
         none if it's not.
     """
-    body_json = request.get_json(silent=True, cache=False)
+    body_json = request.get_json(silent=True, cache=True)
     if body_json is None:
         body_content = request.data.decode("utf-8")
         logger.debug(
@@ -74,6 +78,26 @@ def get_body_box(request: Request) -> Optional[Box]:
         return None
     body_box = Box(body_json)
     return body_box
+
+
+Field = namedtuple("Field", ["name", "type_"])
+
+
+def check_fields(dict_: Box, fields: list[Field]) -> bool:
+    """Check the parsed dict if it contains the field names and has the correct field types.
+
+    Function only checks keys of the dictionary which are in the root depth.
+    """
+
+    for field in fields:
+        field_value = dict_.get(field[0])
+        if field_value is None:
+            logger.debug(f"Field '{field[0]}' not contained: {dict_}.")
+            return False
+        if not isinstance(field_value, field.type_):
+            logger.debug(f"Field '{field[0]}' is not of required type <{field[1].__name__}>: {dict_}.")
+            return False
+    return True
 
 
 def get_delivery_user_lock(all_locks: dict, user_id: int) -> bool:
@@ -95,8 +119,7 @@ def get_delivery_user_lock(all_locks: dict, user_id: int) -> bool:
 
     if lock_acquired is False:
         logger.info(
-            f"Couldn't acquire delivery user lock for user {user_id}. "
-            "The client may be requesting too fast."
+            f"Couldn't acquire delivery user lock for user {user_id}. The client may be requesting too fast."
         )
         return None
     return lock

@@ -21,7 +21,7 @@ class Category(Base):
     category_id = Column(Integer, primary_key=True)
     name = Column(String)
 
-    items = relationship("Item", back_populates="category")#, lazy="selectin")
+    items = relationship("Item", back_populates="category")  # , lazy="selectin")
 
 
 class Item(Base):
@@ -83,6 +83,8 @@ class Order(Base):
     city = Column(String)
     postal_code = Column(String)
 
+    items = relationship("OrderItem", back_populates="order")
+
 
 class OrderItem(Base):
     """Entry to store information about a single item which was ordered.
@@ -99,7 +101,7 @@ class OrderItem(Base):
     unit_price = Column(price_type)
     quantity = Column(Integer)
 
-    order = relationship("Order", backref="items")
+    order = relationship("Order", back_populates="items")
     item = relationship("Item")
 
 
@@ -157,8 +159,7 @@ class RefreshToken(Base):
     originator = relationship(
         "RefreshToken",
         remote_side=refresh_token_id,
-        uselist=False,
-        backref=backref("successor", uselist=False),
+        backref=backref("successor"),
     )
     description = relationship("RefreshTokenDescription", back_populates="refresh_tokens")
     access_tokens = relationship(

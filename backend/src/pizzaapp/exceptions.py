@@ -28,6 +28,4 @@ class RequiredTableMissing(Exception):
         self.db_path = db_path
 
     def __str__(self):
-        return (
-            f'Required table "{self.table_name}" does not exist in database ' f"at {self.db_path}."
-        )
+        return f'Required table "{self.table_name}" does not exist in database ' f"at {self.db_path}."

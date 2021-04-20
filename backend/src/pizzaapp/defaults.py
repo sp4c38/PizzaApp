@@ -51,4 +51,5 @@ APP_ERROR_CODES = {
     # Returned if the access token for the refresh token, which was used for
     # authentication, did not yet expire and isn't in transition time.
     "access_token_not_expired": 705,
+    "order_not_valid": 706,
 }

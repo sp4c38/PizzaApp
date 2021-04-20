@@ -11,9 +11,10 @@ from sqlalchemy.orm import Session
 from src.pizzaapp import auth
 from src.pizzaapp import engine
 from src.pizzaapp import order
+from src.pizzaapp import store
 from src.pizzaapp import utils
 from src.pizzaapp.catalog import Catalog
-from src.pizzaapp.store import run_store_to_database, StoreOperation
+from src.pizzaapp.store import StoreOperation
 from src.pizzaapp.tables import confirm_required_tables_exist
 from src.pizzaapp.utils import error_response, successful_response
 
@@ -29,40 +30,36 @@ kill_event = threading.Event()  # Kill event for threads to listen on.
 @app.route("/get/catalog/")
 def get_catalog():
     """Get the product catalog as JSON."""
-    catalog_json = catalog.to_json()
+    catalog_json = catalog.as_json()
     return successful_response(catalog_json)
 
 
-@app.route("/order/make", methods=["POST"])
+@app.route("/order/make/", methods=["POST"])
 def order_make():
     """Hand in a new order."""
     body = utils.get_body_box(request)
-    request_valid = order.verify_make_order(body)
-    if not request_valid:
-        logger.debug("Make order request is invalid.")
-        return error_response(400)
+    new_order = order.get_new_order(catalog, body)
+    if new_order is None:
+        logger.info("Request is invalid.")
+        return error_response(400, "order_not_valid")
 
-    store_operation = StoreOperation(order.store_order, (body,))
-    store_queue.put_nowait(store_operationj)
+    store_operation = StoreOperation(store.simple_store, (new_order,))
+    store_queue.put_nowait(store_operation)
     return successful_response()
 
 
 @app.route("/auth/login/", methods=["POST"])
 def auth_login():
     """Get a refresh and access token credentials are valid."""
-    authorization_header = request.authorization
-    auth_info = auth.get_auth_info(authorization_header)
+    auth_info = auth.get_auth_info(request.authorization)
     if auth_info is None:
         return error_response(400)
-
     body = utils.get_body_box(request)
     if body is None:
         return error_response(400)
-    if not "device_description" in body:
+    if "device_description" not in body:
         logger.debug('No "device_description" key is set in the auth login request body.')
-        return error_response(400)  # No "device_description" key set in the body.
-    device_description = body.device_description
-
+        return error_response(400)
     with Session(engine) as session:
         delivery_user = auth.find_delivery_user(session, auth_info)
         if delivery_user is None:
@@ -73,12 +70,12 @@ def auth_login():
             return error_response(429, "requesting_too_fast")
         session.refresh(delivery_user)
 
-        if auth.refresh_token_limit_not_reached(session, delivery_user.user_id) is False:
+        if auth.refresh_token_limit_reached(session, delivery_user.user_id) is True:
             lock.release()
             return error_response(403, "reached_refresh_token_limit")
 
         new_refresh_token = auth.gen_refresh_token(
-            user_id=delivery_user.user_id, device_description=device_description
+            user_id=delivery_user.user_id, device_description=body.device_description
         )
         new_access_token = auth.gen_access_token()
         token_info = auth.TokenInfo(new_refresh_token, new_access_token)
@@ -88,16 +85,15 @@ def auth_login():
         )
         store_queue.put_nowait(store_operation)
 
-    logger.info(f"Client logged in. Issued new refresh token and access token.")
+    logger.debug(f"Client logged in. Issued new refresh token and access token.")
     return successful_response(token_info.response_json())
 
 
 @app.route("/auth/refresh/", methods=["POST"])
 def auth_refresh():
-    """Get new access and refresh token.
+    """Get new access and refresh token by authenticating with a valid refresh token.
 
-    Get a new access token by providing a valid refresh token.
-    Following RFC-6819 5.2.2.3 this will also issue and return a new refresh token.
+    This request flow follows RFC-6819 5.2.2.3 to detect malicious refreshes.
     """
     bearer_token = auth.parse_bearer_token(request.headers.get("Authorization"))
     if not bearer_token:
@@ -117,10 +113,8 @@ def auth_refresh():
         session.refresh(origi_description)
 
         if origi_refresh_token.valid is False:
-            # Following RFC-6819 the usage of an invalidated refresh token means that a
-            # attacker probably stole refresh tokens. To prevent further harm all refresh
-            # and access tokens for a user are deleted. This requires the user to log back in
-            # on all devices.
+            # RFC-6819 5.2.2.3 states refresh token rotation. Following this RFC if a invalid refresh token
+            # is used all tokens of the user need to be deleted. Thus the user needs to relogin everywhere.
             logger.debug(
                 f"Detected old refresh token of user {origi_description.user_id}."
                 "Expiring all users current accesses."
@@ -133,7 +127,6 @@ def auth_refresh():
         origi_access_tokens = origi_refresh_token.access_tokens
         if len(origi_access_tokens) > 0:
             if auth.check_expiration_times_valid(origi_access_tokens) is False:
-                # Access token didn't expire yet and isn't in transition time.
                 lock.release()
                 return error_response(409, "access_token_not_expired")
 
@@ -149,7 +142,7 @@ def auth_refresh():
         )
         store_queue.put_nowait(store_operation)
 
-    logger.info("Client refreshed tokens. Issued new refresh token and access token.")
+    logger.debug("Client refreshed tokens. Issued new refresh token and access token.")
     return successful_response(token_info.response_json())
 
 
@@ -172,7 +165,7 @@ def main():
     signal.signal(signal.SIGINT, _kill_event_handler)
 
     store_thread = threading.Thread(
-        name="store_orders", target=run_store_to_database, args=(store_queue, kill_event)
+        name="store_orders", target=store.run_store_thread, args=(store_queue, kill_event)
     )
     store_thread.start()
 
