@@ -4,6 +4,9 @@ import threading
 
 from queue import Queue
 
+import arrow
+
+from box import Box
 from flask import Flask, request
 from loguru import logger
 from sqlalchemy.orm import Session
@@ -30,7 +33,7 @@ kill_event = threading.Event()  # Kill event for threads to listen on.
 @app.route("/get/catalog/")
 def get_catalog():
     """Get the product catalog as JSON."""
-    catalog_json = catalog.as_json()
+    catalog_json = catalog.to_json()
     return successful_response(catalog_json)
 
 
@@ -47,6 +50,21 @@ def order_make():
     store_queue.put_nowait(store_operation)
     return successful_response()
 
+
+@app.route("/order/get_all/", methods=["POST"])
+def order_get_all():
+    bearer_token = auth.parse_bearer_token(request.headers.get("Authorization"))
+    if bearer_token is None:
+        return error_response(400)
+    with Session(engine) as session:
+        if not auth.check_access_token(session, bearer_token):
+            error_response(401, "invalid_access_token")
+        orders = order.get_all_uncompleted_orders(session)
+
+    orders_json = Box()
+    orders_json.orders = [order.to_json() for order in orders]
+
+    return orders_json
 
 @app.route("/auth/login/", methods=["POST"])
 def auth_login():
@@ -74,16 +92,16 @@ def auth_login():
             lock.release()
             return error_response(403, "reached_refresh_token_limit")
 
-        new_refresh_token = auth.gen_refresh_token(
-            user_id=delivery_user.user_id, device_description=body.device_description
-        )
-        new_access_token = auth.gen_access_token()
-        token_info = auth.TokenInfo(new_refresh_token, new_access_token)
-        store_operation = StoreOperation(
-            auth.store_token_info,
-            (lock, token_info),
-        )
-        store_queue.put_nowait(store_operation)
+    new_refresh_token = auth.gen_refresh_token(
+        user_id=delivery_user.user_id, device_description=body.device_description
+    )
+    new_access_token = auth.gen_access_token()
+    token_info = auth.TokenInfo(new_refresh_token, new_access_token)
+    store_operation = StoreOperation(
+        auth.store_token_info,
+        (lock, token_info),
+    )
+    store_queue.put_nowait(store_operation)
 
     logger.debug(f"Client logged in. Issued new refresh token and access token.")
     return successful_response(token_info.response_json())
@@ -112,35 +130,35 @@ def auth_refresh():
         session.refresh(origi_refresh_token)
         session.refresh(origi_description)
 
-        if origi_refresh_token.valid is False:
-            # RFC-6819 5.2.2.3 states refresh token rotation. Following this RFC if a invalid refresh token
-            # is used all tokens of the user need to be deleted. Thus the user needs to relogin everywhere.
-            logger.debug(
-                f"Detected old refresh token of user {origi_description.user_id}."
-                "Expiring all users current accesses."
-            )
-            reset_operation = StoreOperation(auth.expire_user_access, (origi_description.user_id,))
-            store_queue.put_nowait(reset_operation)
+    if origi_refresh_token.valid is False:
+        # RFC-6819 5.2.2.3 states refresh token rotation. Following this RFC if a invalid refresh token
+        # is used all tokens of the user need to be deleted. Thus the user needs to relogin everywhere.
+        logger.debug(
+            f"Detected old refresh token of user {origi_description.user_id}."
+            "Expiring all users current accesses."
+        )
+        reset_operation = StoreOperation(auth.expire_user_access, (origi_description.user_id,))
+        store_queue.put_nowait(reset_operation)
+        lock.release()
+        return error_response(403, "invalid_refresh_token")
+
+    origi_access_tokens = origi_refresh_token.access_tokens
+    if len(origi_access_tokens) > 0:
+        if auth.check_expiration_times_valid(origi_access_tokens) is False:
             lock.release()
-            return error_response(403)
+            return error_response(409, "access_token_not_expired")
 
-        origi_access_tokens = origi_refresh_token.access_tokens
-        if len(origi_access_tokens) > 0:
-            if auth.check_expiration_times_valid(origi_access_tokens) is False:
-                lock.release()
-                return error_response(409, "access_token_not_expired")
-
-        new_refresh_token = auth.gen_refresh_token(
-            originated_from=origi_refresh_token.refresh_token_id,
-            refers_description=origi_description.description_id,
-        )
-        new_access_token = auth.gen_access_token()
-        token_info = auth.TokenInfo(new_refresh_token, new_access_token)
-        store_operation = StoreOperation(
-            auth.store_refreshed_token_info,
-            (lock, token_info, origi_refresh_token),
-        )
-        store_queue.put_nowait(store_operation)
+    new_refresh_token = auth.gen_refresh_token(
+        originated_from=origi_refresh_token.refresh_token_id,
+        refers_description=origi_description.description_id,
+    )
+    new_access_token = auth.gen_access_token()
+    token_info = auth.TokenInfo(new_refresh_token, new_access_token)
+    store_operation = StoreOperation(
+        auth.store_refreshed_token_info,
+        (lock, token_info, origi_refresh_token),
+    )
+    store_queue.put_nowait(store_operation)
 
     logger.debug("Client refreshed tokens. Issued new refresh token and access token.")
     return successful_response(token_info.response_json())

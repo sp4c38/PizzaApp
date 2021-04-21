@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+import random
 import secrets
 
 from collections import namedtuple
@@ -17,6 +18,7 @@ from sqlalchemy.orm import Session
 from werkzeug.datastructures import Authorization as AuthorizationHeader
 
 from src.pizzaapp import defaults
+from src.pizzaapp import utils
 from src.pizzaapp.tables import AccessToken, DeliveryUser, RefreshToken, RefreshTokenDescription
 
 
@@ -49,23 +51,21 @@ class BasicToken:
         return token_hash
 
     @classmethod
-    def from_hex(cls, token_hex: str) -> Optional[BasicToken]:
+    def from_hex(cls, token_hex: str) -> BasicToken:
         """Create a BasicToken instance by providing only the token hex.
 
         The token hash will be automatically generated.
 
-        :returns: BasicToken instance if the token hex is valid hex, none if not.
+        :returns: BasicToken instance.
         """
-        try:
-            token = bytes.fromhex(token_hex)
-        except ValueError:
-            return None
+        token = bytes.fromhex(token_hex)
         token_hash = cls._hash_token(token)
         return cls(token_hex, token_hash)
 
     @classmethod
     def generate(cls) -> BasicToken:
-        token = secrets.token_bytes()
+        token_length = random.choice(defaults.TOKEN_LENGTH)
+        token = secrets.token_bytes(int(token_length / 2))
         token_hex = token.hex()
         token_hash = cls._hash_token(token)
         return cls(token_hex, token_hash)
@@ -245,11 +245,18 @@ def parse_bearer_token(authorization: Optional[str]) -> Optional[str]:
     auth_token = auth_parts[1]
 
     if not auth_type.lower() == "bearer":
-        logger.debug("Authorization header is not of bearer type.")
+        logger.debug(f"Authorization header is not of bearer type: {auth_type.lower()}.")
         return None
 
-    if auth_token == "":
-        logger.debug("Provided authorization token is empty.")
+    token_length = len(auth_token)
+    if not token_length in defaults.TOKEN_LENGTH:
+        logger.debug(f"Token has an invalid length of {token_length}: {auth_token}.")
+        return None
+
+    try:
+        bytes.fromhex(auth_token)
+    except ValueError:
+        logger.debug(f"Token in authorization header is an invalid hex: {auth_token}.")
         return None
 
     return auth_token
@@ -263,11 +270,11 @@ def get_refresh_token(session: Session, token_hex: str) -> Optional[RefreshToken
     :returns: Refresh token ORM object if an entry was found, none if no entry was found.
     """
     basic_token = BasicToken.from_hex(token_hex)
-    if basic_token is None:
-        logger.info(f"Can't get refresh token as the token hex is no valid hex: {token_hex}.")
-        return None
-    stmt = select(RefreshToken).where(RefreshToken.refresh_token_hash == basic_token.token_hash)
-    refresh_token = session.execute(stmt).scalar_one_or_none()
+    refresh_token = utils.one_or_none(
+        select(RefreshToken)
+        .filter(RefreshToken.refresh_token_hash == basic_token.token_hash)
+        .all()
+    )
     if refresh_token is None:
         logger.info(f"Didn't find refresh token in database: {token_hex}.")
         return None
@@ -302,6 +309,23 @@ def check_expiration_times_valid(access_tokens: list[AccessToken]) -> bool:
         )
         return False
 
+    return True
+
+
+def check_access_token(session: Session, access_token: str) -> bool:
+    """Check if the parsed access token is valid and the request is thus authorized.
+
+    :param access_token: Access token as valid hex.
+    """
+    basic_token = BasicToken.from_hex(access_token)
+    access_token = utils.one_or_none(
+        session.query(AccessToken)
+        .filter(AccessToken.access_token_hash == basic_token.token_hash)
+        .all()
+    )
+    now = arrow.now()
+    if access_token.expiration_time < now.int_timestamp:
+        return False
     return True
 
 

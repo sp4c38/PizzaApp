@@ -35,7 +35,7 @@ class Catalog:
         )
         return categories
 
-    def as_json(self) -> dict:
+    def to_json(self) -> dict:
         """Convert the catalog to a json representation."""
         if self._parsed_json is not None:
             return self._parsed_json

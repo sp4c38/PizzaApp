@@ -23,6 +23,12 @@ NAMES_OF_TABLES = {
     "access_token_table": "access_token",
 }
 
+# Length of both refresh and access token in characters when the token is represented as hex.
+# Should only be even numbers. Uneven numbers will be rounded to down to the next even number.
+# For example: 63 -> 62, 24 -> 24 or 49 -> 48.
+# Will select a random length out of the range for better security.
+TOKEN_LENGTH = range(64, 72 + 1, 2)
+
 # The maximal amount of valid refresh tokens a user can have at the same time.
 MAX_REFRESH_TOKENS = 10
 
@@ -39,6 +45,8 @@ ACCESS_TOKEN_TRANSITION_TIME = 20  # Value in seconds.
 # This is better and more exact then interpreting a general error code like 401.
 # HTTP error codes should be used when responding, but not for error identification.
 APP_ERROR_CODES = {
+    # App error codes are intentionally completely unsorted.
+
     # Used if the error wasn't mapped to a specific app error code.
     "error_not_mapped": 0,
     # Username or password is invalid.
@@ -52,4 +60,5 @@ APP_ERROR_CODES = {
     # authentication, did not yet expire and isn't in transition time.
     "access_token_not_expired": 705,
     "order_not_valid": 706,
+    "invalid_access_token": 707,
 }

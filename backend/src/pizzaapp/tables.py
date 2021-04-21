@@ -1,5 +1,7 @@
 from typing import Optional
 
+from box import Box
+
 from sqlalchemy.types import Boolean, Integer, String
 from sqlalchemy.schema import Column, ForeignKey
 from sqlalchemy.orm import backref, relationship
@@ -85,6 +87,18 @@ class Order(Base):
 
     items = relationship("OrderItem", back_populates="order")
 
+    def to_json(self) -> dict:
+        jsoned = Box()
+        jsoned.details = {}
+        jsoned.details.first_name = self.first_name
+        jsoned.details.last_name = self.last_name
+        jsoned.details.street = self.street
+        jsoned.details.city = self.city
+        jsoned.details.postal_code = self.postal_code
+
+        jsoned["items"] = [item.to_json() for item in self.items] 
+        return jsoned.to_dict()
+
 
 class OrderItem(Base):
     """Entry to store information about a single item which was ordered.
@@ -103,6 +117,14 @@ class OrderItem(Base):
 
     order = relationship("Order", back_populates="items")
     item = relationship("Item")
+
+    def to_json(self) -> dict:
+        jsoned = Box()
+        jsoned.order_id = self.order_id
+        jsoned.item_id = self.item_id
+        jsoned.unit_price = self.unit_price
+        jsoned_quantity = self.quantity
+        return jsoned.to_dict()
 
 
 # User tables

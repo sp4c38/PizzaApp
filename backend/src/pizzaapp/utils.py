@@ -1,6 +1,6 @@
 from collections import namedtuple
 from threading import Lock
-from typing import Optional
+from typing import Optional, TypeVar
 
 from box import Box
 from flask import make_response, Request
@@ -98,6 +98,15 @@ def check_fields(dict_: Box, fields: list[Field]) -> bool:
             logger.debug(f"Field '{field[0]}' is not of required type <{field[1].__name__}>: {dict_}.")
             return False
     return True
+
+
+QueryRowType = TypeVar("RowType")
+
+
+def one_or_none(results: list[QueryRowType]) -> QueryRowType:
+    if len(results) == 1:
+        return results[0]
+    return None
 
 
 def get_delivery_user_lock(all_locks: dict, user_id: int) -> bool:
