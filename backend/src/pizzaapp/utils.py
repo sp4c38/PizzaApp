@@ -10,27 +10,6 @@ from werkzeug.exceptions import default_exceptions
 from src.pizzaapp.defaults import APP_ERROR_CODES
 
 
-def successful_response(response_body=None):
-    """Wrap a response if the request is successful.
-
-    If the response body is a dictionary this function will set the
-    key "status" to "successful" (beaware, this function overwrites
-    any existing value).
-
-    Only run this function if a Flask request context exists.
-
-    :param response_body: The body of the response.
-    """
-    if response_body is None:
-        response_body = Box()
-    if isinstance(response_body, dict):
-        response_body["status"] = "successful"
-
-    logger.debug("Sending successful response.")
-    response = make_response(response_body)
-    return response, 200
-
-
 def error_response(error_code: int, app_error_key: Optional[int] = None) -> dict:
     """Generates an JSON error response a certain error code.
 

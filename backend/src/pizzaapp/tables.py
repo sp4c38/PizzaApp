@@ -85,7 +85,7 @@ class Order(Base):
     city = Column(String)
     postal_code = Column(String)
 
-    items = relationship("OrderItem", back_populates="order")
+    items = relationship("OrderItem", back_populates="order", cascade="all, delete, delete-orphan")
 
     def to_json(self) -> dict:
         jsoned = Box()
@@ -110,8 +110,10 @@ class OrderItem(Base):
 
     __tablename__ = NAMES_OF_TABLES["order_item_table"]
 
-    order_id = Column(ForeignKey(Order.order_id), primary_key=True)
-    item_id = Column(ForeignKey(Item.item_id), primary_key=True)
+    order_item_id = Column(Integer, primary_key=True)
+    order_id = Column(ForeignKey(Order.order_id, ondelete="CASCADE"), nullable=False)
+    # If the item to deliver is deleted we still want to keep the ordered item.
+    item_id = Column(ForeignKey(Item.item_id, ondelete="SET NULL"), nullable=True)
     unit_price = Column(price_type)
     quantity = Column(Integer)
 
@@ -190,7 +192,7 @@ class RefreshToken(Base):
 
     def response_json(self):
         """Generate json for providing information about a refresh token in a response."""
-        # Beaware of which information to leak to the client.
+        # Beaware which information to leak in a response.
         jsoned = {"token": self.refresh_token}
         return jsoned
 

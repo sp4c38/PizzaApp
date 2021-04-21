@@ -49,10 +49,6 @@ def check_order_body(body: Box) -> bool:
 
 def get_new_order(catalog: Catalog, body: Box) -> Optional[Order]:
     """Get a new order from a request body."""
-    if body is None:
-        logger.debug("No order in request body.")
-        return None
-
     order_body_valid = check_order_body(body)
     if not order_body_valid:
         return None

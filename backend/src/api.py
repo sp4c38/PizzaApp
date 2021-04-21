@@ -19,7 +19,7 @@ from src.pizzaapp import utils
 from src.pizzaapp.catalog import Catalog
 from src.pizzaapp.store import StoreOperation
 from src.pizzaapp.tables import confirm_required_tables_exist
-from src.pizzaapp.utils import error_response, successful_response
+from src.pizzaapp.utils import error_response
 
 catalog = Catalog(engine)
 
@@ -34,21 +34,23 @@ kill_event = threading.Event()  # Kill event for threads to listen on.
 def get_catalog():
     """Get the product catalog as JSON."""
     catalog_json = catalog.to_json()
-    return successful_response(catalog_json)
+    return catalog_json
 
 
 @app.route("/order/make/", methods=["POST"])
 def order_make():
     """Hand in a new order."""
     body = utils.get_body_box(request)
+    if body is None:
+        return error_response(400)
     new_order = order.get_new_order(catalog, body)
     if new_order is None:
-        logger.info("Request is invalid.")
+        logger.info("Order request json is invalid.")
         return error_response(400, "order_not_valid")
 
     store_operation = StoreOperation(store.simple_store, (new_order,))
     store_queue.put_nowait(store_operation)
-    return successful_response()
+    return "", 204
 
 
 @app.route("/order/get_all/", methods=["POST"])
@@ -63,6 +65,7 @@ def order_get_all():
 
     orders_json = Box()
     orders_json.orders = [order.to_json() for order in orders]
+    orders_json.time = arrow.now().int_timestamp
 
     return orders_json
 
@@ -104,7 +107,7 @@ def auth_login():
     store_queue.put_nowait(store_operation)
 
     logger.debug(f"Client logged in. Issued new refresh token and access token.")
-    return successful_response(token_info.response_json())
+    return token_info.response_json()
 
 
 @app.route("/auth/refresh/", methods=["POST"])
@@ -161,7 +164,7 @@ def auth_refresh():
     store_queue.put_nowait(store_operation)
 
     logger.debug("Client refreshed tokens. Issued new refresh token and access token.")
-    return successful_response(token_info.response_json())
+    return token_info.response_json()
 
 
 def _kill_event_handler(signum, frame):

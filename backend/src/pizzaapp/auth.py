@@ -143,7 +143,7 @@ class TokenInfo:
     access_token: Optional[AccessToken]
 
     def response_json(self):
-        """Generate a json having important info about the refresh token and access token."""
+        """Generate a json containing info about the tokens in a response."""
         jsoned = {}
         if self.refresh_token is not None:
             jsoned["refresh_token"] = self.refresh_token.response_json()
