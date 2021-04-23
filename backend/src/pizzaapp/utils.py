@@ -1,3 +1,8 @@
+"""Contains small utility functions supporting the main application code.
+
+Mostly contains generic functions.
+"""
+
 from collections import namedtuple
 from threading import Lock
 from typing import Optional, TypeVar

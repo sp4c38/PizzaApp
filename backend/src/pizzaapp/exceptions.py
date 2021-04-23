@@ -1,3 +1,5 @@
+"""Contain own app-specific exceptions."""
+
 class ConfigValueNotBool(Exception):
     """Exception indicating that a value inside the config can't be mapped to a python boolean."""
 

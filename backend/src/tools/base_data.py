@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+"""Load and insert base data to the database."""
 
 import csv
 

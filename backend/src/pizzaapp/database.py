@@ -1,3 +1,9 @@
+"""Perform database managing tasks.
+
+For example connect to the database.
+This module also holds custom sqlalchemy types.
+"""
+
 import sys
 
 from decimal import Decimal

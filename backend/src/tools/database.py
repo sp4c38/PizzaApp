@@ -1,5 +1,12 @@
 #!/usr/bin/env python
 
+"""Simple CLI to manage the pizzaapp database on your machine.
+
+The CLI is controlled by command line arguments.
+It does create all tables, insert predefined data and remove tables.
+Base data or predefined data is data read from CSV files. Examples are items and their prices.
+"""
+
 import argparse
 
 from sqlalchemy import MetaData

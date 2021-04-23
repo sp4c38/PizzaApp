@@ -1,3 +1,13 @@
+"""Store information to the database in a seperate thread.
+
+Other threads can put items in a queue observed by this module. They then get executed in this background
+thread. An item consists of a function to call and arguments to parse to this function.
+
+In this module there is a "simple store" function which directly takes a orm object and stores it in the db.
+Sometimes more then that has to be done. Functions handling those tasks are normally not in this file,
+but in seperate files. For example a function to store new orders is in order.py.
+"""
+
 import threading
 
 from dataclasses import dataclass

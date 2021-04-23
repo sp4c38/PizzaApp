@@ -1,3 +1,8 @@
+"""Handle orders made by clients.
+
+For example includes functions to extract order data from a HTTP request.
+"""
+
 from typing import Optional
 
 from box import Box
@@ -72,9 +77,5 @@ def get_new_order(catalog: Catalog, body: Box) -> Optional[Order]:
 
 def get_all_uncompleted_orders(session: Session) -> list[Order]:
     """Get all currently uncompleted orders."""
-    orders = (
-        session.query(Order)
-        .options(selectinload(Order.items))
-        .all()
-    )
+    orders = session.query(Order).options(selectinload(Order.items)).all()
     return orders

@@ -1,3 +1,9 @@
+"""Handle application configuration.
+
+Here is where the config file gets read and translated.
+The logger is also configured at this place.
+"""
+
 import sys
 
 from configparser import ConfigParser

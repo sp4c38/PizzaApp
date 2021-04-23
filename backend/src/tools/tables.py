@@ -1,3 +1,5 @@
+"""Commands to add and modify the projects database tables."""
+
 from sqlalchemy import MetaData
 
 

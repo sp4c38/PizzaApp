@@ -1,3 +1,5 @@
+"""Contains the sqlalchemy orm table representations and some table helper functions."""
+
 from typing import Optional
 
 from box import Box
@@ -96,7 +98,7 @@ class Order(Base):
         jsoned.details.city = self.city
         jsoned.details.postal_code = self.postal_code
 
-        jsoned["items"] = [item.to_json() for item in self.items] 
+        jsoned["items"] = [item.to_json() for item in self.items]
         return jsoned.to_dict()
 
 
@@ -224,10 +226,10 @@ class AccessToken(Base):
 def map_tables():
     """Run to add above tables to the Base's metadata.
 
-    After the Base class from src.pizzaapp was created the table
-    classes above which conform to Base need to be processed to be
-    added to the Base's metadata. A simple import would be sufficient,
-    but to increase code readability this function can be called.
+    First the Base needs to be created which is done in the __init__.py file. Then the above tables
+    need to be added to the Base's metadata. To do this the python interpreter needs to execute the
+    above class declarations. This could be simply done by importing this module, but to increase code
+    readability this function should be called.
     """
 
 

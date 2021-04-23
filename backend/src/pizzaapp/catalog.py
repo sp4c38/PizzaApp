@@ -1,3 +1,5 @@
+"""Store information about the catalog and provide helper functions for it."""
+
 from box import Box
 from loguru import logger
 from sqlalchemy.engine import Engine

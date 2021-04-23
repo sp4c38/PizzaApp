@@ -1,3 +1,8 @@
+"""Handle variouse authentication/authorization tasks.
+
+Includes functions handling username, password, refresh tokens and access tokens.
+"""
+
 from __future__ import annotations
 
 import hashlib
@@ -271,9 +276,7 @@ def get_refresh_token(session: Session, token_hex: str) -> Optional[RefreshToken
     """
     basic_token = BasicToken.from_hex(token_hex)
     refresh_token = utils.one_or_none(
-        select(RefreshToken)
-        .filter(RefreshToken.refresh_token_hash == basic_token.token_hash)
-        .all()
+        select(RefreshToken).filter(RefreshToken.refresh_token_hash == basic_token.token_hash).all()
     )
     if refresh_token is None:
         logger.info(f"Didn't find refresh token in database: {token_hex}.")
@@ -319,9 +322,7 @@ def check_access_token(session: Session, access_token: str) -> bool:
     """
     basic_token = BasicToken.from_hex(access_token)
     access_token = utils.one_or_none(
-        session.query(AccessToken)
-        .filter(AccessToken.access_token_hash == basic_token.token_hash)
-        .all()
+        session.query(AccessToken).filter(AccessToken.access_token_hash == basic_token.token_hash).all()
     )
     now = arrow.now()
     if access_token.expiration_time < now.int_timestamp:

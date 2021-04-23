@@ -1,3 +1,5 @@
+"""Store default values used across the application."""
+
 DEFAULT_CONFIG = """\
 [pizzaapp]
 debug = off
@@ -46,7 +48,6 @@ ACCESS_TOKEN_TRANSITION_TIME = 20  # Value in seconds.
 # HTTP error codes should be used when responding, but not for error identification.
 APP_ERROR_CODES = {
     # App error codes are intentionally completely unsorted.
-
     # Used if the error wasn't mapped to a specific app error code.
     "error_not_mapped": 0,
     # Username or password is invalid.

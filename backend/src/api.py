@@ -1,3 +1,5 @@
+"""Run the flask app and coordinate web application tasks."""
+
 import signal
 import sys
 import threading
@@ -68,6 +70,7 @@ def order_get_all():
     orders_json.time = arrow.now().int_timestamp
 
     return orders_json
+
 
 @app.route("/auth/login/", methods=["POST"])
 def auth_login():
