@@ -1,0 +1,32 @@
+﻿item_id,name,image_name,ingredient_description,category_id
+1,Margherita,Margherita,mit Pizzasoße und echtem Gouda,1
+2,Margherita Vegan,MargheritaVegan,mit Pizzasoße und veganem Reibegenuss von Simply V,1
+3,4 Käse,VierKäse,"mit Pizzasoße, Hirtenkäse, Mozzarella, Cheddar und echtem Gouda",1
+4,Venedig,Venedig,"mit Pizzasoße, Tomaten, Mozzarella, Basilikum und echtem Gouda",1
+5,Dublin,Dublin,"mit Pizzasoße, Champignons, Paprika, Broccoli, Mais und echtem Gouda",1
+6,Cheeseburger,Cheeseburger,Leckerer hausgemachter Cheeseburger.,2
+7,Gemischter Salat,MixedSalad,"mit Salatmischung, Kirschtomate, Gurke, Mais, Paprika und Petersilie",3
+8,Balsamico Dressing,BalsamicoDressing,Leckerer Dressing - Perfekt für deinen Salat!,3
+9,Pasta Lucca,PastaLucca,"mit Penne (Makkaroni), Käse-Sahne-Soße, Kirschtomaten, Basilikum, Petersilie",4
+10,XXL-Cookie Choclate (Hell),XXLCookieChocolateLight,XXL-Cookie mit Milchschokolade (103g),5
+11,XL-Cookie Double-Chocolate (Dunkel),XXLCookieDoubleChocolateDark,XXL-Cookie mit doppelt Milchschokolade (103g),5
+12,Donut,ChocolateDonut,Donut mit Alpenmilchschokolade (56g),5
+13,Belgian Chocolate,HaagenBelgianChocolate,460ml - Schokoladen-Eiscreme mit Belgischer Schokolade,5
+14,Cookies & Cream,HaagenCookiesAndCream,"460ml - Feinste, cremige Vanille-Eiscreme in Kombination mit leckeren Schokoladenkeks-Stückchen!",5
+15,Macadamia nut brittle,HaagenMacadamiaNutBrittle,460ml - Für Nuss-Genießer mit Feinschmecker-Gen! Feinste Vanille-Eiscreme kombiniert mit knusprig-karamellisierten Macadamianuss-Stückchen!,5
+16,Mango & Raspberry,HaagenMangoAndRaspberry,460ml - Fruchtig exotisch und himmlisch erfrischend. Mango-Eiscreme durchzogen mit fruchtiger Himbeersauce.,5
+17,Peanut Butter Crunch,HaagenPeanutButterCrunch,460ml - Erdnussbutter Eiscreme durchzogen mit cremiger Erdnussbuttersauce und karamellisierten Erdnussstùckchen.,5
+18,Vanilla Caramel Brownie,HaagenVanillaCaramelBrownie,"460ml - Zartschmelzende Vanille-Eiscreme mit köstlicher Karamellsauce und den heiß¸ begehrten Schokokuchen-Stückchen, fein kombiniert für einen einzigartigen Eiscremegenuss!",5
+19,Blondie Brownie Core,BenJerryBlondieBrownieCore,465ml - Schokoladeneiscreme mit saftigen Schokogebäckstückchen,5
+20,Chocolate Fudge Brownie,BenJerryChocolateFudgeBrownie,465ml - Schokoladeneiscreme mit saftigen Schokogebäckstückchen,5
+21,Cookie Dough,BenJerryCookieDough,465ml - Vanielleeiscreme mit leckeren Knusperstückchen,5
+22,Half Baked,BenJerryHalfBaked,"465ml - Schokoladen- und Vanilleeiscreme mit Schokogebäckstücken, kakaohaltigen Bits und Riesenstücken aus Plätzchenteig",5
+23,Strawberry Cheesecake,BenJerryStrawberryCheesecake,"465ml - Erdbeer- und Käsekucheneiscreme, Erdbeerstückchen und Plätzchenteig",5
+24,Peanut Butter & Cookies Vegan,BenJerryPeanutButterAndCookiesVegan,"465ml - Vanilleeis auf Mandelbasis mit gefällten Kakao-Doppelkeksen, durchzogen von Erdnussbutter",5
+25,Wasser,Water,"0,5l frisches Mineralwasser.\n0,25ct Pfand enthalten.",6
+26,Tee,Tea,"0,5l köstlicher Haustee.",6
+27,Apfelsaft,AppleJuice,"0,2l purer Apfelsaft.",6
+28,Erdbeersaft,StrawberryJuice,"0,2l feinster Erdbeersaft.",6
+29,Orangensaft,OrangeJuice,"0,2l schmackhafter Orangensaft.",6
+30,Wein,Wine,"0,75l des besten Weins.",6
+31,Bier,Beer,"0,5l leckeres Radeberger Bier.",6
