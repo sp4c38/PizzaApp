@@ -87,7 +87,7 @@ def configure_logging(config: Box):
             sys.exit(1)
     else:
         sys.stdout.write(f"Creating log directory at {log_dir_path.as_posix()}.")
-        log_path.mkdir(parents=True)
+        log_dir_path.mkdir(parents=True)
 
     log_path = log_dir_path / "pizzaapp.log"
     logger.add(

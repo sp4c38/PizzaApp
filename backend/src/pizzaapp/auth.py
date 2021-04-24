@@ -9,7 +9,6 @@ import hashlib
 import random
 import secrets
 
-from collections import namedtuple
 from dataclasses import dataclass
 from loguru import logger
 from threading import Lock
@@ -216,7 +215,7 @@ def refresh_token_limit_reached(session: Session, user_id: int) -> bool:
         .where(
             and_(
                 RefreshTokenDescription.user_id == user_id,
-                RefreshToken.valid == True 
+                RefreshToken.valid is True
             )
         )
     )
@@ -254,7 +253,7 @@ def parse_bearer_token(authorization: Optional[str]) -> Optional[str]:
         return None
 
     token_length = len(auth_token)
-    if not token_length in defaults.TOKEN_LENGTH:
+    if token_length not in defaults.TOKEN_LENGTH:
         logger.debug(f"Token has an invalid length of {token_length}: {auth_token}.")
         return None
 
@@ -354,7 +353,7 @@ def store_token_info(session: Session, lock: Lock, token_info: TokenInfo):
 def expire_user_access(session: Session, description: RefreshTokenDescription):
     """Delete all refresh and access tokens for a delivery user."""
 
-    stmt = select(RefreshTokenDescription).where(RefreshTokenDescription.user_id == user_id)
+    stmt = select(RefreshTokenDescription).where(RefreshTokenDescription.user_id == description.user_id)
     descriptions = session.execute(stmt).scalars().all()
     for des in descriptions:
         # If RefreshTokenDescription gets deleted all refresh tokens which refer to it will

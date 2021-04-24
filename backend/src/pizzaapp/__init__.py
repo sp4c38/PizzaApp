@@ -17,7 +17,6 @@ _metadata = MetaData(engine)
 registry = orm_registry(_metadata)
 Base = registry.generate_base()  # SQLAlchemy declarative ORM Base class
 
-# skipcq: FLK-E402
 # The src.pizzaapp.tables module itself imports the Base class declared above. If anything from the
 # tables module is imported before the Base definition this init fails due to circular imports.
 from src.pizzaapp.tables import map_tables

@@ -127,7 +127,7 @@ class OrderItem(Base):
         jsoned.order_id = self.order_id
         jsoned.item_id = self.item_id
         jsoned.unit_price = self.unit_price
-        jsoned_quantity = self.quantity
+        jsoned.quantity = self.quantity
         return jsoned.to_dict()
 
 

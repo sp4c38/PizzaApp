@@ -7,12 +7,11 @@ from typing import Optional
 
 from box import Box
 from loguru import logger
-from sqlalchemy import select
 from sqlalchemy.orm import selectinload, Session
 
 from src.pizzaapp import catalog as catalog_helper
 from src.pizzaapp.catalog import Catalog
-from src.pizzaapp.tables import Item, Order, OrderItem
+from src.pizzaapp.tables import Order, OrderItem
 from src.pizzaapp.utils import check_fields, Field
 
 

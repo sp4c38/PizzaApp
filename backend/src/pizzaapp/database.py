@@ -13,6 +13,7 @@ from sqlalchemy import create_engine, event
 from sqlalchemy.engine import Engine
 from sqlalchemy.types import Integer, TypeDecorator
 
+
 # skipcq: PYL-W0223
 class SQLiteDecimal(TypeDecorator):
     """A SQLAlchemy TypeDecorator that stores decimals to SQLite.

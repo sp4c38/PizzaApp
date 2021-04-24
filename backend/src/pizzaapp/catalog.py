@@ -92,7 +92,7 @@ def items_valid(catalog: Catalog, items: list[Item]) -> bool:
         for item in category.items:
             category_item_ids.append(item.item_id)
     for item in items:
-        if not item.item_id in category_item_ids:
+        if item.item_id not in category_item_ids:
             logger.info(f"Item id {item.item_id} not found in catalog.")
             return False
     return True

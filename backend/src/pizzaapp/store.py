@@ -11,7 +11,7 @@ but in seperate files. For example a function to store new orders is in order.py
 import threading
 
 from dataclasses import dataclass
-from queue import Empty as QueueEmptyError, Full as QueueFullError, Queue
+from queue import Empty as QueueEmptyError, Queue
 from typing import Callable, Optional
 
 from loguru import logger
