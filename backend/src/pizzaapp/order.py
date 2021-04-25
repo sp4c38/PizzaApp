@@ -19,7 +19,7 @@ def check_order_body(body: Box) -> bool:
     """Check if all sections and fields exist, have the valid format and have the valid type."""
     sections = [Field("details", dict), Field("items", list)]
     if not check_fields(body, sections):
-        logger.debug(f"Wrong order sections in request.")
+        logger.debug("Wrong order sections in request.")
         return False
 
     items_ordered = len(body["items"])
@@ -35,7 +35,7 @@ def check_order_body(body: Box) -> bool:
         Field("postal_code", str),
     ]
     if not check_fields(body.details, detail_fields):
-        logger.debug(f"Wrong order detail section in request.")
+        logger.debug("Wrong order detail section in request.")
         return False
     if not body.details.postal_code.isdecimal():
         logger.debug("Postal code field of order details contains characters other than numbers.")
@@ -46,7 +46,7 @@ def check_order_body(body: Box) -> bool:
         if not isinstance(item, dict):
             return False
         if not check_fields(item, item_fields):
-            logger.debug(f"Wrong fields for an item in items section.")
+            logger.debug("Wrong fields for an item in items section.")
             return False
     return True
 

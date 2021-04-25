@@ -109,7 +109,7 @@ def auth_login():
     )
     store_queue.put_nowait(store_operation)
 
-    logger.debug(f"Client logged in. Issued new refresh token and access token.")
+    logger.debug("Client logged in. Issued new refresh token and access token.")
     return token_info.response_json()
 
 

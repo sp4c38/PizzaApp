@@ -19,6 +19,6 @@ Base = registry.generate_base()  # SQLAlchemy declarative ORM Base class
 
 # The src.pizzaapp.tables module itself imports the Base class declared above. If anything from the
 # tables module is imported before the Base definition this init fails due to circular imports.
-from src.pizzaapp.tables import map_tables
+from src.pizzaapp.tables import map_tables  # noqa: E402
 
 map_tables()
