@@ -5,7 +5,7 @@ from loguru import logger
 from sqlalchemy.engine import Engine
 from sqlalchemy.orm import Session, selectinload
 
-from src.pizzaapp.tables import Category, Item
+from pizzaapp.tables import Category, Item
 
 
 class Catalog:

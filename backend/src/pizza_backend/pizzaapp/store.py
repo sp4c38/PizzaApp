@@ -17,7 +17,7 @@ from typing import Callable, Optional
 from loguru import logger
 from sqlalchemy.orm import Session
 
-from src.pizzaapp import engine
+from pizzaapp import engine
 
 
 @dataclass

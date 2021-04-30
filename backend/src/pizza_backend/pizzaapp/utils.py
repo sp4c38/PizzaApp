@@ -12,7 +12,7 @@ from flask import make_response, Request
 from loguru import logger
 from werkzeug.exceptions import default_exceptions
 
-from src.pizzaapp.defaults import APP_ERROR_CODES
+from pizzaapp.defaults import APP_ERROR_CODES
 
 
 def error_response(error_code: int, app_error_key: Optional[int] = None) -> dict:

@@ -8,9 +8,9 @@ from box import Box
 from sqlalchemy.engine import Engine
 from sqlalchemy.orm import Session
 
-from src.pizzaapp import Base
-from src.pizzaapp.defaults import NAMES_OF_TABLES
-from src.pizzaapp.tables import Category, Item, ItemPrice, ItemSpeciality
+from pizzaapp import Base
+from pizzaapp.defaults import NAMES_OF_TABLES
+from pizzaapp.tables import Category, Item, ItemPrice, ItemSpeciality
 
 
 def get_files() -> list[Path]:
@@ -18,7 +18,7 @@ def get_files() -> list[Path]:
 
     CSV files are tried to be lcoated in backend/res/base_data.
     """
-    file_dir = Path(__file__).parents[2] / "res" / "base_data"
+    file_dir = Path(__file__).parents[3] / "res" / "base_data"
     dir_items = file_dir.iterdir()
     file_paths = []
 

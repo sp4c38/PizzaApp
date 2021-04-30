@@ -1,10 +1,10 @@
 [tool.poetry]
-name = "pizza-project-backend"
-version = "0.0.1"
-description = "Backend for the PizzaTech-App."
+name = "pizza_backend"
+version = "1.0"
+description = "Backend for the PizzaApp."
 authors = ["Léon Becker <lb@alien8.de>"]
 packages = [
-    {include = "src"}	
+    { include = "pizza_backend", from = "src" }	
 ]
 include = ["res/base_data"]
 

@@ -13,15 +13,15 @@ from flask import Flask, request
 from loguru import logger
 from sqlalchemy.orm import Session
 
-from src.pizzaapp import auth
-from src.pizzaapp import engine
-from src.pizzaapp import order
-from src.pizzaapp import store
-from src.pizzaapp import utils
-from src.pizzaapp.catalog import Catalog
-from src.pizzaapp.store import StoreOperation
-from src.pizzaapp.tables import confirm_required_tables_exist
-from src.pizzaapp.utils import error_response
+from pizzaapp import auth
+from pizzaapp import engine
+from pizzaapp import order
+from pizzaapp import store
+from pizzaapp import utils
+from pizzaapp.catalog import Catalog
+from pizzaapp.store import StoreOperation
+from pizzaapp.tables import confirm_required_tables_exist
+from pizzaapp.utils import error_response
 
 catalog = Catalog(engine)
 
