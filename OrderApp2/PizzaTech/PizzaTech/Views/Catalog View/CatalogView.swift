@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct CategoryView: View {
+struct CatalogView: View {
     var body: some View {
         VStack(spacing: 13) {
             CategorySelection()
@@ -16,9 +16,9 @@ struct CategoryView: View {
     }
 }
 
-struct CategoryView_Previews: PreviewProvider {
+struct CatalogView_Previews: PreviewProvider {
     static var previews: some View {
-        CategoryView()
+        CatalogView()
             .modifier(PizzaTechServices())
             
     }

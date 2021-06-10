@@ -18,7 +18,7 @@ struct HomeView: View {
                     ScrollView {
                         VStack(spacing: 22) {
                             MainActionsView()
-                            CategoryView()
+                            CatalogView()
                         }
                     }
                     .padding(.top, 5)

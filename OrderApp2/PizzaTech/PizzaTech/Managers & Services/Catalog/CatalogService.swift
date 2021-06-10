@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol CatalogFoodCharacteristics {
+protocol CatalogFoodCharacteristics: Codable {
     var vegetarian: Bool { get }
     var vegan: Bool { get }
     var spicy: Bool { get }
@@ -19,19 +19,19 @@ protocol CatalogGeneralItem: Codable {
     var imageName: String { get }
     var prices: [Float] { get }
     var ingredientDescription: String { get }
+//    var speciality: CatalogFoodCharacteristics { get }
 }
 
 protocol CatalogGeneralCategory: Codable {
     associatedtype CatalogGeneralItem
     
-    var sizeNames: [String] { get }
     var items: [CatalogGeneralItem] { get }
 }
 
 enum CategoryID {
     case pizza, burger, salad, pasta, iceDessert, drink
     
-    var identification: Int {
+    var id: Int {
         switch self {
         case .pizza:
             return 0
@@ -76,8 +76,9 @@ struct Categories: Codable {
     
     let categoryID: [CategoryID] = [.pizza, .drink, .burger, .salad, .iceDessert, .pasta]
     
-    enum CodingKeys: CodingKey {
-        case pizza, burger, salad, pasta, iceDessert, drink
+    enum CodingKeys: String, CodingKey {
+        case iceDessert = "ice_dessert"
+        case pizza, burger, salad, pasta, drink
     }
 }
 
@@ -92,10 +93,8 @@ class CatalogService: ObservableObject {
     @Published var downloadErrorOccurred = false
     
     @Published var categorySelection: CategoryID = .pizza
-}
-
-extension CatalogService {
-    func setCategorySelection(to newCategory: CategoryID) {
-        self.categorySelection = newCategory
+    
+    func fetchCatalog() {
+        catalog = loadPreviewJSON("CatalogPreview")
     }
 }

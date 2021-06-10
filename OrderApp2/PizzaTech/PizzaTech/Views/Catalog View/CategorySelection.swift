@@ -24,44 +24,12 @@ struct CategorySelectionButtonStyle: ButtonStyle {
             .cornerRadius(6)
             
             .shadow(radius: 3)
-            .animation(.easeInOut)
-    }
-}
-
-struct CategorySelectionButton: View {
-    @EnvironmentObject var catalogService: CatalogService
-    
-    let id: CategoryID
-    let name: String
-    
-    var isCurrentlySelected: Bool {
-        catalogService.categorySelection == id
-    }
-    
-    init(id: CategoryID) {
-        self.id = id
-        self.name = id.name
-    }
-    
-    var body: some View {
-        Button(action: {
-            onCategorySelection()
-        }) {
-            Text(name)
-        }
-        .buttonStyle(CategorySelectionButtonStyle(isSelected: isCurrentlySelected))
-    }
-    
-    func onCategorySelection() {
-        catalogService.setCategorySelection(to: id)
+            .animation(.easeInOut(duration: 0.2))
     }
 }
 
 struct CategorySelection: View {
     @EnvironmentObject var catalogService: CatalogService
-    var categories: Categories {
-        catalogService.catalog!.categories
-    }
     
     let gridColumns: [GridItem] = [
         GridItem(.adaptive(minimum: 100), spacing: 20, alignment: .center)
@@ -69,8 +37,13 @@ struct CategorySelection: View {
     
     var body: some View {
         LazyVGrid(columns: gridColumns, alignment: .center, spacing: 10) {
-            ForEach(categories.categoryID, id: \.identification) { categoryID in
-                CategorySelectionButton(id: categoryID)
+            ForEach(catalogService.catalog!.categories.categoryID, id: \.id) { categoryID in
+                Button(action: {
+                    catalogService.categorySelection = categoryID
+                }) {
+                    Text(categoryID.name)
+                }
+                .buttonStyle(CategorySelectionButtonStyle(isSelected: catalogService.categorySelection == categoryID))
             }
             .fixedSize(horizontal: true, vertical: false)
         }

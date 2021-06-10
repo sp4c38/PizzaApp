@@ -77,7 +77,7 @@ def read_config() -> Box:
 
 
 def configure_logging(config: Box):
-    """Configure the python logging module."""
+    """Configure the loguru logger."""
     log_dir_path = config.paths.log
     if log_dir_path.exists():
         if not log_dir_path.is_dir():

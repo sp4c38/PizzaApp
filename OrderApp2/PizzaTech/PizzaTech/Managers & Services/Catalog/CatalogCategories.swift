@@ -7,32 +7,146 @@
 
 import Foundation
 
+class FoodCharacteristics: CatalogFoodCharacteristics {
+    var vegetarian: Bool
+    var vegan: Bool
+    var spicy: Bool
+}
+
+class PizzaItem: CatalogGeneralItem {
+    var id: Int
+    var name: String
+    var imageName: String
+    var prices: [Float]
+    var ingredientDescription: String
+    var speciality: FoodCharacteristics
+    
+    enum CodingKeys: String, CodingKey {
+        case id, name, prices, speciality
+        case imageName = "image_name"
+        case ingredientDescription = "ingredient_description"
+    }
+}
+
 class PizzaCategory: CatalogGeneralCategory {
-    var sizeNames: [String]
     var items: [PizzaItem]
+    
+    enum CodingKeys: String, CodingKey {
+        case items = "all_items"
+    }
+}
+
+class BurgerItem: CatalogGeneralItem {
+    var id: Int
+    var name: String
+    var imageName: String
+    var prices: [Float]
+    var ingredientDescription: String
+    var speciality: FoodCharacteristics
+    
+    enum CodingKeys: String, CodingKey {
+        case id, name, prices, speciality
+        case imageName = "image_name"
+        case ingredientDescription = "ingredient_description"
+    }
 }
 
 class BurgerCategory: CatalogGeneralCategory {
-    var sizeNames: [String]
     var items: [BurgerItem]
+    
+    enum CodingKeys: String, CodingKey {
+        case items = "all_items"
+    }
+}
+
+class SaladItem: CatalogGeneralItem {
+    var id: Int
+    var name: String
+    var imageName: String
+    var prices: [Float]
+    var ingredientDescription: String
+    var speciality: FoodCharacteristics
+    
+    enum CodingKeys: String, CodingKey {
+        case id, name, prices, speciality
+        case imageName = "image_name"
+        case ingredientDescription = "ingredient_description"
+    }
 }
 
 class SaladCategory: CatalogGeneralCategory {
-    var sizeNames: [String]
     var items: [SaladItem]
+    
+    enum CodingKeys: String, CodingKey {
+        case items = "all_items"
+    }
+}
+
+class PastaItem: CatalogGeneralItem {
+    var id: Int
+    var name: String
+    var imageName: String
+    var prices: [Float]
+    var ingredientDescription: String
+    var speciality: FoodCharacteristics
+    
+    enum CodingKeys: String, CodingKey {
+        case id, name, prices, speciality
+        case imageName = "image_name"
+        case ingredientDescription = "ingredient_description"
+    }
 }
 
 class PastaCategory: CatalogGeneralCategory {
-    var sizeNames: [String]
     var items: [PastaItem]
+    
+    enum CodingKeys: String, CodingKey {
+        case items = "all_items"
+    }
+}
+
+class IceDessertItem: CatalogGeneralItem {
+    var id: Int
+    var name: String
+    var imageName: String
+    var prices: [Float]
+    var ingredientDescription: String
+    var speciality: FoodCharacteristics
+    
+    enum CodingKeys: String, CodingKey {
+        case id, name, prices, speciality
+        case imageName = "image_name"
+        case ingredientDescription = "ingredient_description"
+    }
 }
 
 class IceDessertCategory: CatalogGeneralCategory {
-    var sizeNames: [String]
     var items: [IceDessertItem]
+    
+    enum CodingKeys: String, CodingKey {
+        case items = "all_items"
+    }
+}
+
+class DrinkItem: CatalogGeneralItem {
+    var id: Int
+    var name: String
+    var imageName: String
+    var prices: [Float]
+    var ingredientDescription: String
+    var speciality: FoodCharacteristics
+    
+    enum CodingKeys: String, CodingKey {
+        case id, name, prices, speciality
+        case imageName = "image_name"
+        case ingredientDescription = "ingredient_description"
+    }
 }
 
 class DrinkCategory: CatalogGeneralCategory {
-    var sizeNames: [String]
     var items: [DrinkItem]
+    
+    enum CodingKeys: String, CodingKey {
+        case items = "all_items"
+    }
 }
