@@ -5,8 +5,8 @@ from sqlalchemy import MetaData
 from sqlalchemy import inspect
 from sqlalchemy.orm import registry as orm_registry
 
-from pizzaapp.config import configure_logging, read_config
-from pizzaapp.database import connect
+from pizzaapp.app.config import configure_logging, read_config
+from pizzaapp.app.database import connect
 
 config = read_config()
 configure_logging(config)
@@ -19,6 +19,6 @@ Base = registry.generate_base()  # SQLAlchemy declarative ORM Base class
 
 # The src.pizzaapp.tables module itself imports the Base class declared above. If anything from the
 # tables module is imported before the Base definition this init fails due to circular imports.
-from pizzaapp.tables import map_tables  # noqa: E402
+from pizzaapp.app.tables import map_tables  # noqa: E402
 
 map_tables()

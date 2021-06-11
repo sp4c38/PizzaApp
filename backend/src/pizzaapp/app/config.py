@@ -12,8 +12,8 @@ from pathlib import Path
 from box import Box
 from loguru import logger
 
-from pizzaapp.exceptions import ConfigValueNotBool
-from pizzaapp.defaults import DEFAULT_CONFIG
+from pizzaapp.app.exceptions import ConfigValueNotBool
+from pizzaapp.app.defaults import DEFAULT_CONFIG
 
 
 def _create_config(path: Path):

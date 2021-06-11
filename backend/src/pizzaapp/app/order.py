@@ -9,10 +9,10 @@ from box import Box
 from loguru import logger
 from sqlalchemy.orm import selectinload, Session
 
-from pizzaapp import catalog as catalog_helper
-from pizzaapp.catalog import Catalog
-from pizzaapp.tables import Order, OrderItem
-from pizzaapp.utils import check_fields, Field
+from pizzaapp.app import catalog as catalog_helper
+from pizzaapp.app.catalog import Catalog
+from pizzaapp.app.tables import Order, OrderItem
+from pizzaapp.app.utils import check_fields, Field
 
 
 def check_order_body(body: Box) -> bool:

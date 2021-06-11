@@ -21,9 +21,9 @@ from sqlalchemy import and_, func, select
 from sqlalchemy.orm import Session
 from werkzeug.datastructures import Authorization as AuthorizationHeader
 
-from pizzaapp import defaults
-from pizzaapp import utils
-from pizzaapp.tables import AccessToken, DeliveryUser, RefreshToken, RefreshTokenDescription
+from pizzaapp.app import defaults
+from pizzaapp.app import utils
+from pizzaapp.app.tables import AccessToken, DeliveryUser, RefreshToken, RefreshTokenDescription
 
 
 @dataclass

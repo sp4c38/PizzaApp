@@ -8,10 +8,10 @@ from sqlalchemy.types import Boolean, Integer, String
 from sqlalchemy.schema import Column, ForeignKey
 from sqlalchemy.orm import backref, relationship
 
-from pizzaapp import Base, config, inspector
-from pizzaapp.database import SQLiteDecimal
-from pizzaapp.defaults import NAMES_OF_TABLES
-from pizzaapp.exceptions import RequiredTableMissing
+from pizzaapp.app import Base, config, inspector
+from pizzaapp.app.database import SQLiteDecimal
+from pizzaapp.app.defaults import NAMES_OF_TABLES
+from pizzaapp.app.exceptions import RequiredTableMissing
 
 price_type = SQLiteDecimal(scale=2)
 
