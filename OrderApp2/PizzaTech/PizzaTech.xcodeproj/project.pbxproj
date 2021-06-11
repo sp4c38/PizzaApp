@@ -14,16 +14,18 @@
 		611B802425F2F1C900C300B7 /* CurrentCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 611B802325F2F1C900C300B7 /* CurrentCategory.swift */; };
 		611B802825F3751500C300B7 /* CatalogPreview.json in Resources */ = {isa = PBXBuildFile; fileRef = 611B802725F3751500C300B7 /* CatalogPreview.json */; };
 		611B802A25F3753700C300B7 /* GetCatalogPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 611B802925F3753700C300B7 /* GetCatalogPreview.swift */; };
+		6188E2492673D6DF00822EFA /* OrderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6188E2482673D6DF00822EFA /* OrderView.swift */; };
 		61B72ECF25F2A2ED0065FB2A /* PizzaTechApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61B72ECE25F2A2ED0065FB2A /* PizzaTechApp.swift */; };
 		61B72ED125F2A2ED0065FB2A /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61B72ED025F2A2ED0065FB2A /* HomeView.swift */; };
 		61B72ED325F2A2EF0065FB2A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 61B72ED225F2A2EF0065FB2A /* Assets.xcassets */; };
 		61B72ED625F2A2EF0065FB2A /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 61B72ED525F2A2EF0065FB2A /* Preview Assets.xcassets */; };
-		61B72ED825F2A2EF0065FB2A /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61B72ED725F2A2EF0065FB2A /* Persistence.swift */; };
-		61B72EDB25F2A2EF0065FB2A /* PizzaTech.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 61B72ED925F2A2EF0065FB2A /* PizzaTech.xcdatamodeld */; };
 		61B883F725F3B38500A67BC4 /* ItemInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61B883F625F3B38500A67BC4 /* ItemInfo.swift */; };
 		61B883F925F3B5B000A67BC4 /* CategorySelection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61B883F825F3B5B000A67BC4 /* CategorySelection.swift */; };
 		61B883FB25F3B8DF00A67BC4 /* CatalogImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 61B883FA25F3B8DF00A67BC4 /* CatalogImages.xcassets */; };
 		61B883FF25F42FEB00A67BC4 /* CatalogCategories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61B883FE25F42FEB00A67BC4 /* CatalogCategories.swift */; };
+		61FA0E202673D2A9009AF1C8 /* PizzaTech.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 61FA0E1E2673D2A9009AF1C8 /* PizzaTech.xcdatamodeld */; };
+		61FA0E232673D442009AF1C8 /* OrderedItem+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61FA0E212673D442009AF1C8 /* OrderedItem+CoreDataClass.swift */; };
+		61FA0E242673D442009AF1C8 /* OrderedItem+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61FA0E222673D442009AF1C8 /* OrderedItem+CoreDataProperties.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,18 +36,20 @@
 		611B802325F2F1C900C300B7 /* CurrentCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentCategory.swift; sourceTree = "<group>"; };
 		611B802725F3751500C300B7 /* CatalogPreview.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = CatalogPreview.json; sourceTree = "<group>"; };
 		611B802925F3753700C300B7 /* GetCatalogPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetCatalogPreview.swift; sourceTree = "<group>"; };
+		6188E2482673D6DF00822EFA /* OrderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderView.swift; sourceTree = "<group>"; };
 		61B72ECB25F2A2ED0065FB2A /* PizzaTech.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PizzaTech.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		61B72ECE25F2A2ED0065FB2A /* PizzaTechApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PizzaTechApp.swift; sourceTree = "<group>"; };
 		61B72ED025F2A2ED0065FB2A /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		61B72ED225F2A2EF0065FB2A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		61B72ED525F2A2EF0065FB2A /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		61B72ED725F2A2EF0065FB2A /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
-		61B72EDA25F2A2EF0065FB2A /* PizzaTech.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = PizzaTech.xcdatamodel; sourceTree = "<group>"; };
 		61B72EDC25F2A2EF0065FB2A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		61B883F625F3B38500A67BC4 /* ItemInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemInfo.swift; sourceTree = "<group>"; };
 		61B883F825F3B5B000A67BC4 /* CategorySelection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategorySelection.swift; sourceTree = "<group>"; };
 		61B883FA25F3B8DF00A67BC4 /* CatalogImages.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = CatalogImages.xcassets; sourceTree = "<group>"; };
 		61B883FE25F42FEB00A67BC4 /* CatalogCategories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogCategories.swift; sourceTree = "<group>"; };
+		61FA0E1F2673D2A9009AF1C8 /* PizzaTech.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = PizzaTech.xcdatamodel; sourceTree = "<group>"; };
+		61FA0E212673D442009AF1C8 /* OrderedItem+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OrderedItem+CoreDataClass.swift"; sourceTree = "<group>"; };
+		61FA0E222673D442009AF1C8 /* OrderedItem+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OrderedItem+CoreDataProperties.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,9 +91,19 @@
 			path = "Catalog View";
 			sourceTree = "<group>";
 		};
+		6188E2472673D6CA00822EFA /* Order View */ = {
+			isa = PBXGroup;
+			children = (
+				6188E2482673D6DF00822EFA /* OrderView.swift */,
+			);
+			path = "Order View";
+			sourceTree = "<group>";
+		};
 		61B72EC225F2A2ED0065FB2A = {
 			isa = PBXGroup;
 			children = (
+				61FA0E212673D442009AF1C8 /* OrderedItem+CoreDataClass.swift */,
+				61FA0E222673D442009AF1C8 /* OrderedItem+CoreDataProperties.swift */,
 				61B72ECD25F2A2ED0065FB2A /* PizzaTech */,
 				61B72ECC25F2A2ED0065FB2A /* Products */,
 			);
@@ -108,6 +122,7 @@
 			children = (
 				61B72ECE25F2A2ED0065FB2A /* PizzaTechApp.swift */,
 				61B72EEA25F2B5A00065FB2A /* Views */,
+				6188E2472673D6CA00822EFA /* Order View */,
 				61B72EEB25F2B5AF0065FB2A /* Managers & Services */,
 				61B72EEC25F2B5D10065FB2A /* Resources */,
 			);
@@ -139,7 +154,6 @@
 			children = (
 				611B801B25F2D46600C300B7 /* BackendAPI.swift */,
 				611B801825F2D22400C300B7 /* Catalog */,
-				61B72ED725F2A2EF0065FB2A /* Persistence.swift */,
 			);
 			path = "Managers & Services";
 			sourceTree = "<group>";
@@ -148,9 +162,9 @@
 			isa = PBXGroup;
 			children = (
 				61B72ED225F2A2EF0065FB2A /* Assets.xcassets */,
+				61FA0E1E2673D2A9009AF1C8 /* PizzaTech.xcdatamodeld */,
 				61B883FA25F3B8DF00A67BC4 /* CatalogImages.xcassets */,
 				61B72EDC25F2A2EF0065FB2A /* Info.plist */,
-				61B72ED925F2A2EF0065FB2A /* PizzaTech.xcdatamodeld */,
 				61B72ED425F2A2EF0065FB2A /* Preview Content */,
 			);
 			path = Resources;
@@ -227,14 +241,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				61B72EDB25F2A2EF0065FB2A /* PizzaTech.xcdatamodeld in Sources */,
+				61FA0E242673D442009AF1C8 /* OrderedItem+CoreDataProperties.swift in Sources */,
 				611B802225F2ED1D00C300B7 /* CatalogView.swift in Sources */,
 				611B801F25F2E80900C300B7 /* MainActionsView.swift in Sources */,
 				611B802425F2F1C900C300B7 /* CurrentCategory.swift in Sources */,
 				61B883FF25F42FEB00A67BC4 /* CatalogCategories.swift in Sources */,
 				61B883F725F3B38500A67BC4 /* ItemInfo.swift in Sources */,
-				61B72ED825F2A2EF0065FB2A /* Persistence.swift in Sources */,
+				61FA0E232673D442009AF1C8 /* OrderedItem+CoreDataClass.swift in Sources */,
 				61B72ED125F2A2ED0065FB2A /* HomeView.swift in Sources */,
+				61FA0E202673D2A9009AF1C8 /* PizzaTech.xcdatamodeld in Sources */,
+				6188E2492673D6DF00822EFA /* OrderView.swift in Sources */,
 				61B72ECF25F2A2ED0065FB2A /* PizzaTechApp.swift in Sources */,
 				611B801725F2C0B000C300B7 /* CatalogService.swift in Sources */,
 				611B801C25F2D46600C300B7 /* BackendAPI.swift in Sources */,
@@ -515,13 +531,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		61B72ED925F2A2EF0065FB2A /* PizzaTech.xcdatamodeld */ = {
+		61FA0E1E2673D2A9009AF1C8 /* PizzaTech.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				61B72EDA25F2A2EF0065FB2A /* PizzaTech.xcdatamodel */,
+				61FA0E1F2673D2A9009AF1C8 /* PizzaTech.xcdatamodel */,
 			);
-			currentVersion = 61B72EDA25F2A2EF0065FB2A /* PizzaTech.xcdatamodel */;
-			path = PizzaTech.xcdatamodeld;
+			currentVersion = 61FA0E1F2673D2A9009AF1C8 /* PizzaTech.xcdatamodel */;
+			name = PizzaTech.xcdatamodeld;
+			path = ../../PizzaTech.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};

@@ -19,7 +19,7 @@ protocol CatalogGeneralItem: Codable {
     var imageName: String { get }
     var prices: [Float] { get }
     var ingredientDescription: String { get }
-//    var speciality: CatalogFoodCharacteristics { get }
+    var speciality: FoodCharacteristics { get }
 }
 
 protocol CatalogGeneralCategory: Codable {

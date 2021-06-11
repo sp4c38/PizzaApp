@@ -41,7 +41,7 @@ def check_order_body(body: Box) -> bool:
         logger.debug("Postal code field of order details contains characters other than numbers.")
         return False
 
-    item_fields = [Field("item_id", int), Field("quantity", int)]
+    item_fields = [Field("item_id", int), Field("price", float), Field("quantity", int)]
     for item in body["items"]:
         if not isinstance(item, dict):
             return False
@@ -65,7 +65,7 @@ def get_new_order(catalog: Catalog, body: Box) -> Optional[Order]:
         postal_code=body.details.postal_code,
     )
     for item in body["items"]:
-        order_item = OrderItem(item_id=item.item_id, unit_price=0, quantity=item.quantity)
+        order_item = OrderItem(item_id=item.item_id, unit_price=item.price, quantity=item.quantity)
         order.items.append(order_item)
 
     if not catalog_helper.items_valid(catalog, order.items):

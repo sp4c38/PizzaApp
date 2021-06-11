@@ -5,6 +5,7 @@
 //  Created by Léon Becker on 05.03.21.
 //
 
+import CoreData
 import SwiftUI
 import OSLog
 
@@ -17,16 +18,31 @@ struct PizzaTechServices: ViewModifier {
     }
 }
 
+class PersistenceManager {
+    var persistentContainer: NSPersistentContainer {
+        let container = NSPersistentContainer(name: "PizzaTech")
+        container.loadPersistentStores(completionHandler: { storeDescription, error in
+            if let error = error {
+                fatalError("Unresolved error occurred. \(error)")
+            }
+        })
+        return container
+    }
+}
+
+
 let logger = Logger(.default)
 
 @main
 struct PizzaTechApp: App {
-    let persistenceController = PersistenceController.shared
+    var catalogService = CatalogService()
+    var persistenceManager = PersistenceManager()
 
     var body: some Scene {
         WindowGroup {
             HomeView()
-                .modifier(PizzaTechServices())
+                .environmentObject(catalogService)
+                .environment(\.managedObjectContext, persistenceManager.persistentContainer.viewContext)
         }
     }
 }

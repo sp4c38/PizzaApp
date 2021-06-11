@@ -45,6 +45,29 @@ struct CategoryItemNameModifier: ViewModifier {
     }
 }
 
+struct SingleItemPreview<T: CatalogGeneralItem>: View {
+    let item: T
+    @State var isActive = false
+    
+    var body: some View {
+        NavigationLink(destination: ItemInfo(item: item), isActive: $isActive) {
+            VStack(spacing: 0) {
+                Image(item.imageName)
+                    .resizable()
+                    .scaledToFit()
+
+                Text(item.name)
+                    .modifier(CategoryItemNameModifier())
+            }
+            .background(
+                Color(hue: 0.9916, saturation: 0.9689, brightness: 0.8824)
+            )
+            .cornerRadius(10)
+            .shadow(radius: 4)
+        }
+    }
+}
+
 struct CategoryItemCollection<T: CatalogGeneralItem>: View {
     let items: [T]
     
@@ -60,19 +83,7 @@ struct CategoryItemCollection<T: CatalogGeneralItem>: View {
     var body: some View {
         LazyVGrid(columns: gridColumns, spacing: 30) {
             ForEach(items, id: \.id) { item in
-                VStack(spacing: 0) {
-                    Image(item.imageName)
-                        .resizable()
-                        .scaledToFit()
-
-                    Text(item.name)
-                        .modifier(CategoryItemNameModifier())
-                }
-                .background(
-                    Color(hue: 0.9916, saturation: 0.9689, brightness: 0.8824)
-                )
-                .cornerRadius(10)
-                .shadow(radius: 4)
+                SingleItemPreview(item: item)
             }
         }
         .padding([.leading, .trailing], 16)
@@ -82,6 +93,6 @@ struct CategoryItemCollection<T: CatalogGeneralItem>: View {
 struct CurrentCategory_Previews: PreviewProvider {
     static var previews: some View {
         SelectedCategory()
-            .modifier(PizzaTechServices())
+            .environmentObject(CatalogService())
     }
 }
