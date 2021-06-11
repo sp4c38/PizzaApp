@@ -8,9 +8,9 @@ from box import Box
 from sqlalchemy.engine import Engine
 from sqlalchemy.orm import Session
 
-from pizzaapp import Base
-from pizzaapp.defaults import NAMES_OF_TABLES
-from pizzaapp.tables import Category, Item, ItemPrice, ItemSpeciality
+from pizzaapp.app import Base
+from pizzaapp.app.defaults import NAMES_OF_TABLES
+from pizzaapp.app.tables import Category, Item, ItemPrice, ItemSpeciality
 
 
 def get_files() -> list[Path]:

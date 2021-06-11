@@ -14,9 +14,9 @@ from sqlalchemy.engine import Engine
 from rich.console import Console
 from rich.prompt import Confirm
 
-from pizzaapp import config, engine, registry
-from tools.base_data import base_data_populate
-from tools.tables import create_tables, delete_tables
+from pizzaapp.app import config, engine, registry
+from pizzaapp.tools.base_data import base_data_populate
+from pizzaapp.tools.tables import create_tables, delete_tables
 
 console = Console(highlight=True)
 

@@ -2,10 +2,11 @@
 
 DEFAULT_CONFIG = """\
 [pizzaapp]
-debug = off
+debug = no
 
-[db]
-path = ~/.pizzaapp/db.sqlite3
+[paths]
+database = ~/.pizzaapp/db.sqlite3
+log = ~/.pizzaapp/log/
 """
 
 # Names for required database tables used by the backend.

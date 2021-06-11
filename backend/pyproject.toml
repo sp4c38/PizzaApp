@@ -18,6 +18,7 @@ passlib = "^1.7.4"
 bcrypt = "^3.2.0"
 arrow = "^1.0.3"
 loguru = "^0.5.3"
+gunicorn = {version = "^20.1.0", optional = true}
 
 [tool.poetry.dev-dependencies]
 ipython = "^7.21.0"

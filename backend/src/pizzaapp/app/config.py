@@ -62,6 +62,7 @@ def read_config() -> Box:
     if config_path is None:
         new_config_path = find_config_paths[0]
         _create_config(new_config_path)
+        config_path = new_config_path
         config_parsed.read(new_config_path)
     else:
         config_parsed.read(config_path)
