@@ -34,23 +34,27 @@ struct OrderView: View {
             let newRequestItem = OrderRequestItem(item_id: Int(item.item_id), price: item.price, quantity: Int(item.quantity))
             orderRequestItems.append(newRequestItem)
         }
+        var details = OrderRequestDetails(first_name: "L", last_name: "B", street: "K", city: "A", postal_code: "4")
         
-        let newOrderRequest = OrderRequest(first_name: "L", last_name: "B", street: "Ka", city: "A", postal_code: "4", items: orderRequestItems)
-        
-        var request = URLRequest(url: URL(string: "https://www.space8.me:7392/order/make/")!, cachePolicy: .reloadIgnoringLocalAndRemoteCacheData)
+        let newOrderRequest = OrderRequest(items: orderRequestItems, details: details)
         
         let jsonEncoder = JSONEncoder()
         let encodedNewOrderRequest = try! jsonEncoder.encode(newOrderRequest)
         
+        var request = URLRequest(url: URL(string: "https://www.space8.me:7392/order/make/")!, cachePolicy: .reloadIgnoringLocalAndRemoteCacheData)
         request.httpMethod = "POST"
+        request.allHTTPHeaderFields = ["Content-Type": "application/json"]
         request.httpBody = encodedNewOrderRequest
-
-        let task = URLSession.shared.dataTask(with: request, completionHandler: { data, response, error in
+        print(String(data: request.httpBody!, encoding: .utf8))
+        URLSession.shared.dataTask(with: request, completionHandler: { data, response, error in
+            if error == nil {
+                print("Error: \(error).")
+            }
             orderSuccessful = true
-            print("Order successful.")
-        })
+            print("Order successful: \(response).")
+            print("Os: \(String(data: data!, encoding: .utf8))")
+        }).resume()
         orderSending = true
-        task.resume()
     }
 }
 
@@ -60,13 +64,17 @@ struct OrderRequestItem: Encodable {
     var quantity: Int
 }
 
-struct OrderRequest: Encodable {
+struct OrderRequestDetails: Encodable {
     var first_name: String
     var last_name: String
     var street: String
     var city: String
     var postal_code: String
+}
+
+struct OrderRequest: Encodable {
     var items: [OrderRequestItem]
+    var details: OrderRequestDetails
 }
 
 struct OrderView_Previews: PreviewProvider {

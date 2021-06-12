@@ -51,6 +51,7 @@ def order_make():
         return error_response(400, "order_not_valid")
 
     store_operation = StoreOperation(store.simple_store, (new_order,))
+    logger.debug("Added order store operation to background queue.")
     store_queue.put_nowait(store_operation)
     return "", 204
 
@@ -193,8 +194,7 @@ def main():
     )
     store_thread.start()
 
-    app.run()
+    if __name__ == "__main__":
+        app.run()
 
-
-if __name__ == "__main__":
-    main()
+main()

@@ -53,11 +53,10 @@ def get_body_box(request: Request) -> Optional[Box]:
     :returns: Box object containing the request body if the body is valid JSON,
         none if it's not.
     """
-    body_json = request.get_json(silent=True, cache=True)
+    body_json = request.get_json(silent=True, cache=False)
     if body_json is None:
-        body_content = request.data.decode("utf-8")
         logger.debug(
-            f'Can\'t get json because the request body is empty or has an invalid format: "{body_content}".'
+            f'Can\'t get json because the request body is empty or has an invalid format: "{repr(request.data)}".'
         )
         return None
     body_box = Box(body_json)
@@ -78,9 +77,9 @@ def check_fields(dict_: Box, fields: list[Field]) -> bool:
         if field_value is None:
             logger.debug(f"Field '{field[0]}' not contained: {dict_}.")
             return False
-        if not isinstance(field_value, field.type_):
-            logger.debug(f"Field '{field[0]}' is not of required type <{field[1].__name__}>: {dict_}.")
-            return False
+        # if not isinstance(field_value, field.type_):
+        #     logger.debug(f"Field '{field[0]}' is not of required type {str(field[1])}: {dict_}.")
+        #     return False
     return True
 
 
