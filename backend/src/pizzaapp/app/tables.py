@@ -81,12 +81,12 @@ class Order(Base):
     __tablename__ = NAMES_OF_TABLES["order_table"]
 
     order_id = Column(Integer, primary_key=True)
-    first_name = Column(String)
-    last_name = Column(String)
-    street = Column(String)
-    city = Column(String)
-    postal_code = Column(String)
-    order_progress = Column(Integer)  # Progress of the order in percent.
+    first_name = Column(String, nullable=False)
+    last_name = Column(String, nullable=False)
+    street = Column(String, nullable=False)
+    city = Column(String, nullable=False)
+    postal_code = Column(String, nullable=False)
+    order_progress = Column(Integer, default=0, nullable=False)  # Progress of the order in percent.
 
     items = relationship("OrderItem", back_populates="order", cascade="all, delete, delete-orphan")
 
@@ -98,6 +98,7 @@ class Order(Base):
         jsoned.details.street = self.street
         jsoned.details.city = self.city
         jsoned.details.postal_code = self.postal_code
+        jsoned.details.order_progress = self.order_progress
 
         jsoned["items"] = [item.to_json() for item in self.items]
         return jsoned.to_dict()

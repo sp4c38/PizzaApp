@@ -19,6 +19,7 @@ func convertCountToString(count: Int) -> String {
 
 struct OrderPreview: View {
     @State var isActive = false
+    @Binding var orderInfoOpen: Bool
     var order: Order
     
     var body: some View {
@@ -31,12 +32,19 @@ struct OrderPreview: View {
             .onTapGesture {
                 isActive = true
             }
+            .onChange(of: isActive) { new in
+                if new == true {
+                    orderInfoOpen = true
+                } else {
+                    orderInfoOpen = false
+                }
+            }
         }
     }
 }
 
 struct OrderPreview_Previews: PreviewProvider {
     static var previews: some View {
-        OrderPreview(order: Order(details: OrderDetails(city: "Arnsdorf", first_name: "Léon", last_name: "Becker", postal_code: "19383", street: "Karswaldsiedlung 19"), items: [OrderedItem(item_id: 1, order_id: 1, quantity: 1, unit_price: 12.9)]))
+        OrderPreview(orderInfoOpen: .constant(false), order: Order(details: OrderDetails(city: "Arnsdorf", first_name: "Léon", last_name: "Becker", postal_code: "19383", street: "Karswaldsiedlung 19", order_progress: 10), items: [OrderedItem(item_id: 1, order_id: 1, quantity: 1, unit_price: 12.9)]))
     }
 }

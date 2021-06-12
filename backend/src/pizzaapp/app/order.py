@@ -15,7 +15,7 @@ from pizzaapp.app.tables import Order, OrderItem
 from pizzaapp.app.utils import check_fields, Field
 
 
-def check_order_body(body: Box) -> bool:
+def check_new_order_body(body: Box) -> bool:
     """Check if all sections and fields exist, have the valid format and have the valid type."""
     sections = [Field("details", dict), Field("items", list)]
     if not check_fields(body, sections):
@@ -51,9 +51,17 @@ def check_order_body(body: Box) -> bool:
     return True
 
 
+def check_update_progress_body(body: Box) -> bool:
+    fields = [Field("order_id", int), Field("new_progress", int)]
+    if not check_fields(body, fields):
+        logger.info("Wrong update progress body fields in request.")
+        return False
+    return True
+
+
 def get_new_order(catalog: Catalog, body: Box) -> Optional[Order]:
     """Get a new order from a request body."""
-    order_body_valid = check_order_body(body)
+    order_body_valid = check_new_order_body(body)
     if not order_body_valid:
         return None
 
@@ -72,6 +80,18 @@ def get_new_order(catalog: Catalog, body: Box) -> Optional[Order]:
         return None
 
     return order
+
+
+def get_existing_order(session: Session, order_id: int) -> Optional[Order]:
+    order_results = session.query(Order).where(Order.order_id == order_id)
+    order = order_results.one_or_none()
+    return order
+
+
+def update_progress(session: Session, order: Order, new_progress: int):
+    order.order_progress = new_progress
+    session.add(order)
+    session.commit()
 
 
 def get_all_uncompleted_orders(session: Session) -> list[Order]:

@@ -56,6 +56,30 @@ def order_make():
     return "", 204
 
 
+@app.route("/order/update/progress/", methods=["POST"])
+def order_update_progress():
+    bearer_token = auth.parse_bearer_token(request.headers.get("Authorization"))
+    if bearer_token is None:
+        return error_response(400)
+    body = utils.get_body_box(request)
+    if body is None:
+        return error_response(400)
+    body_valid = order.check_update_progress_body(body)
+    if not body_valid:
+        return error_response(400)
+
+    with Session(engine) as session:
+        if not auth.check_access_token(session, bearer_token):
+            return error_response(401, "invalid_access_token")
+        existing_order = order.get_existing_order(session, body.order_id)
+        if not existing_order:
+            return error_response(400)
+        store_operation = StoreOperation(order.update_progress, (existing_order, body.new_progress))
+        store_queue.put_nowait(store_operation)
+
+    return "", 204
+
+
 @app.route("/order/get_all/", methods=["GET"])
 def order_get_all():
     bearer_token = auth.parse_bearer_token(request.headers.get("Authorization"))

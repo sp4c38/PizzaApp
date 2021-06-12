@@ -7,13 +7,13 @@
 
 import Foundation
 
-class FoodCharacteristics: CatalogFoodCharacteristics {
+struct FoodCharacteristics: CatalogFoodCharacteristics {
     var vegetarian: Bool
     var vegan: Bool
     var spicy: Bool
 }
 
-class PizzaItem: CatalogGeneralItem {
+struct PizzaItem: CatalogGeneralItem {
     var id: Int
     var name: String
     var imageName: String
@@ -36,7 +36,7 @@ class PizzaCategory: CatalogGeneralCategory {
     }
 }
 
-class BurgerItem: CatalogGeneralItem {
+struct BurgerItem: CatalogGeneralItem {
     var id: Int
     var name: String
     var imageName: String
@@ -51,7 +51,7 @@ class BurgerItem: CatalogGeneralItem {
     }
 }
 
-class BurgerCategory: CatalogGeneralCategory {
+struct BurgerCategory: CatalogGeneralCategory {
     var items: [BurgerItem]
     
     enum CodingKeys: String, CodingKey {
@@ -59,7 +59,7 @@ class BurgerCategory: CatalogGeneralCategory {
     }
 }
 
-class SaladItem: CatalogGeneralItem {
+struct SaladItem: CatalogGeneralItem {
     var id: Int
     var name: String
     var imageName: String
@@ -74,7 +74,7 @@ class SaladItem: CatalogGeneralItem {
     }
 }
 
-class SaladCategory: CatalogGeneralCategory {
+struct SaladCategory: CatalogGeneralCategory {
     var items: [SaladItem]
     
     enum CodingKeys: String, CodingKey {
@@ -82,7 +82,7 @@ class SaladCategory: CatalogGeneralCategory {
     }
 }
 
-class PastaItem: CatalogGeneralItem {
+struct PastaItem: CatalogGeneralItem {
     var id: Int
     var name: String
     var imageName: String
@@ -97,7 +97,7 @@ class PastaItem: CatalogGeneralItem {
     }
 }
 
-class PastaCategory: CatalogGeneralCategory {
+struct PastaCategory: CatalogGeneralCategory {
     var items: [PastaItem]
     
     enum CodingKeys: String, CodingKey {
@@ -105,7 +105,7 @@ class PastaCategory: CatalogGeneralCategory {
     }
 }
 
-class IceDessertItem: CatalogGeneralItem {
+struct IceDessertItem: CatalogGeneralItem {
     var id: Int
     var name: String
     var imageName: String
@@ -120,7 +120,7 @@ class IceDessertItem: CatalogGeneralItem {
     }
 }
 
-class IceDessertCategory: CatalogGeneralCategory {
+struct IceDessertCategory: CatalogGeneralCategory {
     var items: [IceDessertItem]
     
     enum CodingKeys: String, CodingKey {
@@ -128,7 +128,7 @@ class IceDessertCategory: CatalogGeneralCategory {
     }
 }
 
-class DrinkItem: CatalogGeneralItem {
+struct DrinkItem: CatalogGeneralItem {
     var id: Int
     var name: String
     var imageName: String
@@ -143,7 +143,7 @@ class DrinkItem: CatalogGeneralItem {
     }
 }
 
-class DrinkCategory: CatalogGeneralCategory {
+struct DrinkCategory: CatalogGeneralCategory {
     var items: [DrinkItem]
     
     enum CodingKeys: String, CodingKey {

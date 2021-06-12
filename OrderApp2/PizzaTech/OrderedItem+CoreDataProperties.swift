@@ -19,7 +19,6 @@ extension OrderedItem {
     @NSManaged public var item_id: Int64
     @NSManaged public var quantity: Int64
     @NSManaged public var price: Double
-
 }
 
 extension OrderedItem : Identifiable {

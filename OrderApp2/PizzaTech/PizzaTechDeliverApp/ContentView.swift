@@ -12,6 +12,7 @@ struct ContentView: View {
     @EnvironmentObject var ordersService: OrdersService
     
     @State var downloadingOrders = false
+    @State var orderInfoOpen = false
     
     let timer = Timer.publish(every: TimeInterval(30), on: .main, in: .common).autoconnect()
     
@@ -20,7 +21,7 @@ struct ContentView: View {
             ScrollView {
                 if ordersService.orders != nil {
                     ForEach(ordersService.orders!.orders, id: \.items[0].order_id) { order in
-                        OrderPreview(order: order)
+                        OrderPreview(orderInfoOpen: $orderInfoOpen, order: order)
                     }
                 }
                 
@@ -29,13 +30,22 @@ struct ContentView: View {
             .onReceive(timer) { _ in downloadOrdersManager() }
             .onAppear { downloadOrdersManager() }
             .navigationTitle("Bestellungen")
+            .navigationBarItems(trailing:
+                                    Button(action: { downloadOrdersManager(force: true) }) {
+                                        Image(systemName: "arrow.clockwise")
+                                            .resizable()
+                                            .font(.title2)
+                                    }
+            )
         }
     }
     
-    func downloadOrdersManager() {
-        DispatchQueue.global(qos: .userInitiated).async {
-            let downloadedOrders = downloadOrders()
-            DispatchQueue.main.async { ordersService.orders = downloadedOrders }
+    func downloadOrdersManager(force: Bool = false) {
+        if !orderInfoOpen || force == true {
+            DispatchQueue.global(qos: .userInitiated).async {
+                let downloadedOrders = downloadOrders()
+                DispatchQueue.main.async { ordersService.orders = downloadedOrders }
+            }
         }
     }
     
@@ -66,6 +76,7 @@ struct OrderDetails: Decodable {
     var last_name: String
     var postal_code: String
     var street: String
+    var order_progress: Int
 }
 
 struct OrderedItem: Decodable {

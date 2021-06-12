@@ -23,7 +23,7 @@ struct CategorySelectionButtonStyle: ButtonStyle {
             .background(isSelected ? Color.red : Color.blue)
             .cornerRadius(6)
             
-            .shadow(radius: 3)
+            .shadow(color: Color.gray, radius: 5)
             .animation(.easeInOut(duration: 0.2))
     }
 }

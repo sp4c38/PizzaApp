@@ -63,7 +63,7 @@ struct SingleItemPreview<T: CatalogGeneralItem>: View {
                 Color(hue: 0.9916, saturation: 0.9689, brightness: 0.8824)
             )
             .cornerRadius(10)
-            .shadow(radius: 4)
+            .shadow(radius: 10)
         }
     }
 }

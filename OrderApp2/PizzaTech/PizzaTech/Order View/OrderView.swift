@@ -7,18 +7,75 @@
 
 import SwiftUI
 
+//struct OrderedItemD {
+//    var quantity = 2
+//    var price = 19.99
+//}
+
+struct SingleOrderedItemView: View {
+    let orderedItem: OrderedItem
+    let item: CatalogGeneralItem?
+    
+    let numberFormatter = { () -> NumberFormatter in
+        let numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .decimal
+        numberFormatter.decimalSeparator = ","
+        return numberFormatter
+    }()
+    
+    var body: some View {
+        if item != nil {
+            HStack(alignment: .top) {
+                Image(item!.imageName)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 210)
+                
+                Spacer()
+                
+                VStack(alignment: .trailing, spacing: 0) {
+                    Text(item!.name)
+                        .bold()
+                        .font(.title2)
+                        .padding(.bottom, 3)
+                    
+                    Text("\(orderedItem.quantity)x")
+                    Spacer()
+                    Text("\(numberFormatter.string(for: orderedItem.price)!) €")
+                        .bold()
+                        .font(.title2)
+                }
+                .padding(.top, 15)
+                .padding(.bottom, 10)
+                .padding(.trailing, 15)
+            }
+            .foregroundColor(.white)
+            .frame(maxWidth: .infinity)
+            .background(Color.red)
+            .cornerRadius(10)
+            .padding([.leading, .trailing])
+            .fixedSize(horizontal: false, vertical: true)
+            .shadow(radius: 10)
+        } else {
+            VStack {}
+        }
+    }
+}
+
+
 struct OrderView: View {
+    @EnvironmentObject var catalogService: CatalogService
     @State var orderSending = false
     @State var orderSuccessful = false
     @FetchRequest(entity: OrderedItem.entity(), sortDescriptors: []) var orderedItems: FetchedResults<OrderedItem>
     
     var body: some View {
         VStack {
-            ForEach(orderedItems) { orderedItem in
-                HStack {
-                    Text(String(orderedItem.item_id))
-                    Text(String(orderedItem.price))
-                    Text(String(orderedItem.quantity))
+            ScrollView {
+                VStack(spacing: 30) {
+                    ForEach(orderedItems) { orderedItem in
+                        SingleOrderedItemView(orderedItem: orderedItem, item: getCatalogItem(order: orderedItem))
+                    }
                 }
             }
             Spacer()
@@ -26,6 +83,25 @@ struct OrderView: View {
                 Text("Order")
             }
         }
+    }
+    
+    func getCatalogItem(order: OrderedItem) -> CatalogGeneralItem? {
+        guard let catalog = catalogService.catalog else {
+            return nil
+        }
+        let categories = catalog.categories
+        let item_id = order.item_id
+        var foundItem: CatalogGeneralItem? = nil
+        for item in categories.pizza.items { if item.id == item_id { foundItem = item } }
+        for item in categories.burger.items { if item.id == item_id { foundItem = item } }
+        for item in categories.iceDessert.items { if item.id == item_id { foundItem = item } }
+        for item in categories.salad.items { if item.id == item_id { foundItem = item } }
+        for item in categories.drink.items { if item.id == item_id { foundItem = item } }
+        for item in categories.pasta.items { if item.id == item_id { foundItem = item } }
+        if foundItem != nil {
+            print("Found item: \(foundItem).")
+        }
+        return foundItem
     }
     
     func orderItems() {
@@ -48,7 +124,7 @@ struct OrderView: View {
 
         URLSession.shared.dataTask(with: request, completionHandler: { data, response, error in
             if error == nil {
-                print("Error: \(error).")
+                print("Error: \(String(describing: error)).")
             }
             if let httpResponse = response as? HTTPURLResponse {
                 print("Status \(httpResponse.statusCode)")
@@ -83,5 +159,7 @@ struct OrderRequest: Encodable {
 struct OrderView_Previews: PreviewProvider {
     static var previews: some View {
         OrderView()
+            .environmentObject(CatalogService())
+//        SingleOrderedItemView(orderedItem: OrderedItemD(), item: PizzaItem(id: 10, name: "Margheritta", imageName: "margherita", prices: [1,2,34], ingredientDescription: "mit Pizzasauce", speciality: FoodCharacteristics(vegetarian: true, vegan: true, spicy: false)))
     }
 }
