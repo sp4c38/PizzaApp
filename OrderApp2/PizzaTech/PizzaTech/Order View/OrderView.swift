@@ -34,7 +34,7 @@ struct OrderView: View {
             let newRequestItem = OrderRequestItem(item_id: Int(item.item_id), price: item.price, quantity: Int(item.quantity))
             orderRequestItems.append(newRequestItem)
         }
-        var details = OrderRequestDetails(first_name: "L", last_name: "B", street: "K", city: "A", postal_code: "4")
+        let details = OrderRequestDetails(first_name: "L", last_name: "B", street: "K", city: "A", postal_code: "4")
         
         let newOrderRequest = OrderRequest(items: orderRequestItems, details: details)
         
@@ -45,14 +45,17 @@ struct OrderView: View {
         request.httpMethod = "POST"
         request.allHTTPHeaderFields = ["Content-Type": "application/json"]
         request.httpBody = encodedNewOrderRequest
-        print(String(data: request.httpBody!, encoding: .utf8))
+
         URLSession.shared.dataTask(with: request, completionHandler: { data, response, error in
             if error == nil {
                 print("Error: \(error).")
             }
+            if let httpResponse = response as? HTTPURLResponse {
+                print("Status \(httpResponse.statusCode)")
+                print("Order should be successful.")
+            }
+
             orderSuccessful = true
-            print("Order successful: \(response).")
-            print("Os: \(String(data: data!, encoding: .utf8))")
         }).resume()
         orderSending = true
     }

@@ -86,6 +86,7 @@ class Order(Base):
     street = Column(String)
     city = Column(String)
     postal_code = Column(String)
+    order_progress = Column(Integer)  # Progress of the order in percent.
 
     items = relationship("OrderItem", back_populates="order", cascade="all, delete, delete-orphan")
 

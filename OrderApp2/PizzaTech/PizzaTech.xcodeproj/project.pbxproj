@@ -7,6 +7,18 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		610875052674AC79007E25DF /* PizzaTechDeliverAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 610875042674AC78007E25DF /* PizzaTechDeliverAppApp.swift */; };
+		610875072674AC79007E25DF /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 610875062674AC79007E25DF /* ContentView.swift */; };
+		610875092674AC7B007E25DF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 610875082674AC7B007E25DF /* Assets.xcassets */; };
+		6108750C2674AC7B007E25DF /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6108750B2674AC7B007E25DF /* Preview Assets.xcassets */; };
+		610875322674AD50007E25DF /* CatalogPreview.json in Resources */ = {isa = PBXBuildFile; fileRef = 611B802725F3751500C300B7 /* CatalogPreview.json */; };
+		610875332674AD50007E25DF /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 61B72ED525F2A2EF0065FB2A /* Preview Assets.xcassets */; };
+		610875342674AD50007E25DF /* GetCatalogPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 611B802925F3753700C300B7 /* GetCatalogPreview.swift */; };
+		610875352674AD93007E25DF /* CatalogCategories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61B883FE25F42FEB00A67BC4 /* CatalogCategories.swift */; };
+		610875362674AD93007E25DF /* CatalogService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 611B801625F2C0B000C300B7 /* CatalogService.swift */; };
+		610875372674CD83007E25DF /* CatalogImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 61B883FA25F3B8DF00A67BC4 /* CatalogImages.xcassets */; };
+		610875392674D39A007E25DF /* OrderPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 610875382674D39A007E25DF /* OrderPreview.swift */; };
+		6108753B2674D789007E25DF /* OrderInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6108753A2674D789007E25DF /* OrderInfoView.swift */; };
 		611B801725F2C0B000C300B7 /* CatalogService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 611B801625F2C0B000C300B7 /* CatalogService.swift */; };
 		611B801C25F2D46600C300B7 /* BackendAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 611B801B25F2D46600C300B7 /* BackendAPI.swift */; };
 		611B801F25F2E80900C300B7 /* MainActionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 611B801E25F2E80800C300B7 /* MainActionsView.swift */; };
@@ -29,6 +41,14 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		610875022674AC78007E25DF /* PizzaTechDeliverApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PizzaTechDeliverApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		610875042674AC78007E25DF /* PizzaTechDeliverAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PizzaTechDeliverAppApp.swift; sourceTree = "<group>"; };
+		610875062674AC79007E25DF /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		610875082674AC7B007E25DF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		6108750B2674AC7B007E25DF /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		6108750D2674AC7B007E25DF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		610875382674D39A007E25DF /* OrderPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderPreview.swift; sourceTree = "<group>"; };
+		6108753A2674D789007E25DF /* OrderInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderInfoView.swift; sourceTree = "<group>"; };
 		611B801625F2C0B000C300B7 /* CatalogService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogService.swift; sourceTree = "<group>"; };
 		611B801B25F2D46600C300B7 /* BackendAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackendAPI.swift; sourceTree = "<group>"; };
 		611B801E25F2E80800C300B7 /* MainActionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainActionsView.swift; sourceTree = "<group>"; };
@@ -53,6 +73,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		610874FF2674AC78007E25DF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		61B72EC825F2A2ED0065FB2A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -63,6 +90,37 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		610875032674AC78007E25DF /* PizzaTechDeliverApp */ = {
+			isa = PBXGroup;
+			children = (
+				610875042674AC78007E25DF /* PizzaTechDeliverAppApp.swift */,
+				610875062674AC79007E25DF /* ContentView.swift */,
+				610875382674D39A007E25DF /* OrderPreview.swift */,
+				6108753A2674D789007E25DF /* OrderInfoView.swift */,
+				610875082674AC7B007E25DF /* Assets.xcassets */,
+				6108750D2674AC7B007E25DF /* Info.plist */,
+				6108750A2674AC7B007E25DF /* Preview Content */,
+			);
+			path = PizzaTechDeliverApp;
+			sourceTree = "<group>";
+		};
+		6108750A2674AC7B007E25DF /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				6108750B2674AC7B007E25DF /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		610875302674AD34007E25DF /* SharedResources */ = {
+			isa = PBXGroup;
+			children = (
+				61B883FA25F3B8DF00A67BC4 /* CatalogImages.xcassets */,
+				61B72ED425F2A2EF0065FB2A /* Preview Content */,
+			);
+			path = SharedResources;
+			sourceTree = "<group>";
+		};
 		611B801825F2D22400C300B7 /* Catalog */ = {
 			isa = PBXGroup;
 			children = (
@@ -105,6 +163,9 @@
 				61FA0E212673D442009AF1C8 /* OrderedItem+CoreDataClass.swift */,
 				61FA0E222673D442009AF1C8 /* OrderedItem+CoreDataProperties.swift */,
 				61B72ECD25F2A2ED0065FB2A /* PizzaTech */,
+				610875302674AD34007E25DF /* SharedResources */,
+				611B801825F2D22400C300B7 /* Catalog */,
+				610875032674AC78007E25DF /* PizzaTechDeliverApp */,
 				61B72ECC25F2A2ED0065FB2A /* Products */,
 			);
 			sourceTree = "<group>";
@@ -113,6 +174,7 @@
 			isa = PBXGroup;
 			children = (
 				61B72ECB25F2A2ED0065FB2A /* PizzaTech.app */,
+				610875022674AC78007E25DF /* PizzaTechDeliverApp.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -120,11 +182,11 @@
 		61B72ECD25F2A2ED0065FB2A /* PizzaTech */ = {
 			isa = PBXGroup;
 			children = (
+				61B72EEC25F2B5D10065FB2A /* Resources */,
 				61B72ECE25F2A2ED0065FB2A /* PizzaTechApp.swift */,
 				61B72EEA25F2B5A00065FB2A /* Views */,
 				6188E2472673D6CA00822EFA /* Order View */,
 				61B72EEB25F2B5AF0065FB2A /* Managers & Services */,
-				61B72EEC25F2B5D10065FB2A /* Resources */,
 			);
 			path = PizzaTech;
 			sourceTree = "<group>";
@@ -153,7 +215,6 @@
 			isa = PBXGroup;
 			children = (
 				611B801B25F2D46600C300B7 /* BackendAPI.swift */,
-				611B801825F2D22400C300B7 /* Catalog */,
 			);
 			path = "Managers & Services";
 			sourceTree = "<group>";
@@ -162,10 +223,8 @@
 			isa = PBXGroup;
 			children = (
 				61B72ED225F2A2EF0065FB2A /* Assets.xcassets */,
-				61FA0E1E2673D2A9009AF1C8 /* PizzaTech.xcdatamodeld */,
-				61B883FA25F3B8DF00A67BC4 /* CatalogImages.xcassets */,
 				61B72EDC25F2A2EF0065FB2A /* Info.plist */,
-				61B72ED425F2A2EF0065FB2A /* Preview Content */,
+				61FA0E1E2673D2A9009AF1C8 /* PizzaTech.xcdatamodeld */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -173,6 +232,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		610875012674AC78007E25DF /* PizzaTechDeliverApp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6108752D2674AC7B007E25DF /* Build configuration list for PBXNativeTarget "PizzaTechDeliverApp" */;
+			buildPhases = (
+				610874FE2674AC78007E25DF /* Sources */,
+				610874FF2674AC78007E25DF /* Frameworks */,
+				610875002674AC78007E25DF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PizzaTechDeliverApp;
+			productName = PizzaTechDeliverApp;
+			productReference = 610875022674AC78007E25DF /* PizzaTechDeliverApp.app */;
+			productType = "com.apple.product-type.application";
+		};
 		61B72ECA25F2A2ED0065FB2A /* PizzaTech */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 61B72EDF25F2A2EF0065FB2A /* Build configuration list for PBXNativeTarget "PizzaTech" */;
@@ -196,9 +272,12 @@
 		61B72EC325F2A2ED0065FB2A /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1240;
+				LastSwiftUpdateCheck = 1250;
 				LastUpgradeCheck = 1240;
 				TargetAttributes = {
+					610875012674AC78007E25DF = {
+						CreatedOnToolsVersion = 12.5;
+					};
 					61B72ECA25F2A2ED0065FB2A = {
 						CreatedOnToolsVersion = 12.4;
 					};
@@ -218,11 +297,24 @@
 			projectRoot = "";
 			targets = (
 				61B72ECA25F2A2ED0065FB2A /* PizzaTech */,
+				610875012674AC78007E25DF /* PizzaTechDeliverApp */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		610875002674AC78007E25DF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				610875322674AD50007E25DF /* CatalogPreview.json in Resources */,
+				6108750C2674AC7B007E25DF /* Preview Assets.xcassets in Resources */,
+				610875332674AD50007E25DF /* Preview Assets.xcassets in Resources */,
+				610875372674CD83007E25DF /* CatalogImages.xcassets in Resources */,
+				610875092674AC7B007E25DF /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		61B72EC925F2A2ED0065FB2A /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -237,6 +329,20 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		610874FE2674AC78007E25DF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6108753B2674D789007E25DF /* OrderInfoView.swift in Sources */,
+				610875342674AD50007E25DF /* GetCatalogPreview.swift in Sources */,
+				610875392674D39A007E25DF /* OrderPreview.swift in Sources */,
+				610875072674AC79007E25DF /* ContentView.swift in Sources */,
+				610875052674AC79007E25DF /* PizzaTechDeliverAppApp.swift in Sources */,
+				610875352674AD93007E25DF /* CatalogCategories.swift in Sources */,
+				610875362674AD93007E25DF /* CatalogService.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		61B72EC725F2A2ED0065FB2A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -262,6 +368,72 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		610875242674AC7B007E25DF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_ASSET_PATHS = "\"PizzaTechDeliverApp/Preview Content\"";
+				DEVELOPMENT_TEAM = RC32A2AMHF;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = PizzaTechDeliverApp/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = test.me.space8.PizzaTechDeliver.PizzaTechDeliverApp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		610875252674AC7B007E25DF /* Preview */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_ASSET_PATHS = "\"PizzaTechDeliverApp/Preview Content\"";
+				DEVELOPMENT_TEAM = RC32A2AMHF;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = PizzaTechDeliverApp/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = test.me.space8.PizzaTechDeliver.PizzaTechDeliverApp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Preview;
+		};
+		610875262674AC7B007E25DF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_ASSET_PATHS = "\"PizzaTechDeliverApp/Preview Content\"";
+				DEVELOPMENT_TEAM = RC32A2AMHF;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = PizzaTechDeliverApp/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = test.me.space8.PizzaTechDeliver.PizzaTechDeliverApp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		611B802525F3720F00C300B7 /* Preview */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -329,7 +501,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_ASSET_PATHS = "\"PizzaTech/Resources/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"SharedResources/Preview Content\"";
 				DEVELOPMENT_TEAM = RC32A2AMHF;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = PizzaTech/Resources/Info.plist;
@@ -467,7 +639,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_ASSET_PATHS = "\"PizzaTech/Resources/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"SharedResources/Preview Content\"";
 				DEVELOPMENT_TEAM = RC32A2AMHF;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = PizzaTech/Resources/Info.plist;
@@ -489,7 +661,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_ASSET_PATHS = "\"PizzaTech/Resources/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"SharedResources/Preview Content\"";
 				DEVELOPMENT_TEAM = RC32A2AMHF;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = PizzaTech/Resources/Info.plist;
@@ -508,6 +680,16 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		6108752D2674AC7B007E25DF /* Build configuration list for PBXNativeTarget "PizzaTechDeliverApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				610875242674AC7B007E25DF /* Debug */,
+				610875252674AC7B007E25DF /* Preview */,
+				610875262674AC7B007E25DF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		61B72EC625F2A2ED0065FB2A /* Build configuration list for PBXProject "PizzaTech" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

@@ -89,8 +89,6 @@ struct Catalog: Codable {
 
 class CatalogService: ObservableObject {
     @Published var catalog: Catalog? = nil
-    @Published var downloadInProgress = false
-    @Published var downloadErrorOccurred = false
     
     @Published var categorySelection: CategoryID = .pizza
     

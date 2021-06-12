@@ -84,7 +84,7 @@ struct ItemInfo<T: CatalogGeneralItem>: View {
             Spacer()
             
             Button(action: {
-                var newOrderedItem = OrderedItem(context: managedObjectContext)
+                let newOrderedItem = OrderedItem(context: managedObjectContext)
                 newOrderedItem.item_id = Int64(item.id)
                 newOrderedItem.price = selectedPrice
                 newOrderedItem.quantity = Int64(quantity)

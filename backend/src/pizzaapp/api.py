@@ -56,7 +56,7 @@ def order_make():
     return "", 204
 
 
-@app.route("/order/get_all/", methods=["POST"])
+@app.route("/order/get_all/", methods=["GET"])
 def order_get_all():
     bearer_token = auth.parse_bearer_token(request.headers.get("Authorization"))
     if bearer_token is None:

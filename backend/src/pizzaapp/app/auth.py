@@ -323,6 +323,8 @@ def check_access_token(session: Session, access_token: str) -> bool:
     access_token = utils.one_or_none(
         session.query(AccessToken).filter(AccessToken.access_token_hash == basic_token.token_hash).all()
     )
+    if not access_token:
+        return False
     now = arrow.now()
     if access_token.expiration_time < now.int_timestamp:
         return False
