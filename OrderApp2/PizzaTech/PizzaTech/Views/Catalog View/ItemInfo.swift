@@ -75,13 +75,24 @@ struct ItemSizePickerButtonStyle: ButtonStyle {
             .padding(15)
             .background(
                 Circle().foregroundColor(.red)
-                    .shadow(color: .black, radius: isSelected ? 1 : 3, x: 0.0, y: 1.3)
+                    .shadow(color: .gray, radius: 10)
                     .background(
                     Circle()
-                        .stroke(Color.blue, lineWidth: isSelected ? 12: 0)
-                        .shadow(radius: isSelected ? 3 : 0)
+                        .stroke(Color.blue, lineWidth: isSelected ? 12 : 0)
+                        .shadow(radius: isSelected ? 10 : 0)
                 )
             )
+    }
+}
+
+struct SizeButtonTextModifier: ViewModifier {
+    var isSelected: Bool
+    
+    func body(content: Content) -> some View {
+        content
+            .padding(isSelected ? 5 : 0)
+            .padding([.leading, .trailing], isSelected ? 3 : 0)
+            .background(Color.white.cornerRadius(isSelected ? 7 : 0).shadow(radius: isSelected ? 10 : 0))
     }
 }
 
@@ -102,38 +113,34 @@ struct ItemSizePicker: View {
         HStack(spacing: 40) {
             if prices.count == 3 {
                 VStack(spacing: 15) {
-                    Button(action: { selectedPriceIndex = 0 }) {
+                    Button(action: { withAnimation(.easeInOut(duration: 0.13)) { selectedPriceIndex = 0 } }) {
                         Text("S").foregroundColor(.white)
                     }.buttonStyle(ItemSizePickerButtonStyle(isSelected: selectedPriceIndex == 0))
                     Text("\(numberFormatter.string(for: prices[0])!) €")
-                        .padding(.leading, 8)
+                        .padding(.leading, selectedPriceIndex == 0 ? 0 : 8)
+                        .modifier(SizeButtonTextModifier(isSelected : selectedPriceIndex == 0))
                 }
                 VStack(spacing: 15) {
-                    Button(action: { selectedPriceIndex = 1 }) {
+                    Button(action: { withAnimation(.easeInOut(duration: 0.13)) { selectedPriceIndex = 1 } }) {
                         Text("M").foregroundColor(.white)
                     }.buttonStyle(ItemSizePickerButtonStyle(isSelected: selectedPriceIndex == 1))
                     Text("\(numberFormatter.string(for: prices[1])!) €")
-                        .padding(.leading, 8)
+                        .padding(.leading, selectedPriceIndex == 1 ? 0 : 8)
+                        .modifier(SizeButtonTextModifier(isSelected : selectedPriceIndex == 1))
                 }
                 VStack(spacing: 15) {
-                    Button(action: { selectedPriceIndex = 2 }) {
+                    Button(action: { withAnimation(.easeInOut(duration: 0.13)) { selectedPriceIndex = 2 } }) {
                         Text("L").foregroundColor(.white)
                     }.buttonStyle(ItemSizePickerButtonStyle(isSelected: selectedPriceIndex == 2))
                     Text("\(numberFormatter.string(for: prices[2])!) €")
-                        .padding(.leading, 8)
+                        .padding(.leading, selectedPriceIndex == 2 ? 0 : 8)
+                        .modifier(SizeButtonTextModifier(isSelected : selectedPriceIndex == 2))
                 }
             } else if prices.count == 1 {
                 Text("\(numberFormatter.string(for: prices[0])!) €")
                     .bold()
                     .font(.title)
             }
-        }
-        .ifTrue(prices.count == 3) { content in
-            content
-            .animation(.easeInOut(duration: 0.2))
-        }
-        .ifTrue(prices.count == 1) { content in
-            content
         }
         .frame(maxWidth: .infinity)
         .padding([.top, .bottom], 20)
@@ -146,7 +153,7 @@ struct ItemSizePicker: View {
 
 struct ItemInfo<T: CatalogGeneralItem>: View {
     @Environment(\.managedObjectContext) var managedObjectContext
-    @State var selectedPriceIndex: Int = 0
+    @State var selectedPriceIndex: Int = 1
     @State var quantity = 1
     
     var item: T
@@ -171,6 +178,7 @@ struct ItemInfo<T: CatalogGeneralItem>: View {
             IngredientDescription(description: item.ingredientDescription)
                 .padding(.bottom, 40)
                 .padding(.top, 20)
+                .padding([.leading, .trailing])
             
             ItemSizePicker(selectedPriceIndex: $selectedPriceIndex, prices: item.prices)
             
@@ -185,16 +193,15 @@ struct ItemInfo<T: CatalogGeneralItem>: View {
                     Image(systemName: "plus")
                         .onTapGesture { withAnimation { quantity += 1 } }
                         .font(.title2)
-                        .frame(width: 35, height: 35)
+                        .frame(width: 45, height: 45)
                         .contentShape(Rectangle())
                     Text(String(quantity))
-                        .animation(nil)
                         .font(.title2)
                     Image(systemName: "minus")
                         .colorMultiply(quantity == 1 ? Color(red: 0.84, green: 0.84, blue: 0.84) : .white)
                         .onTapGesture { minusQuantity() }
                         .font(.title2)
-                        .frame(width: 35, height: 35)
+                        .frame(width: 45, height: 45)
                         .contentShape(Rectangle())
                 }
             }
@@ -205,8 +212,9 @@ struct ItemInfo<T: CatalogGeneralItem>: View {
                 RoundedRectangle(cornerRadius: 40)
                     .foregroundColor(.red)
             )
-            .padding(.bottom, 40)
             .shadow(radius: 10)
+            
+            Spacer()
             
             Button(action: {
                 let newOrderedItem = OrderedItem(context: managedObjectContext)
@@ -227,6 +235,7 @@ struct ItemInfo<T: CatalogGeneralItem>: View {
                 }
             }
             .buttonStyle(AddToBasketButtonStyle())
+            .padding(.bottom)
         }
         .navigationTitle(item.name)
     }

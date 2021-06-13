@@ -9,7 +9,7 @@ import SwiftUI
 
 struct CatalogView: View {
     var body: some View {
-        VStack(spacing: 13) {
+        VStack(spacing: 23) {
             CategorySelection()
             SelectedCategory()
         }

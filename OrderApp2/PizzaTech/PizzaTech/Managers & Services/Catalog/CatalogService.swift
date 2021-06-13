@@ -89,7 +89,7 @@ struct Catalog: Codable {
 
 class CatalogService: ObservableObject {
     @Published var catalog: Catalog? = nil
-    
+    @Published var showThanksForOrder = false
     @Published var categorySelection: CategoryID = .pizza
     
     func fetchCatalog() {

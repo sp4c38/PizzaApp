@@ -37,7 +37,7 @@ struct SingleOrderedItemView: View {
                     Text(item!.name)
                         .bold()
                         .font(.title2)
-                        .padding(.bottom, 3)
+                        .padding(.bottom, 2)
                     
                     Text("\(orderedItem.quantity)x")
                     Spacer()
@@ -46,7 +46,6 @@ struct SingleOrderedItemView: View {
                         .font(.title2)
                 }
                 .padding(.top, 15)
-                .padding(.bottom, 10)
                 .padding(.trailing, 15)
             }
             .foregroundColor(.white)
@@ -65,24 +64,34 @@ struct SingleOrderedItemView: View {
 
 struct OrderView: View {
     @EnvironmentObject var catalogService: CatalogService
-    @State var orderSending = false
-    @State var orderSuccessful = false
+    @State var isActive = false
     @FetchRequest(entity: OrderedItem.entity(), sortDescriptors: []) var orderedItems: FetchedResults<OrderedItem>
     
     var body: some View {
         VStack {
             ScrollView {
-                VStack(spacing: 30) {
+                VStack(spacing: 40) {
                     ForEach(orderedItems) { orderedItem in
                         SingleOrderedItemView(orderedItem: orderedItem, item: getCatalogItem(order: orderedItem))
                     }
                 }
+                .padding(.top, 20)
             }
             Spacer()
-            Button(action: { orderItems() }) {
-                Text("Order")
+            NavigationLink(destination: CheckoutView(), isActive: $isActive) {
+                Button(action: { isActive = true }) {
+                    HStack(spacing: 10) {
+                        Image(systemName: "creditcard")
+                            .font(.title2)
+                        Text("Weiter zur Kasse")
+                            .bold()
+                    }
+                }
+                .buttonStyle(ToCheckoutButtonStyle())
             }
         }
+        .navigationTitle("Warenkorb")
+        .padding(.bottom)
     }
     
     func getCatalogItem(order: OrderedItem) -> CatalogGeneralItem? {
@@ -99,41 +108,9 @@ struct OrderView: View {
         for item in categories.drink.items { if item.id == item_id { foundItem = item } }
         for item in categories.pasta.items { if item.id == item_id { foundItem = item } }
         if foundItem != nil {
-            print("Found item: \(foundItem).")
+            print("Found item: \(String(describing: foundItem)).")
         }
         return foundItem
-    }
-    
-    func orderItems() {
-        var orderRequestItems = [OrderRequestItem]()
-        for item in orderedItems {
-            let newRequestItem = OrderRequestItem(item_id: Int(item.item_id), price: item.price, quantity: Int(item.quantity))
-            orderRequestItems.append(newRequestItem)
-        }
-        let details = OrderRequestDetails(first_name: "L", last_name: "B", street: "K", city: "A", postal_code: "4")
-        
-        let newOrderRequest = OrderRequest(items: orderRequestItems, details: details)
-        
-        let jsonEncoder = JSONEncoder()
-        let encodedNewOrderRequest = try! jsonEncoder.encode(newOrderRequest)
-        
-        var request = URLRequest(url: URL(string: "https://www.space8.me:7392/order/make/")!, cachePolicy: .reloadIgnoringLocalAndRemoteCacheData)
-        request.httpMethod = "POST"
-        request.allHTTPHeaderFields = ["Content-Type": "application/json"]
-        request.httpBody = encodedNewOrderRequest
-
-        URLSession.shared.dataTask(with: request, completionHandler: { data, response, error in
-            if error == nil {
-                print("Error: \(String(describing: error)).")
-            }
-            if let httpResponse = response as? HTTPURLResponse {
-                print("Status \(httpResponse.statusCode)")
-                print("Order should be successful.")
-            }
-
-            orderSuccessful = true
-        }).resume()
-        orderSending = true
     }
 }
 
@@ -156,10 +133,29 @@ struct OrderRequest: Encodable {
     var details: OrderRequestDetails
 }
 
+struct ToCheckoutButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .foregroundColor(.white)
+            .frame(maxWidth: .infinity)
+            .padding([.top, .bottom], 20)
+            .background(Color.red)
+            .cornerRadius(20)
+            .padding([.leading, .trailing], 16)
+            .shadow(radius: 10)
+    }
+}
+
 struct OrderView_Previews: PreviewProvider {
     static var previews: some View {
-        OrderView()
-            .environmentObject(CatalogService())
-//        SingleOrderedItemView(orderedItem: OrderedItemD(), item: PizzaItem(id: 10, name: "Margheritta", imageName: "margherita", prices: [1,2,34], ingredientDescription: "mit Pizzasauce", speciality: FoodCharacteristics(vegetarian: true, vegan: true, spicy: false)))
+        Button(action: {}) {
+            HStack(spacing: 10) {
+                Image(systemName: "creditcard")
+                    .font(.title2)
+                Text("Weiter zur Kasse")
+                    .bold()
+            }
+        }
+        .buttonStyle(ToCheckoutButtonStyle())
     }
 }

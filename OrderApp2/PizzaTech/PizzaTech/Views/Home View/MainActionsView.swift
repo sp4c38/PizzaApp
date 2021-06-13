@@ -23,26 +23,26 @@ struct MainActionButtonStyle: ButtonStyle {
 }
 
 struct MainActionsView: View {
-    @State var isActive = false
+    @State var isActive1 = false
     var body: some View {
         HStack(spacing: 13) {
             Button(action: {
                 
             }) {
                 HStack {
-                    Image(systemName: "cart")
-                    Text("Warenkorb")
+                    Text("Bestellungen")
+                    Image(systemName: "archivebox")
                 }
             }
             .buttonStyle(MainActionButtonStyle())
             
-            NavigationLink(destination: OrderView(), isActive: $isActive) {
+            NavigationLink(destination: OrderView(), isActive: $isActive1) {
                 Button(action: {
-                    isActive = true
+                    isActive1 = true
                 }) {
                     HStack {
-                        Text("Bestellungen")
-                        Image(systemName: "archivebox")
+                        Image(systemName: "cart")
+                        Text("Warenkorb")
                     }
                 }
                 .buttonStyle(MainActionButtonStyle())
