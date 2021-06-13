@@ -12,6 +12,7 @@ struct CatalogView: View {
         VStack(spacing: 23) {
             CategorySelection()
             SelectedCategory()
+                .animation(nil)
         }
     }
 }

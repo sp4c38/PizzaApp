@@ -39,6 +39,7 @@
 		61FA0E202673D2A9009AF1C8 /* PizzaTech.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 61FA0E1E2673D2A9009AF1C8 /* PizzaTech.xcdatamodeld */; };
 		61FA0E232673D442009AF1C8 /* OrderedItem+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61FA0E212673D442009AF1C8 /* OrderedItem+CoreDataClass.swift */; };
 		61FA0E242673D442009AF1C8 /* OrderedItem+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61FA0E222673D442009AF1C8 /* OrderedItem+CoreDataProperties.swift */; };
+		61FDEE972675FDF10088DA2E /* RealOrderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61FDEE962675FDF10088DA2E /* RealOrderView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -72,6 +73,7 @@
 		61FA0E1F2673D2A9009AF1C8 /* PizzaTech.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = PizzaTech.xcdatamodel; sourceTree = "<group>"; };
 		61FA0E212673D442009AF1C8 /* OrderedItem+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OrderedItem+CoreDataClass.swift"; sourceTree = "<group>"; };
 		61FA0E222673D442009AF1C8 /* OrderedItem+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OrderedItem+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		61FDEE962675FDF10088DA2E /* RealOrderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealOrderView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -157,6 +159,7 @@
 			children = (
 				6188E2482673D6DF00822EFA /* OrderView.swift */,
 				61989E8326754EAF00A9A206 /* CheckoutView.swift */,
+				61FDEE962675FDF10088DA2E /* RealOrderView.swift */,
 			);
 			path = "Order View";
 			sourceTree = "<group>";
@@ -354,6 +357,7 @@
 				611B802225F2ED1D00C300B7 /* CatalogView.swift in Sources */,
 				611B801F25F2E80900C300B7 /* MainActionsView.swift in Sources */,
 				611B802425F2F1C900C300B7 /* CurrentCategory.swift in Sources */,
+				61FDEE972675FDF10088DA2E /* RealOrderView.swift in Sources */,
 				61B883FF25F42FEB00A67BC4 /* CatalogCategories.swift in Sources */,
 				61B883F725F3B38500A67BC4 /* ItemInfo.swift in Sources */,
 				61FA0E232673D442009AF1C8 /* OrderedItem+CoreDataClass.swift in Sources */,

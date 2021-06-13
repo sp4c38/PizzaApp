@@ -24,7 +24,6 @@ struct CategorySelectionButtonStyle: ButtonStyle {
             .cornerRadius(6)
             
             .shadow(color: Color.gray, radius: 5)
-            .animation(.easeInOut(duration: 0.2))
     }
 }
 
@@ -39,7 +38,9 @@ struct CategorySelection: View {
         LazyVGrid(columns: gridColumns, alignment: .center, spacing: 10) {
             ForEach(catalogService.catalog!.categories.categoryID, id: \.id) { categoryID in
                 Button(action: {
-                    catalogService.categorySelection = categoryID
+                    withAnimation {
+                        catalogService.categorySelection = categoryID
+                    }
                 }) {
                     Text(categoryID.name)
                 }

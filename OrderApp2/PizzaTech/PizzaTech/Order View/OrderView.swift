@@ -7,12 +7,8 @@
 
 import SwiftUI
 
-//struct OrderedItemD {
-//    var quantity = 2
-//    var price = 19.99
-//}
-
 struct SingleOrderedItemView: View {
+    @Environment(\.managedObjectContext) var managedObjectContext
     let orderedItem: OrderedItem
     let item: CatalogGeneralItem?
     
@@ -26,24 +22,35 @@ struct SingleOrderedItemView: View {
     var body: some View {
         if item != nil {
             HStack(alignment: .top) {
-                Image(item!.imageName)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 210)
+                ZStack(alignment: Alignment(horizontal: .leading, vertical: .bottom)) {
+                    Image(item!.imageName)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 210)
+                    
+                    Button(action: { deleteItem() } ) {
+                        Image(systemName: "trash")
+                            .padding(10)
+                            .foregroundColor(.red)
+                            .background(Color.white.cornerRadius(10).shadow(radius: 10))
+                            .padding([.leading, .bottom], 8)
+                    }
+                }
                 
-                Spacer()
+                Spacer(minLength: 6)
                 
                 VStack(alignment: .trailing, spacing: 0) {
                     Text(item!.name)
                         .bold()
-                        .font(.title2)
-                        .padding(.bottom, 2)
+                        .font(.callout)
+                        .padding(.bottom, 4)
                     
                     Text("\(orderedItem.quantity)x")
-                    Spacer()
+                    Spacer(minLength: 0)
                     Text("\(numberFormatter.string(for: orderedItem.price)!) €")
                         .bold()
-                        .font(.title2)
+                        .font(.body)
+                        .padding(.bottom, 10)
                 }
                 .padding(.top, 15)
                 .padding(.trailing, 15)
@@ -57,6 +64,18 @@ struct SingleOrderedItemView: View {
             .shadow(radius: 10)
         } else {
             VStack {}
+        }
+    }
+        
+    func deleteItem() {
+            managedObjectContext.delete(orderedItem)
+        do {
+            try withAnimation {
+                try managedObjectContext.save()
+            }
+            print("Deleted and saved.")
+        } catch {
+            print("Error while saving deleted ordered item: \(error).")
         }
     }
 }
@@ -148,6 +167,7 @@ struct ToCheckoutButtonStyle: ButtonStyle {
 
 struct OrderView_Previews: PreviewProvider {
     static var previews: some View {
+//        SingleOrderedItemView(orderedItem: OrderedItemD(), item: PizzaItem(id: 1, name: "Marherita", imageName: "margherita", prices: [1,2,3], ingredientDescription: "oeitjiuhbketjhgbjkheruigbjieurjhbiuheijh", speciality: FoodCharacteristics(vegetarian: true, vegan: false, spicy: false)))
         Button(action: {}) {
             HStack(spacing: 10) {
                 Image(systemName: "creditcard")

@@ -41,7 +41,6 @@ struct OrderButtonButtonStyle: ButtonStyle {
             .cornerRadius(20)
             .padding([.leading, .trailing], 16)
             .shadow(radius: 10)
-            .animation(.easeInOut)
     }
 }
 
@@ -118,11 +117,15 @@ struct CheckoutView: View {
                 
                 Button(action: {
                     if orderButtonTaps == 0 || orderButtonTaps == 1 {
-                        orderButtonTaps += 1
+                        withAnimation(.easeInOut) {
+                            orderButtonTaps += 1
+                        }
                     }
                     if orderButtonTaps == 2 {
-                        orderSending = true
-                        orderItems()
+                        withAnimation {
+                            orderSending = true
+                            orderItems()
+                        }
                     }
                 }) {
                     HStack(spacing: 10) {
@@ -200,6 +203,8 @@ struct CheckoutView: View {
                 DispatchQueue.main.asyncAfter(deadline: .now() + diff) {
                     orderSuccessful = true
                     catalogService.showThanksForOrder = true
+                    let generator = UINotificationFeedbackGenerator()
+                    generator.notificationOccurred(.success)
                     DispatchQueue.main.asyncAfter(deadline: .now() + 30) {
                         catalogService.showThanksForOrder = false
                     }

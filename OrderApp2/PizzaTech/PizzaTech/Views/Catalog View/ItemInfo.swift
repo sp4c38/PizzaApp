@@ -58,7 +58,7 @@ struct IngredientDescription: View {
         }
         .padding([.top, .bottom], 12)
         .padding([.leading, .trailing], 15)
-//        .frame(maxWidth: .infinity)
+        .frame(maxWidth: .infinity)
         .background(Color.white)
         .cornerRadius(10)
         .shadow(radius: 10)
@@ -172,13 +172,15 @@ struct ItemInfo<T: CatalogGeneralItem>: View {
                 .scaledToFit()
                 .padding([.leading, .trailing], 16)
                 .padding(.top, 13)
-                .padding(.bottom, 13)
+                .padding(.bottom, 5)
                 .shadow(radius: 10)
             
+            Spacer()
+            
             IngredientDescription(description: item.ingredientDescription)
-                .padding(.bottom, 40)
-                .padding(.top, 20)
                 .padding([.leading, .trailing])
+            
+            Spacer()
             
             ItemSizePicker(selectedPriceIndex: $selectedPriceIndex, prices: item.prices)
             
@@ -219,7 +221,11 @@ struct ItemInfo<T: CatalogGeneralItem>: View {
             Button(action: {
                 let newOrderedItem = OrderedItem(context: managedObjectContext)
                 newOrderedItem.item_id = Int64(item.id)
-                newOrderedItem.price = Double(item.prices[selectedPriceIndex])
+                if item.prices.count == 1 {
+                    newOrderedItem.price = Double(item.prices[0])
+                } else {
+                    newOrderedItem.price = Double(item.prices[selectedPriceIndex])
+                }
                 newOrderedItem.quantity = Int64(quantity)
                 
                 do {
