@@ -133,7 +133,7 @@ struct OrderView: View {
     }
 }
 
-struct OrderRequestItem: Encodable {
+struct OrderRequestItem: Codable {
     var item_id: Int
     var price: Double
     var quantity: Int

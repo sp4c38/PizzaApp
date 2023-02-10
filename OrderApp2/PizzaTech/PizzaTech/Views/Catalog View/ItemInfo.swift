@@ -44,6 +44,7 @@ struct AddToBasketButtonStyle: ButtonStyle {
             .padding([.leading, .trailing], 16)
             .font(.body)
             .shadow(radius: 10)
+            .opacity(configuration.isPressed ? 0.3 : 1)
     }
 }
 

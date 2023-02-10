@@ -26,6 +26,7 @@
 		611B802425F2F1C900C300B7 /* CurrentCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 611B802325F2F1C900C300B7 /* CurrentCategory.swift */; };
 		611B802825F3751500C300B7 /* CatalogPreview.json in Resources */ = {isa = PBXBuildFile; fileRef = 611B802725F3751500C300B7 /* CatalogPreview.json */; };
 		611B802A25F3753700C300B7 /* GetCatalogPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 611B802925F3753700C300B7 /* GetCatalogPreview.swift */; };
+		614004C526762BA200EF1BD8 /* OrderInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 614004C426762BA200EF1BD8 /* OrderInfoView.swift */; };
 		6188E2492673D6DF00822EFA /* OrderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6188E2482673D6DF00822EFA /* OrderView.swift */; };
 		61989E8426754EAF00A9A206 /* CheckoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61989E8326754EAF00A9A206 /* CheckoutView.swift */; };
 		61B72ECF25F2A2ED0065FB2A /* PizzaTechApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61B72ECE25F2A2ED0065FB2A /* PizzaTechApp.swift */; };
@@ -40,6 +41,8 @@
 		61FA0E232673D442009AF1C8 /* OrderedItem+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61FA0E212673D442009AF1C8 /* OrderedItem+CoreDataClass.swift */; };
 		61FA0E242673D442009AF1C8 /* OrderedItem+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61FA0E222673D442009AF1C8 /* OrderedItem+CoreDataProperties.swift */; };
 		61FDEE972675FDF10088DA2E /* RealOrderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61FDEE962675FDF10088DA2E /* RealOrderView.swift */; };
+		61FDEE9A2675FEC30088DA2E /* RealOrder+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61FDEE982675FEC30088DA2E /* RealOrder+CoreDataClass.swift */; };
+		61FDEE9B2675FEC30088DA2E /* RealOrder+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61FDEE992675FEC30088DA2E /* RealOrder+CoreDataProperties.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -58,6 +61,7 @@
 		611B802325F2F1C900C300B7 /* CurrentCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentCategory.swift; sourceTree = "<group>"; };
 		611B802725F3751500C300B7 /* CatalogPreview.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = CatalogPreview.json; sourceTree = "<group>"; };
 		611B802925F3753700C300B7 /* GetCatalogPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetCatalogPreview.swift; sourceTree = "<group>"; };
+		614004C426762BA200EF1BD8 /* OrderInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderInfoView.swift; sourceTree = "<group>"; };
 		6188E2482673D6DF00822EFA /* OrderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderView.swift; sourceTree = "<group>"; };
 		61989E8326754EAF00A9A206 /* CheckoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckoutView.swift; sourceTree = "<group>"; };
 		61B72ECB25F2A2ED0065FB2A /* PizzaTech.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PizzaTech.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -74,6 +78,8 @@
 		61FA0E212673D442009AF1C8 /* OrderedItem+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OrderedItem+CoreDataClass.swift"; sourceTree = "<group>"; };
 		61FA0E222673D442009AF1C8 /* OrderedItem+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OrderedItem+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		61FDEE962675FDF10088DA2E /* RealOrderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealOrderView.swift; sourceTree = "<group>"; };
+		61FDEE982675FEC30088DA2E /* RealOrder+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RealOrder+CoreDataClass.swift"; sourceTree = "<group>"; };
+		61FDEE992675FEC30088DA2E /* RealOrder+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RealOrder+CoreDataProperties.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -160,6 +166,7 @@
 				6188E2482673D6DF00822EFA /* OrderView.swift */,
 				61989E8326754EAF00A9A206 /* CheckoutView.swift */,
 				61FDEE962675FDF10088DA2E /* RealOrderView.swift */,
+				614004C426762BA200EF1BD8 /* OrderInfoView.swift */,
 			);
 			path = "Order View";
 			sourceTree = "<group>";
@@ -167,6 +174,8 @@
 		61B72EC225F2A2ED0065FB2A = {
 			isa = PBXGroup;
 			children = (
+				61FDEE982675FEC30088DA2E /* RealOrder+CoreDataClass.swift */,
+				61FDEE992675FEC30088DA2E /* RealOrder+CoreDataProperties.swift */,
 				61FA0E212673D442009AF1C8 /* OrderedItem+CoreDataClass.swift */,
 				61FA0E222673D442009AF1C8 /* OrderedItem+CoreDataProperties.swift */,
 				61B72ECD25F2A2ED0065FB2A /* PizzaTech */,
@@ -355,6 +364,7 @@
 			files = (
 				61FA0E242673D442009AF1C8 /* OrderedItem+CoreDataProperties.swift in Sources */,
 				611B802225F2ED1D00C300B7 /* CatalogView.swift in Sources */,
+				61FDEE9A2675FEC30088DA2E /* RealOrder+CoreDataClass.swift in Sources */,
 				611B801F25F2E80900C300B7 /* MainActionsView.swift in Sources */,
 				611B802425F2F1C900C300B7 /* CurrentCategory.swift in Sources */,
 				61FDEE972675FDF10088DA2E /* RealOrderView.swift in Sources */,
@@ -364,10 +374,12 @@
 				61B72ED125F2A2ED0065FB2A /* HomeView.swift in Sources */,
 				61FA0E202673D2A9009AF1C8 /* PizzaTech.xcdatamodeld in Sources */,
 				6188E2492673D6DF00822EFA /* OrderView.swift in Sources */,
+				61FDEE9B2675FEC30088DA2E /* RealOrder+CoreDataProperties.swift in Sources */,
 				61B72ECF25F2A2ED0065FB2A /* PizzaTechApp.swift in Sources */,
 				611B801725F2C0B000C300B7 /* CatalogService.swift in Sources */,
 				611B801C25F2D46600C300B7 /* BackendAPI.swift in Sources */,
 				611B802A25F3753700C300B7 /* GetCatalogPreview.swift in Sources */,
+				614004C526762BA200EF1BD8 /* OrderInfoView.swift in Sources */,
 				61989E8426754EAF00A9A206 /* CheckoutView.swift in Sources */,
 				61B883F925F3B5B000A67BC4 /* CategorySelection.swift in Sources */,
 			);

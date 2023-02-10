@@ -59,6 +59,14 @@ def check_update_progress_body(body: Box) -> bool:
     return True
 
 
+def check_get_progress_body(body: Box) -> bool:
+    fields = [Field("order_id", int)]
+    if not check_fields(body, fields):
+        logger.info("Wrong update progress body fields in request.")
+        return False
+    return True
+
+
 def get_new_order(catalog: Catalog, body: Box) -> Optional[Order]:
     """Get a new order from a request body."""
     order_body_valid = check_new_order_body(body)
@@ -92,6 +100,13 @@ def update_progress(session: Session, order: Order, new_progress: int):
     order.order_progress = new_progress
     session.add(order)
     session.commit()
+
+
+def get_progress(session: Session, order_id: int) -> Optional[int]:
+    order = get_existing_order(session, order_id)
+    if order is None:
+        return None
+    return order.order_progress
 
 
 def get_all_uncompleted_orders(session: Session) -> list[Order]:

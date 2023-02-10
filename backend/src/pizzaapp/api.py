@@ -50,10 +50,14 @@ def order_make():
         logger.info("Order request json is invalid.")
         return error_response(400, "order_not_valid")
 
-    store_operation = StoreOperation(store.simple_store, (new_order,))
+    # store_operation = StoreOperation(store.simple_store, (new_order,))
+    # store_queue.put_nowait(store_operation)
+    with Session(engine) as session:
+        session.add(new_order)
+        session.commit() 
+        order_id = new_order.order_id
     logger.debug("Added order store operation to background queue.")
-    store_queue.put_nowait(store_operation)
-    return "", 204
+    return {"order_id": order_id}, 200
 
 
 @app.route("/order/update/progress/", methods=["POST"])
@@ -78,6 +82,21 @@ def order_update_progress():
         store_queue.put_nowait(store_operation)
 
     return "", 204
+
+
+@app.route("/order/get/progress/", methods=["POST"])
+def order_get_progress():
+    body = utils.get_body_box(request)
+    if body is None:
+        return error_response(400)
+    body_valid = order.check_get_progress_body(body)
+
+    with Session(engine) as session:
+        order_progress = order.get_progress(session, body.order_id)
+        print(order_progress)
+    if order_progress is None:
+        return error_response(400)
+    return {"order_progress": order_progress}
 
 
 @app.route("/order/get_all/", methods=["GET"])

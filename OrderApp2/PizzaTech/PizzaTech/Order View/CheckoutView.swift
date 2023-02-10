@@ -45,6 +45,7 @@ struct OrderButtonButtonStyle: ButtonStyle {
 }
 
 struct CheckoutView: View {
+    @Environment(\.managedObjectContext) var managedObjectContext
     @EnvironmentObject var catalogService: CatalogService
     @State var orderSending = false
     @State var orderSuccessful = false
@@ -122,9 +123,11 @@ struct CheckoutView: View {
                         }
                     }
                     if orderButtonTaps == 2 {
-                        withAnimation {
-                            orderSending = true
-                            orderItems()
+                        DispatchQueue.global(qos: .userInitiated).async {
+                            withAnimation {
+                                orderSending = true
+                                orderItems()
+                            }
                         }
                     }
                 }) {
@@ -181,6 +184,7 @@ struct CheckoutView: View {
         let newOrderRequest = OrderRequest(items: orderRequestItems, details: details)
         
         let jsonEncoder = JSONEncoder()
+        
         let encodedNewOrderRequest = try! jsonEncoder.encode(newOrderRequest)
         
         var request = URLRequest(url: URL(string: "https://www.space8.me:7392/order/make/")!, cachePolicy: .reloadIgnoringLocalAndRemoteCacheData)
@@ -197,10 +201,41 @@ struct CheckoutView: View {
                 print("Status \(httpResponse.statusCode)")
                 print("Order should be successful.")
             }
+            let decoder = JSONDecoder()
+            var decodedResponse: ResponseCheckoutOrder? = nil
+            do {
+                decodedResponse = try decoder.decode(ResponseCheckoutOrder.self, from: data!)
+            } catch {
+                fatalError("Couldn't decode response checkout order.")
+            }
+            
             let endTime = Date()
             if endTime.timeIntervalSince(startTime) < TimeInterval(3) {
+                let realOrder = RealOrder(context: managedObjectContext)
+                realOrder.firstName = firstName
+                realOrder.lastName = lastName
+                realOrder.city = city
+                realOrder.street = street
+                realOrder.postalCode = postalCode
+                realOrder.orderID = Int64(decodedResponse!.order_id)
+                var pizzasOrderedEncoded: Data? = nil
+                do {
+                    pizzasOrderedEncoded = try jsonEncoder.encode(orderRequestItems)
+                } catch {
+                    fatalError("Couldn't encode ordered pizzas.")
+                }
+                realOrder.pizzasOrdered = pizzasOrderedEncoded
+                
+                do {
+                    try managedObjectContext.save()
+                    print("Saved new real order.")
+                } catch {
+                    print("Couldn't store new real order to moc.")
+                }
+                
                 let diff = 3 - endTime.timeIntervalSince(startTime)
                 DispatchQueue.main.asyncAfter(deadline: .now() + diff) {
+                    
                     orderSuccessful = true
                     catalogService.showThanksForOrder = true
                     let generator = UINotificationFeedbackGenerator()
@@ -212,6 +247,10 @@ struct CheckoutView: View {
             }
         }).resume()
     }
+}
+
+struct ResponseCheckoutOrder: Decodable {
+    var order_id: Int
 }
 
 struct CheckoutView_Previews: PreviewProvider {

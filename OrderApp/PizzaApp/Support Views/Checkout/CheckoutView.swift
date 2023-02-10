@@ -7,7 +7,7 @@
 
 import CoreData
 import SwiftUI
-
+        
 struct PaymentMethod: Identifiable {
     var id: Int8
     var name: String
